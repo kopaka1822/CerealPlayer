@@ -1,0 +1,39 @@
+﻿<Window x:Class="CerealPlayer.Views.PlaylistCreationView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CerealPlayer.Views"
+        mc:Ignorable="d"
+        Title="New Playlist" 
+        Height="140" 
+        Width="400"
+        WindowStyle="ToolWindow">
+    <Grid Margin="{StaticResource DialogBorder}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel 
+            Grid.Row="0"
+            Margin="{StaticResource BottomBorder}">
+            <TextBlock Text="Url:"/>
+            <TextBox 
+                Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+        
+        <StackPanel
+            Grid.Row="1"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+            <Button 
+                Content="Create"
+                Margin="{StaticResource RightBorder}"
+                Command="{Binding CreatePlaylistCommand}"/>
+            <Button
+                Content="Cancel"
+                Command="{Binding CancelCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>

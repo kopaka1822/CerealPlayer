@@ -1,0 +1,33 @@
+﻿<Application x:Class="CerealPlayer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:CerealPlayer"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <Style TargetType="{x:Type Control}" x:Key="BaseStyle">
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style TargetType="{x:Type Control}" x:Key="TextStyle">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+
+        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource BaseStyle}"></Style>
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseStyle}"></Style>
+
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextStyle}"></Style>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
+        <system:Double x:Key="BigBorder">5</system:Double>
+        <system:Double x:Key="SmallBorder">3</system:Double>
+
+        <Thickness x:Key="DialogBorder" Bottom="{StaticResource BigBorder}" Left="{StaticResource BigBorder}" Right="{StaticResource BigBorder}" Top="{StaticResource BigBorder}"/>
+        <Thickness x:Key="RightBorder" Right="{StaticResource SmallBorder}"/>
+        <Thickness x:Key="LeftBorder" Left="{StaticResource SmallBorder}"/>
+        <Thickness x:Key="TopBorder" Top="{StaticResource SmallBorder}"/>
+        <Thickness x:Key="BottomBorder" Bottom="{StaticResource SmallBorder}"/>
+    </Application.Resources>
+</Application>
+
