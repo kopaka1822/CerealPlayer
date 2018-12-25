@@ -5,39 +5,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CerealPlayer.Controllers;
+using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 
 namespace CerealPlayer.Commands.Playlist
 {
     public class RetryVideoDownloadCommand : ICommand
     {
-        private TaskModel task;
+        private readonly PlaylistModel playlist;
+        private readonly TaskController ctrl;
 
-        public RetryVideoDownloadCommand(TaskModel task)
+        public RetryVideoDownloadCommand(PlaylistModel playlist, TaskController controller)
         {
-            this.task = task;
-            task.PropertyChanged += TaskOnPropertyChanged;
+            this.playlist = playlist;
+            this.ctrl = controller;
         }
-
-        private void TaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            switch (args.PropertyName)
-            {
-                case nameof(TaskModel.Status):
-                    OnCanExecuteChanged();
-                    break;
-            }
-        }
-
 
         public bool CanExecute(object parameter)
         {
-            return task.Status == TaskModel.TaskStatus.Failed;
+            return true;
         }
 
         public void Execute(object parameter)
         {
-            task.Retry();
+            ctrl.RetryTask(playlist);   
         }
 
         public event EventHandler CanExecuteChanged;

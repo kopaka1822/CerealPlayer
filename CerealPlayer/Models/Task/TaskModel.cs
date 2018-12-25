@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.ComTypes;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models.Playlist;
 
@@ -40,6 +41,7 @@ namespace CerealPlayer.Models.Task
             {
                 var clamped = Math.Min(Math.Max(value, 0), 100);
                 if (percentage == clamped) return;
+                percentage = clamped;
                 OnPropertyChanged(nameof(Percentage));
             }
         }
@@ -72,6 +74,7 @@ namespace CerealPlayer.Models.Task
         {
             Debug.Assert(subTask != null);
             Debug.Assert(Status == TaskStatus.NotStarted);
+            Status = TaskStatus.Running;
             subTask.Start();
         }
 
@@ -83,10 +86,10 @@ namespace CerealPlayer.Models.Task
             Status = TaskStatus.Failed;
         }
 
-        public void Retry()
+        public void ResetStatus()
         {
-            Debug.Assert(Status == TaskStatus.Failed);
-            subTask.Start();
+            Debug.Assert(Status == TaskStatus.Failed || Status == TaskStatus.Finished);
+            Status = TaskStatus.NotStarted;
         }
 
         public void SetError(string error)

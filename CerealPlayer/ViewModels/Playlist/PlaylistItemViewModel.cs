@@ -19,13 +19,13 @@ namespace CerealPlayer.ViewModels.Playlist
         private readonly Models.Models models;
         private readonly VideoModel video;
 
-        public PlaylistItemViewModel(Models.Models models, VideoModel video)
+        public PlaylistItemViewModel(Models.Models models, VideoModel video, RetryVideoDownloadCommand retryCommand)
         {
             this.models = models;
             this.video = video;
             video.DownloadTask.PropertyChanged += DownloadTaskOnPropertyChanged;
 
-            RetryCommand = new RetryVideoDownloadCommand(video.DownloadTask);
+            RetryCommand = retryCommand;
             StopCommand = new StopVideoDownloadCommand(video.DownloadTask);
         }
 

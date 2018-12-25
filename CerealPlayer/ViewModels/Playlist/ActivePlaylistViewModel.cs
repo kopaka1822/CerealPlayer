@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CerealPlayer.Annotations;
+using CerealPlayer.Commands.Playlist;
+using CerealPlayer.Controllers;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Views;
 
@@ -18,10 +20,12 @@ namespace CerealPlayer.ViewModels.Playlist
     {
         private readonly Models.Models models;
         private PlaylistModel activePlaylist = null;
+        private readonly TaskController taskController;
 
-        public ActivePlaylistViewModel(Models.Models models)
+        public ActivePlaylistViewModel(Models.Models models, TaskController taskController)
         {
             this.models = models;
+            this.taskController = taskController;
             this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
             
             if(models.Playlists.ActivePlaylist != null)
@@ -47,7 +51,11 @@ namespace CerealPlayer.ViewModels.Playlist
             // add existing videos
             foreach (var playlistVideo in activePlaylist.Videos)
             {
-                var view = new PlaylistItemView {DataContext = new PlaylistItemViewModel(models, playlistVideo)};
+                var view = new PlaylistItemView
+                {
+                    DataContext = new PlaylistItemViewModel(models, playlistVideo, 
+                        new RetryVideoDownloadCommand(activePlaylist, taskController))
+                };
                 Videos.Add(view);
             }
 
@@ -63,7 +71,8 @@ namespace CerealPlayer.ViewModels.Playlist
             // add to the end of the list
             Videos.Add(new PlaylistItemView
             {
-                DataContext = new PlaylistItemViewModel(models, models.Playlists.ActivePlaylist.Videos.Last())
+                DataContext = new PlaylistItemViewModel(models, activePlaylist.Videos.Last(),
+                    new RetryVideoDownloadCommand(activePlaylist, taskController))
             });
         }
 

@@ -26,6 +26,14 @@ namespace CerealPlayer.Models.Playlist
 
             // create video and download task
             Videos.Add(new VideoModel(models, initialWebsite, this));
+
+            var task = new NextEpisodeTaskModel(this);
+            var subTask = hoster.GetNextEpisodeTask(task, initialWebsite);
+            if (subTask != null)
+            {
+                task.SetNewSubTask(subTask);
+                this.NextEpisodeTask = task;
+            }
         }
 
         public void AddNextEpisode(string website)

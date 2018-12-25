@@ -31,7 +31,8 @@ namespace CerealPlayer.Models.Hoster
                 try
                 {
                     parent.Description = "resolving " + website;
-                    var source = await models.Web.Html.GetJsAsynch(website);
+                    //var source = await models.Web.Html.GetJsAsynch(website);
+                    var source = await models.Web.Html.GetAsynch(website);
 
                     // search for iframe src="http://www.mp4upload.com
                     var subIndex = source.IndexOf("iframe src=\"http://www.mp4upload.com/embed-", StringComparison.Ordinal);
@@ -89,6 +90,7 @@ namespace CerealPlayer.Models.Hoster
                     if (existing)
                     {
                         // schedule next episode and start new task
+                        parent.Playlist.AddNextEpisode(website);
                         parent.SetNewSubTask(hoster.GetNextEpisodeTask(parent, website));
                     }
                     else
@@ -175,7 +177,7 @@ namespace CerealPlayer.Models.Hoster
             if (!Int32.TryParse(parts.Last(), NumberStyles.Integer, culture, out var currentNumber))
                 return null; // there is no next episode
 
-            var nextWebsite = website.Substring(0, idx);
+            var nextWebsite = website.Substring(0, idx + 1);
             for (int i = 0; i < parts.Length - 1; ++i)
                 nextWebsite += parts[i] + "-";
             nextWebsite += (currentNumber + 1);
