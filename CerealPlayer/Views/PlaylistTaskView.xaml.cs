@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace CerealPlayer.Views
 {
     /// <summary>
-    /// Interaction logic for PlaylistPreviewView.xaml
+    /// Interaction logic for PlaylistTaskView.xaml
     /// </summary>
-    public partial class PlaylistPreviewView : UserControl
+    public partial class PlaylistTaskView : UserControl
     {
-        public PlaylistPreviewView()
+        public PlaylistTaskView()
         {
             InitializeComponent();
         }

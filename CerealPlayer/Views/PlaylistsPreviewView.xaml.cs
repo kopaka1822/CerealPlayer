@@ -10,7 +10,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace CerealPlayer.Views
@@ -18,9 +17,9 @@ namespace CerealPlayer.Views
     /// <summary>
     /// Interaction logic for PlaylistPreviewView.xaml
     /// </summary>
-    public partial class PlaylistPreviewView : UserControl
+    public partial class PlaylistsPreviewView : Window
     {
-        public PlaylistPreviewView()
+        public PlaylistsPreviewView()
         {
             InitializeComponent();
         }

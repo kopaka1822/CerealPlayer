@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models.Playlist;
 
@@ -19,6 +20,9 @@ namespace CerealPlayer.Models.Task
             Finished,
             Failed
         }
+
+        private readonly int maxTries = 5;
+        private int curRetries = 0;
 
         public ObservableCollection<string> History { get; } = new ObservableCollection<string>{"Pending"};
 
@@ -65,6 +69,7 @@ namespace CerealPlayer.Models.Task
         {
             Debug.Assert(Status == TaskStatus.Running || Status == TaskStatus.NotStarted);
             subTask = newSubTask;
+            curRetries = 0;
 
             if (Status == TaskStatus.Running)
                 subTask.Start();
@@ -76,6 +81,7 @@ namespace CerealPlayer.Models.Task
             Debug.Assert(Status == TaskStatus.NotStarted);
             Status = TaskStatus.Running;
             subTask.Start();
+            curRetries = 0;
         }
 
         public void Stop()
@@ -92,10 +98,21 @@ namespace CerealPlayer.Models.Task
             Status = TaskStatus.NotStarted;
         }
 
-        public void SetError(string error)
+        public async void SetError(string error)
         {
+            Debug.Assert(Status == TaskStatus.Running || Status == TaskStatus.Failed);
             Description = error;
-            Status = TaskStatus.Failed;
+            // retry if max retries not reached
+            if (++curRetries < maxTries)
+            {
+                // start again after 5 s timeout
+                await System.Threading.Tasks.Task.Run(() => Thread.Sleep(TimeSpan.FromSeconds(5)));
+                subTask.Start();
+            }
+            else
+            {
+                Status = TaskStatus.Failed;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

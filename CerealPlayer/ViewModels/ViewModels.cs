@@ -18,6 +18,7 @@ namespace CerealPlayer.ViewModels
 
         // controllers
         public TaskController TaskCtrl { get; }
+        public SaveFileController SaveCtrl { get; }
 
         // commands
         public ICommand OpenPlaylistCommand { get; }
@@ -27,6 +28,7 @@ namespace CerealPlayer.ViewModels
         {
             // controller
             TaskCtrl = new TaskController(models);
+            SaveCtrl = new SaveFileController(models);
 
             // view models
             ActivePlaylist = new ActivePlaylistViewModel(models, TaskCtrl);
@@ -34,6 +36,11 @@ namespace CerealPlayer.ViewModels
             // commands
             OpenPlaylistCommand = new OpenPlaylistCommand(models);
             NewPlaylistCommand = new NewPlaylistCommand(models);
+        }
+
+        public void Close()
+        {
+            SaveCtrl.Close();
         }
     }
 }

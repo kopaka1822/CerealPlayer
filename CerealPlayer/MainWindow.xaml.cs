@@ -21,12 +21,15 @@ namespace CerealPlayer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ViewModels.ViewModels viewModels;
+
         public MainWindow()
         {
             InitializeComponent();
 
             var models = new Models.Models(this);
-            DataContext = new ViewModels.ViewModels(models);
+            viewModels = new ViewModels.ViewModels(models);
+            DataContext = viewModels;
 
         }
 
@@ -52,6 +55,11 @@ namespace CerealPlayer
                 this.WindowStyle = WindowStyle.SingleBorderWindow;
                 this.WindowState = WindowState.Normal;
             }
+        }
+
+        private void MainWindow_OnClosed(object sender, EventArgs e)
+        {
+            viewModels.Close();
         }
     }
 }

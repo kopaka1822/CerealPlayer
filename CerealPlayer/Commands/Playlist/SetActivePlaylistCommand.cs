@@ -1,18 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using CerealPlayer.ViewModels.Playlist;
-using CerealPlayer.Views;
+using CerealPlayer.Models.Playlist;
 
 namespace CerealPlayer.Commands.Playlist
 {
-    public class OpenPlaylistCommand : ICommand
+    public class SetActivePlaylistCommand : ICommand
     {
         private readonly Models.Models models;
+        private readonly PlaylistModel model;
 
-        public OpenPlaylistCommand(Models.Models models)
+        public SetActivePlaylistCommand(Models.Models models, PlaylistModel model)
         {
             this.models = models;
+            this.model = model;
         }
+
 
         public bool CanExecute(object parameter)
         {
@@ -21,10 +27,7 @@ namespace CerealPlayer.Commands.Playlist
 
         public void Execute(object parameter)
         {
-            var view = new PlaylistsPreviewView();
-            view.DataContext = new PlaylistsPreviewViewModel(models, view);
-
-            view.ShowDialog();
+            models.Playlists.ActivePlaylist = model;
         }
 
         public event EventHandler CanExecuteChanged

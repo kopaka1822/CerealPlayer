@@ -8,7 +8,8 @@
         Title="Cereal Player" 
         Height="450" 
         Width="800"
-        Background="White">
+        Background="White"
+        Closed="MainWindow_OnClosed">
     <DockPanel Background="Black">
         <Grid DockPanel.Dock="Top" Background="White">
             <Grid.ColumnDefinitions>
@@ -19,10 +20,10 @@
             <Menu Grid.Column="0" Background="White">
                 <MenuItem Header="File">
                     <MenuItem 
-                        Header="Open ActivePlaylist"
+                        Header="Open Playlist"
                         Command="{Binding OpenPlaylistCommand}"/>
                     <MenuItem
-                        Header="New ActivePlaylist"
+                        Header="New Playlist"
                         Command="{Binding NewPlaylistCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Settings">

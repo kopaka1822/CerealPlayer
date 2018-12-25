@@ -60,6 +60,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -84,8 +87,11 @@
     <Compile Include="Commands\Playlist\NewPlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\OpenPlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\RetryVideoDownloadCommand.cs" />
+    <Compile Include="Commands\Playlist\SetActivePlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\StopVideoDownloadCommand.cs" />
+    <Compile Include="Commands\Playlist\UpdatePlaylistDirectoryCommand.cs" />
     <Compile Include="Commands\SetDialogResultCommand.cs" />
+    <Compile Include="Controllers\SaveFileController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Models\AppModel.cs" />
     <Compile Include="Models\Hoster\IVideoHoster.cs" />
@@ -107,7 +113,9 @@
     <Compile Include="ViewModels\Playlist\PlaylistCreationViewModel.cs" />
     <Compile Include="ViewModels\Playlist\PlaylistItemViewModel.cs" />
     <Compile Include="ViewModels\Playlist\PlaylistPreviewViewModel.cs" />
+    <Compile Include="ViewModels\Playlist\PlaylistsPreviewViewModel.cs" />
     <Compile Include="ViewModels\Playlist\ActivePlaylistViewModel.cs" />
+    <Compile Include="ViewModels\Playlist\PlaylistTaskViewModel.cs" />
     <Compile Include="ViewModels\ViewModels.cs" />
     <Compile Include="Views\PlaylistCreationView.xaml.cs">
       <DependentUpon>PlaylistCreationView.xaml</DependentUpon>
@@ -117,6 +125,12 @@
     </Compile>
     <Compile Include="Views\PlaylistPreviewView.xaml.cs">
       <DependentUpon>PlaylistPreviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaylistsPreviewView.xaml.cs">
+      <DependentUpon>PlaylistsPreviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaylistTaskView.xaml.cs">
+      <DependentUpon>PlaylistTaskView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -139,6 +153,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PlaylistPreviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaylistsPreviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaylistTaskView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
