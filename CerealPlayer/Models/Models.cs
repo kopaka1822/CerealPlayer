@@ -17,12 +17,14 @@ namespace CerealPlayer.Models
         public AppModel App { get; }
         public WebModel Web { get; }
         public PlaylistsModel Playlists { get; }
+        public DisplayModel Display { get; }
 
         public Models(MainWindow window)
         {
             App = new AppModel(window);
             Web = new WebModel(this);
             Playlists = new PlaylistsModel();
+            Display = new DisplayModel();
         }
     }
 }

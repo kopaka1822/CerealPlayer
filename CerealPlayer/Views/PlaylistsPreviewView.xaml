@@ -7,8 +7,9 @@
         mc:Ignorable="d"
         Title="Playlists"
         Height="450"
-        Width="400"
-        WindowStyle="ToolWindow">
+        Width="{StaticResource PlaylistDialogWidth}"
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize">
     <Grid Margin="{StaticResource DialogBorder}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

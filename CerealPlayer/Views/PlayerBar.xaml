@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="CerealPlayer.Views.PlayerBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CerealPlayer.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="70" 
+             d:DesignWidth="600"
+             Background="White"
+             Visibility="{Binding BarVisibility, FallbackValue=Visible}">
+    <StackPanel Margin="{StaticResource DialogBorder}">
+        <Grid Margin="{StaticResource BottomBorder}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock
+                Grid.Column="0"
+                Text="{Binding TimeElapsed, FallbackValue=00:00:50}"/>
+            
+            <Slider
+                Grid.Column="1"
+                Value="{Binding TimeProgress, FallbackValue=0, UpdateSourceTrigger=LostFocus}"
+                Margin="{StaticResource RightBorder}"
+                Minimum="0"
+                Maximum="1"/>
+
+            <TextBlock
+                Grid.Column="2"
+                Text="{Binding TimeRemaining, FallbackValue=00:00:00}"/>
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="32"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button 
+                Grid.Column="0"
+                Command="{Binding PlayCommand}">
+                Play
+            </Button>
+            
+            <StackPanel
+                Grid.Column="2"
+                Orientation="Horizontal">
+                <Button 
+                    Margin="{StaticResource RightBorder}"
+                    Command="{Binding PreviousEpisodeCommand}">
+                    &lt;&lt;
+                </Button>
+                <Button
+                    Margin="{StaticResource RightBorder}"
+                    Command="{Binding WindBackCommand}">
+                    &lt;
+                </Button>
+                <Button
+                    Margin="{StaticResource RightBorder}"
+                    Command="{Binding WindForwardCommand}">
+                    &gt;
+                </Button>
+                <Button
+                    Margin="{StaticResource RightBorder}"
+                    Command="{Binding NextEpisodeCommand}">
+                    &gt;&gt;
+                </Button>
+            </StackPanel>
+            
+            <StackPanel
+                Grid.Column="4"
+                Orientation="Horizontal">
+
+                <Slider
+                    Value="{Binding Volume, FallbackValue=0.5}"
+                    Width="100"
+                    Minimum="0"
+                    Maximum="1"
+                    Margin="{StaticResource RightBorder}"/>
+                
+                <Button
+                    Margin="{StaticResource RightBorder}"
+                    Command="{Binding TogglePlaylistCommand}">
+                    list
+                </Button>
+
+                <Button
+                    Command="{Binding ToggleFullscreenCommand}">
+                    full
+                </Button>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>

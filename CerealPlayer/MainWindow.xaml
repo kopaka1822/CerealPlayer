@@ -4,19 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CerealPlayer"
+        xmlns:views="clr-namespace:CerealPlayer.Views"
         mc:Ignorable="d"
         Title="Cereal Player" 
         Height="450" 
         Width="800"
         Background="White"
-        Closed="MainWindow_OnClosed">
+        Closed="MainWindow_OnClosed"
+        WindowStyle="{Binding Display.WindowStyle}"
+        WindowState="{Binding Display.WindowState}">
     <DockPanel Background="Black">
-        <Grid DockPanel.Dock="Top" Background="White">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid 
+            DockPanel.Dock="Top" 
+            Background="White"
+            Visibility="{Binding Display.FullscreenVisibility}">
             <Menu Grid.Column="0" Background="White">
                 <MenuItem Header="File">
                     <MenuItem 
@@ -30,44 +31,44 @@
 
                 </MenuItem>
             </Menu>
-            
-            <StackPanel 
-                Grid.Column="1"
-                Orientation="Horizontal">
-                <Button>
-                    Player
-                </Button>
-                <Button>
-                    ActivePlaylist
-                </Button>
-            </StackPanel>
-            
-            <Border 
-                Grid.Column="2" 
-                Background="White"/>
         </Grid>
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <ListBox
                 Grid.Column="0"
+                Width="{StaticResource PlaylistBarWidth}"
+                Visibility="{Binding Display.PlaylistVisibility}"
                 ItemsSource="{Binding ActivePlaylist.Videos}"
                 SelectedItem="{Binding ActivePlaylist.SelectedVideo}"/>
 
             <GridSplitter 
+                Visibility="{Binding Display.PlaylistVisibility}"
                 Grid.Column="1"
                 Width="10"
                 HorizontalAlignment="Stretch"
                 Background="White"/>
 
-            <MediaElement 
-                Grid.Column="2"
-                x:Name="Player"
-                MouseLeftButtonUp="Player_OnMouseLeftButtonUp"/>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <MediaElement 
+                    Grid.Column="0"
+                    x:Name="Player"/>
+
+                <views:PlayerBar 
+                    Grid.Row="1"
+                    DataContext="{Binding Player}"/>
+            </Grid>
+
         </Grid>
     </DockPanel>
 </Window>

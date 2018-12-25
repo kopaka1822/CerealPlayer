@@ -69,6 +69,7 @@ namespace CerealPlayer.Models.Playlist
             if (data.IsDownloaded && File.Exists(FileLocation))
             {
                 task.Status = TaskModel.TaskStatus.Finished;
+                task.Description = "";
             }
             else
             {

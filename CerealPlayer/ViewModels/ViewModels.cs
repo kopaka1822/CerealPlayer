@@ -17,6 +17,7 @@ namespace CerealPlayer.ViewModels
         // view models
         public ActivePlaylistViewModel ActivePlaylist { get; }
         public PlayerViewModel Player { get; }
+        public DisplayViewModel Display { get; }
 
         // controllers
         public TaskController TaskCtrl { get; }
@@ -35,6 +36,7 @@ namespace CerealPlayer.ViewModels
             // view models
             ActivePlaylist = new ActivePlaylistViewModel(models, TaskCtrl);
             Player = new PlayerViewModel(models);
+            Display = new DisplayViewModel(models);
 
             // commands
             OpenPlaylistCommand = new OpenPlaylistCommand(models);

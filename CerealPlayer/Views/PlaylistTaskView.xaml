@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CerealPlayer.Views"
              mc:Ignorable="d" 
              d:DesignHeight="70"
-             d:DesignWidth="400">
+             Width="{StaticResource PlaylistItemWidth}">
     <StackPanel>
         <Grid Margin="{StaticResource BottomBorder}">
             <Grid.ColumnDefinitions>

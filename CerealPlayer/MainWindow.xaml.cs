@@ -42,21 +42,6 @@ namespace CerealPlayer
             
         }
 
-        private void Player_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-
-            if (WindowState != WindowState.Maximized)
-            {
-                this.WindowStyle = WindowStyle.None;
-                this.WindowState = WindowState.Maximized;
-            }
-            else
-            {
-                this.WindowStyle = WindowStyle.SingleBorderWindow;
-                this.WindowState = WindowState.Normal;
-            }
-        }
-
         private void MainWindow_OnClosed(object sender, EventArgs e)
         {
             viewModels.Close();
