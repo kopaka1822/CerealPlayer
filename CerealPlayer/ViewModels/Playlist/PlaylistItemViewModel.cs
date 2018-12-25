@@ -73,6 +73,7 @@ namespace CerealPlayer.ViewModels.Playlist
 
         // TODO add current play position if playing
         public string Status => video.DownloadTask.Description;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

@@ -104,6 +104,7 @@
     <Compile Include="Models\Hoster\JustDubs.cs" />
     <Compile Include="Models\Hoster\Mp4Upload.cs" />
     <Compile Include="Models\Hoster\VideoHosterModel.cs" />
+    <Compile Include="Models\Player\PlayerModel.cs" />
     <Compile Include="Models\Playlist\PlaylistModel.cs" />
     <Compile Include="Models\Playlist\PlaylistsModel.cs" />
     <Compile Include="Models\Playlist\VideoModel.cs" />

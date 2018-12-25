@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CerealPlayer"
         xmlns:views="clr-namespace:CerealPlayer.Views"
         mc:Ignorable="d"
-        Title="Cereal Player" 
+        Title="{Binding Display.WindowTitle, FallbackValue=CerealPlayer}" 
         Height="450" 
         Width="800"
         Background="White"
@@ -66,7 +66,8 @@
 
                 <views:PlayerBar 
                     Grid.Row="1"
-                    DataContext="{Binding Player}"/>
+                    DataContext="{Binding Player}"
+                    x:Name="PlayerBar"/>
             </Grid>
 
         </Grid>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models;
+using CerealPlayer.Models.Player;
 
 namespace CerealPlayer.ViewModels
 {
@@ -19,7 +20,20 @@ namespace CerealPlayer.ViewModels
         {
             this.models = models;
             this.models.Display.PropertyChanged += DisplayOnPropertyChanged;
+            this.models.Player.PropertyChanged += PlayerOnPropertyChanged;
         }
+
+        private void PlayerOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(PlayerModel.VideoName):
+                    OnPropertyChanged(nameof(WindowTitle));
+                    break;
+            }
+        }
+
+        public string WindowTitle => "Cereal Player" + (models.Player.VideoName.Length > 0? " - " + models.Player.VideoName : "");
 
         public Visibility PlaylistVisibility => models.Display.ShowPlaylist ? Visibility.Visible : Visibility.Collapsed;
 

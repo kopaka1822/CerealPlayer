@@ -23,10 +23,12 @@
             
             <Slider
                 Grid.Column="1"
-                Value="{Binding TimeProgress, FallbackValue=0, UpdateSourceTrigger=LostFocus}"
+                Value="{Binding TimeProgress, FallbackValue=0, Delay=200, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 Margin="{StaticResource RightBorder}"
                 Minimum="0"
-                Maximum="1"/>
+                Maximum="1"
+                SmallChange="0.001"
+                x:Name="Slider"/>
 
             <TextBlock
                 Grid.Column="2"

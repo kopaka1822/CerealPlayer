@@ -54,13 +54,33 @@ namespace CerealPlayer.ViewModels.Player
             timer.Tick += TimerOnTick;
             timer.Interval = TimeSpan.FromSeconds(0.5);
             timer.Start();
+
+            // dont update slider if user is holding slider..
+            var slider = models.App.Window.PlayerBar.Slider;
+
+            slider.PreviewMouseDown += SliderOnPreviewMouseDown;
+            slider.PreviewMouseUp += SliderOnPreviewMouseUp;
         }
+
+        private void SliderOnPreviewMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            sliderOccupied = false;
+        }
+
+        private void SliderOnPreviewMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            sliderOccupied = true;
+        }
+
+        // indicates if the user is changing the slider
+        private bool sliderOccupied = false;
 
         private void TimerOnTick(object sender, EventArgs eventArgs)
         {
             OnPropertyChanged(nameof(TimeElapsed));
             OnPropertyChanged(nameof(TimeRemaining));
-            OnPropertyChanged(nameof(TimeProgress));
+            if (!sliderOccupied)
+                OnPropertyChanged(nameof(TimeProgress));
         }
 
         private bool hasMedia => player.Source != null;
@@ -223,7 +243,13 @@ namespace CerealPlayer.ViewModels.Player
 
             activeVideo = video;
             player.Source = null;
-            if (activeVideo == null) return;
+            if (activeVideo == null)
+            {
+                models.Player.VideoName = "";
+                return;
+            }
+
+            models.Player.VideoName = video.Name;
 
             // subscribe to new event
             video.DownloadTask.PropertyChanged += DownloadTaskOnPropertyChanged;
