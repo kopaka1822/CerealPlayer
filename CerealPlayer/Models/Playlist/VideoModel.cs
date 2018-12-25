@@ -22,7 +22,7 @@ namespace CerealPlayer.Models.Playlist
             this.Name = hoster.GetEpisodeTitle(initialWebsite);
 
             // create download task
-            var task = new TaskModel(this);
+            var task = new DownloadTaskModel(this);
             task.SetNewSubTask(hoster.GetDownloadTask(task, initialWebsite));
             this.DownloadTask = task;
         }
@@ -36,6 +36,6 @@ namespace CerealPlayer.Models.Playlist
         public string FileLocation => parent.Directory + "/" + Name + Extension;
 
         [NotNull]
-        public TaskModel DownloadTask { get; }
+        public DownloadTaskModel DownloadTask { get; }
     }
 }

@@ -12,39 +12,17 @@ using CerealPlayer.Models.Web;
 
 namespace CerealPlayer.Models
 {
-    public class Models : INotifyPropertyChanged
+    public class Models
     {
         public AppModel App { get; }
         public WebModel Web { get; }
-
-        private PlaylistModel playlist = null;
-
-        /// <summary>
-        /// active playlist (may be null)
-        /// </summary>
-        public PlaylistModel Playlist
-        {
-            get => playlist;
-            set
-            {
-                if (ReferenceEquals(playlist, value)) return;
-                playlist = value;
-                OnPropertyChanged(nameof(Playlist));
-            }
-        }
+        public PlaylistsModel Playlists { get; }
 
         public Models(MainWindow window)
         {
             App = new AppModel(window);
             Web = new WebModel(this);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Playlists = new PlaylistsModel();
         }
     }
 }

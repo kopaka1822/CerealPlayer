@@ -10,11 +10,11 @@ namespace CerealPlayer.Models.Task
     public class DefaultVideoDownloader : ISubTask
     {
         private Models models;
-        private readonly TaskModel parent;
+        private readonly DownloadTaskModel parent;
         private readonly string link;
         private WebClient webClient = null;
 
-        public DefaultVideoDownloader(Models models, TaskModel parent, string link)
+        public DefaultVideoDownloader(Models models, DownloadTaskModel parent, string link)
         {
             this.models = models;
             this.parent = parent;

@@ -28,6 +28,11 @@ namespace CerealPlayer.Models.Playlist
             Videos.Add(new VideoModel(models, initialWebsite, this));
         }
 
+        public void AddNextEpisode(string website)
+        {
+            Videos.Add(new VideoModel(models, website, this));
+        }
+
         public string InitialWebsite { get; }
 
         public string Name { get; }
@@ -36,6 +41,6 @@ namespace CerealPlayer.Models.Playlist
 
         public ObservableCollection<VideoModel> Videos = new ObservableCollection<VideoModel>();
 
-        public TaskModel NextEpisodeTask { get; } = null;
+        public NextEpisodeTaskModel NextEpisodeTask { get; } = null;
     }
 }

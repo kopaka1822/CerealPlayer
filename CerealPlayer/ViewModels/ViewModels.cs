@@ -13,7 +13,7 @@ namespace CerealPlayer.ViewModels
     public class ViewModels
     {
         // view models
-        public PlaylistViewModel Playlist { get; }
+        public ActivePlaylistViewModel ActivePlaylist { get; }
 
         // commands
         public ICommand OpenPlaylistCommand { get; }
@@ -22,7 +22,7 @@ namespace CerealPlayer.ViewModels
         public ViewModels(Models.Models models)
         {
             // view models
-            Playlist = new PlaylistViewModel(models);
+            ActivePlaylist = new ActivePlaylistViewModel(models);
 
             // commands
             OpenPlaylistCommand = new OpenPlaylistCommand(models);

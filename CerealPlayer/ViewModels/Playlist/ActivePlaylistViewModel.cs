@@ -9,28 +9,30 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CerealPlayer.Annotations;
+using CerealPlayer.Models.Playlist;
 using CerealPlayer.Views;
 
 namespace CerealPlayer.ViewModels.Playlist
 {
-    public class PlaylistViewModel : INotifyPropertyChanged
+    public class ActivePlaylistViewModel : INotifyPropertyChanged
     {
         private readonly Models.Models models;
+        private PlaylistModel activePlaylist = null;
 
-        public PlaylistViewModel(Models.Models models)
+        public ActivePlaylistViewModel(Models.Models models)
         {
             this.models = models;
-            this.models.PropertyChanged += ModelsOnPropertyChanged;
-            if(models.Playlist != null)
+            this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
+            
+            if(models.Playlists.ActivePlaylist != null)
                 HandleNewPlaylist();
         }
 
-        private void ModelsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
             {
-                case nameof(Models.Models.Playlist):
-                    // new playlist was added!
+                case nameof(PlaylistsModel.ActivePlaylist):
                     HandleNewPlaylist();
                     break;
             }
@@ -39,17 +41,18 @@ namespace CerealPlayer.ViewModels.Playlist
         private void HandleNewPlaylist()
         {
             Reset();
-            if (models.Playlist == null) return;
+            if (models.Playlists.ActivePlaylist == null) return;
 
+            activePlaylist = models.Playlists.ActivePlaylist;
             // add existing videos
-            foreach (var playlistVideo in models.Playlist.Videos)
+            foreach (var playlistVideo in activePlaylist.Videos)
             {
                 var view = new PlaylistItemView {DataContext = new PlaylistItemViewModel(models, playlistVideo)};
                 Videos.Add(view);
             }
 
             // add future videos
-            models.Playlist.Videos.CollectionChanged += VideosOnCollectionChanged;
+            models.Playlists.ActivePlaylist.Videos.CollectionChanged += VideosOnCollectionChanged;
         }
 
         private void VideosOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
@@ -60,14 +63,20 @@ namespace CerealPlayer.ViewModels.Playlist
             // add to the end of the list
             Videos.Add(new PlaylistItemView
             {
-                DataContext = new PlaylistItemViewModel(models, models.Playlist.Videos.Last())
+                DataContext = new PlaylistItemViewModel(models, models.Playlists.ActivePlaylist.Videos.Last())
             });
         }
 
         private void Reset()
         {
+            // remove all event subscriptions
+            if (activePlaylist != null)
+            {
+                activePlaylist.Videos.CollectionChanged -= VideosOnCollectionChanged;
+            }
             Videos.Clear();
             SelectedVideo = null;
+            activePlaylist = null;
         }
 
         public ObservableCollection<PlaylistItemView> Videos { get; } = new ObservableCollection<PlaylistItemView>();

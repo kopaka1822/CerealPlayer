@@ -92,9 +92,12 @@
     <Compile Include="Models\Hoster\Mp4Upload.cs" />
     <Compile Include="Models\Hoster\VideoHosterModel.cs" />
     <Compile Include="Models\Playlist\PlaylistModel.cs" />
+    <Compile Include="Models\Playlist\PlaylistsModel.cs" />
     <Compile Include="Models\Playlist\VideoModel.cs" />
     <Compile Include="Models\Task\DefaultVideoDownloader.cs" />
+    <Compile Include="Models\Task\DownloadTaskModel.cs" />
     <Compile Include="Models\Task\ISubTask.cs" />
+    <Compile Include="Models\Task\NextEpisodeTaskModel.cs" />
     <Compile Include="Models\Web\Browser.cs" />
     <Compile Include="Models\Web\HtmlProvider.cs" />
     <Compile Include="Models\Web\WebModel.cs" />
@@ -103,7 +106,7 @@
     <Compile Include="ViewModels\Playlist\PlaylistCreationViewModel.cs" />
     <Compile Include="ViewModels\Playlist\PlaylistItemViewModel.cs" />
     <Compile Include="ViewModels\Playlist\PlaylistPreviewViewModel.cs" />
-    <Compile Include="ViewModels\Playlist\PlaylistViewModel.cs" />
+    <Compile Include="ViewModels\Playlist\ActivePlaylistViewModel.cs" />
     <Compile Include="ViewModels\ViewModels.cs" />
     <Compile Include="Views\PlaylistCreationView.xaml.cs">
       <DependentUpon>PlaylistCreationView.xaml</DependentUpon>

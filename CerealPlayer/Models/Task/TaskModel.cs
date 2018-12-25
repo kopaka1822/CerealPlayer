@@ -44,8 +44,6 @@ namespace CerealPlayer.Models.Task
             }
         }
 
-        public VideoModel Video { get; }
-
         private TaskStatus status = TaskStatus.NotStarted;
 
         public TaskStatus Status
@@ -60,11 +58,6 @@ namespace CerealPlayer.Models.Task
         }
 
         private ISubTask subTask;
-
-        public TaskModel(VideoModel parent)
-        {
-            this.Video = parent;
-        }
 
         public void SetNewSubTask(ISubTask newSubTask)
         {
@@ -86,7 +79,8 @@ namespace CerealPlayer.Models.Task
         {
             Debug.Assert(Status == TaskStatus.Running);
             subTask.Stop();
-            Status = TaskStatus.NotStarted;
+            Description = "stopped";
+            Status = TaskStatus.Failed;
         }
 
         public void Retry()

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CerealPlayer.Views"
         mc:Ignorable="d"
-        Title="Playlists"
+        Title="ActivePlaylists"
         Height="450"
         Width="400"
         WindowStyle="ToolWindow">
@@ -26,7 +26,7 @@
             Orientation="Horizontal" 
             HorizontalAlignment="Right">
             <Button 
-                Content="New Playlist"
+                Content="New ActivePlaylist"
                 Margin="{StaticResource RightBorder}"
                 Command="{Binding NewPlaylistCommand}"/>
             <Button 

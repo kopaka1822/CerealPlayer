@@ -13,10 +13,10 @@ namespace CerealPlayer.Models.Hoster
         class DownloadTask : ISubTask
         {
             private readonly Models models;
-            private readonly TaskModel parent;
+            private readonly DownloadTaskModel parent;
             private readonly string website;
 
-            public DownloadTask(Models models, TaskModel parent, string website)
+            public DownloadTask(Models models, DownloadTaskModel parent, string website)
             {
                 this.models = models;
                 this.parent = parent;
@@ -28,13 +28,13 @@ namespace CerealPlayer.Models.Hoster
                 try
                 {
                     parent.Description = "resolving " + website;
-                    var source = await models.Web.Html.GetAsynch(website);
+                    var source = await models.Web.Html.GetJsAsynch(website);
                     // search .mp4"
                     var subIndex = source.IndexOf(".mp4\"", StringComparison.Ordinal);
                     if (subIndex < 0)
                     {
                         // remove website from cache (did not load correctly)
-                        models.Web.Html.RemoveCached(website);
+                        models.Web.Html.RemoveCachedJs(website);
                         throw new Exception($"failed to locate \".mp4\"\" in {website}");
                     }
 
@@ -83,12 +83,12 @@ namespace CerealPlayer.Models.Hoster
             return GetSeriesTitle(website);
         }
 
-        public ISubTask GetDownloadTask(TaskModel parent, string website)
+        public ISubTask GetDownloadTask(DownloadTaskModel parent, string website)
         {
             return new DownloadTask(models, parent, website);
         }
 
-        public ISubTask GetNextEpisodeTask(TaskModel parent, string website)
+        public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
         {
             // does not support next episode
             return null;

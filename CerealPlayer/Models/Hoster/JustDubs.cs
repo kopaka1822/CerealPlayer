@@ -17,9 +17,9 @@ namespace CerealPlayer.Models.Hoster
         {
             private readonly Models models;
             private readonly string website;
-            private readonly TaskModel parent;
+            private readonly DownloadTaskModel parent;
 
-            public DownloadTask(Models models, TaskModel parent, string website)
+            public DownloadTask(Models models, DownloadTaskModel parent, string website)
             {
                 this.website = website;
                 this.parent = parent;
@@ -31,7 +31,7 @@ namespace CerealPlayer.Models.Hoster
                 try
                 {
                     parent.Description = "resolving " + website;
-                    var source = await models.Web.Html.GetAsynch(website);
+                    var source = await models.Web.Html.GetJsAsynch(website);
 
                     // search for iframe src="http://www.mp4upload.com
                     var subIndex = source.IndexOf("iframe src=\"http://www.mp4upload.com/embed-", StringComparison.Ordinal);
@@ -51,6 +51,51 @@ namespace CerealPlayer.Models.Hoster
                     // give work to video hoster
                     var newHoster = models.Web.VideoHoster.GetCompatibleHoster(address);
                     parent.SetNewSubTask(newHoster.GetDownloadTask(parent, address));
+                }
+                catch (Exception e)
+                {
+                    parent.SetError(e.Message);
+                }
+            }
+
+            public void Stop()
+            {
+                
+            }
+        }
+
+        class NextEpisodeTask : ISubTask
+        {
+            private readonly Models models;
+            private readonly NextEpisodeTaskModel parent;
+            private readonly IVideoHoster hoster;
+            private readonly string website;
+
+            public NextEpisodeTask(Models models, NextEpisodeTaskModel parent, string website, IVideoHoster hoster)
+            {
+                this.models = models;
+                this.parent = parent;
+                this.website = website;
+                this.hoster = hoster;
+            }
+
+            public async void Start()
+            {
+                try
+                {
+                    // test if the website exists
+                    parent.Description = "resolving " + website;
+                    var existing = await models.Web.Html.IsAvailable(website);
+                    if (existing)
+                    {
+                        // schedule next episode and start new task
+                        parent.SetNewSubTask(hoster.GetNextEpisodeTask(parent, website));
+                    }
+                    else
+                    {
+                        // no more episodes
+                        parent.Status = TaskModel.TaskStatus.Finished;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -112,12 +157,12 @@ namespace CerealPlayer.Models.Hoster
             return website.Substring(idx + 1).Replace('-', ' ');
         }
 
-        public ISubTask GetDownloadTask(TaskModel parent, string website)
+        public ISubTask GetDownloadTask(DownloadTaskModel parent, string website)
         {
             return new DownloadTask(models, parent, website);
         }
 
-        public ISubTask GetNextEpisodeTask(TaskModel parent, string website)
+        public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
         {
             var idx = website.LastIndexOf('/');
             if (idx < 0) throw new Exception(website + " does not contain a / to determine next episode title");
@@ -135,8 +180,7 @@ namespace CerealPlayer.Models.Hoster
                 nextWebsite += parts[i] + "-";
             nextWebsite += (currentNumber + 1);
 
-            // TODO embed next website in task
-            return null;
+            return new NextEpisodeTask(models, parent, nextWebsite, this);
         }
     }
 }

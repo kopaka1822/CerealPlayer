@@ -46,7 +46,8 @@ namespace CerealPlayer.Commands.Playlist
             try
             {
                 var playlist = new PlaylistModel(models, viewModel.Address);
-                models.Playlist = playlist;
+                models.Playlists.List.Add(playlist);
+                models.Playlists.ActivePlaylist = playlist;
                 view.DialogResult = true;
             }
             catch (Exception e)

@@ -12,7 +12,7 @@ namespace CerealPlayer.Models.Hoster
         bool Supports(string website);
         string GetSeriesTitle(string website);
         string GetEpisodeTitle(string website);
-        ISubTask GetDownloadTask(TaskModel parent, string website);
-        ISubTask GetNextEpisodeTask(TaskModel parent, string website);
+        ISubTask GetDownloadTask(DownloadTaskModel parent, string website);
+        ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website);
     }
 }

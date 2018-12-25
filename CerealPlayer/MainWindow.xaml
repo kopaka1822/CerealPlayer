@@ -8,21 +8,21 @@
         Title="Cereal Player" 
         Height="450" 
         Width="800"
-        Background="#eee">
+        Background="White">
     <DockPanel Background="Black">
-        <Grid DockPanel.Dock="Top">
+        <Grid DockPanel.Dock="Top" Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Menu Grid.Column="0">
+            <Menu Grid.Column="0" Background="White">
                 <MenuItem Header="File">
                     <MenuItem 
-                        Header="Open Playlist"
+                        Header="Open ActivePlaylist"
                         Command="{Binding OpenPlaylistCommand}"/>
                     <MenuItem
-                        Header="New Playlist"
+                        Header="New ActivePlaylist"
                         Command="{Binding NewPlaylistCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Settings">
@@ -37,13 +37,13 @@
                     Player
                 </Button>
                 <Button>
-                    Playlist
+                    ActivePlaylist
                 </Button>
             </StackPanel>
             
             <Border 
                 Grid.Column="2" 
-                Background="#eee"/>
+                Background="White"/>
         </Grid>
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
@@ -54,8 +54,8 @@
 
             <ListBox
                 Grid.Column="0"
-                ItemsSource="{Binding Playlist.Videos}"
-                SelectedItem="{Binding Playlist.SelectedVideo}"/>
+                ItemsSource="{Binding ActivePlaylist.Videos}"
+                SelectedItem="{Binding ActivePlaylist.SelectedVideo}"/>
 
             <GridSplitter 
                 Grid.Column="1"
