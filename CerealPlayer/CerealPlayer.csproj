@@ -110,6 +110,7 @@
     <Compile Include="Models\Web\WebModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Utility\StringUtil.cs" />
+    <Compile Include="ViewModels\Player\PlayerViewModel.cs" />
     <Compile Include="ViewModels\Playlist\PlaylistCreationViewModel.cs" />
     <Compile Include="ViewModels\Playlist\PlaylistItemViewModel.cs" />
     <Compile Include="ViewModels\Playlist\PlaylistPreviewViewModel.cs" />

@@ -24,6 +24,7 @@ namespace CerealPlayer.Models.Playlist
             public VideoModel.SaveData[] Videos { get; set; }
             public string LastWebsite { get; set; }
             public string Name { get; set; }
+            public int PlayingVideo { get; set; }
         }
 
         public PlaylistModel(Models models, string initialWebsite)
@@ -63,6 +64,8 @@ namespace CerealPlayer.Models.Playlist
                 Videos.Add(new VideoModel(models, this, hoster, video));
             }
 
+            playingVideoIndex = data.PlayingVideo;
+
             // restore next episode task
             var task = new NextEpisodeTaskModel(this);
             var subTask = hoster.GetNextEpisodeTask(task, data.LastWebsite);
@@ -95,6 +98,22 @@ namespace CerealPlayer.Models.Playlist
                 if (downloadStatus == value) return;
                 downloadStatus = value;
                 OnPropertyChanged(nameof(DownloadStatus));
+            }
+        }
+
+        private int playingVideoIndex = 0;
+
+        public int PlayingVideoIndex
+        {
+            get => playingVideoIndex;
+            set
+            {
+                if (value >= Videos.Count) return;
+                if(value < 0) return;
+                
+                if (playingVideoIndex == value) return;
+                playingVideoIndex = value;
+                OnPropertyChanged(nameof(PlayingVideoIndex));
             }
         }
 
@@ -154,7 +173,8 @@ namespace CerealPlayer.Models.Playlist
             {
                 Videos = vs.ToArray(),
                 LastWebsite = LastWebsite,
-                Name = Name
+                Name = Name,
+                PlayingVideo = PlayingVideoIndex
             };
         }
 

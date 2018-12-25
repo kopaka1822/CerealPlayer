@@ -7,6 +7,7 @@ using System.Windows.Input;
 using CerealPlayer.Commands;
 using CerealPlayer.Commands.Playlist;
 using CerealPlayer.Controllers;
+using CerealPlayer.ViewModels.Player;
 using CerealPlayer.ViewModels.Playlist;
 
 namespace CerealPlayer.ViewModels
@@ -15,6 +16,7 @@ namespace CerealPlayer.ViewModels
     {
         // view models
         public ActivePlaylistViewModel ActivePlaylist { get; }
+        public PlayerViewModel Player { get; }
 
         // controllers
         public TaskController TaskCtrl { get; }
@@ -32,6 +34,7 @@ namespace CerealPlayer.ViewModels
 
             // view models
             ActivePlaylist = new ActivePlaylistViewModel(models, TaskCtrl);
+            Player = new PlayerViewModel(models);
 
             // commands
             OpenPlaylistCommand = new OpenPlaylistCommand(models);
