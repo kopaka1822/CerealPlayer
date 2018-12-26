@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -60,6 +61,35 @@ namespace CerealPlayer.ViewModels.Player
 
             slider.PreviewMouseDown += SliderOnPreviewMouseDown;
             slider.PreviewMouseUp += SliderOnPreviewMouseUp;
+
+            // hide mouse events
+            models.App.Window.MouseMove += WindowOnMouseMove;
+            mouseMoveStopwatch.Start();
+        }
+
+        // indicates when the last mouse movement happened
+        private readonly Stopwatch mouseMoveStopwatch = new Stopwatch();
+        private Point lastMousePosition = new Point(0, 0);
+
+        private void WindowOnMouseMove(object sender, MouseEventArgs mouseEventArgs)
+        {
+            var newPoint = mouseEventArgs.GetPosition(models.App.Window);
+            if(newPoint != lastMousePosition)
+                mouseMoveStopwatch.Restart();
+            lastMousePosition = newPoint;
+        }
+
+        private Visibility barVisibility = Visibility.Visible;
+
+        public Visibility BarVisibility
+        {
+            get => barVisibility;
+            set
+            {
+                if (value == barVisibility) return;
+                barVisibility = value;
+                OnPropertyChanged(nameof(BarVisibility));
+            }
         }
 
         private void SliderOnPreviewMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
@@ -81,6 +111,21 @@ namespace CerealPlayer.ViewModels.Player
             OnPropertyChanged(nameof(TimeRemaining));
             if (!sliderOccupied)
                 OnPropertyChanged(nameof(TimeProgress));
+
+            // hide play bar?
+            if(models.App.Window.PlayerBar.IsMouseOver) mouseMoveStopwatch.Restart();
+
+            if (hasMedia && !isPausing && mouseMoveStopwatch.Elapsed > TimeSpan.FromSeconds(5))
+            {
+                BarVisibility = Visibility.Collapsed;
+            }
+            else
+            {
+                if (BarVisibility == Visibility.Collapsed)
+                    while (false) { }
+
+                BarVisibility = Visibility.Visible;
+            }
         }
 
         private bool hasMedia => player.Source != null;
@@ -185,8 +230,6 @@ namespace CerealPlayer.ViewModels.Player
         public ICommand TogglePlaylistCommand { get; }
 
         public ICommand ToggleFullscreenCommand { get; }
-
-        public Visibility BarVisibility { get; } = Visibility.Visible;
 
         private void PlayerOnBufferingStarted(object sender, RoutedEventArgs routedEventArgs)
         {
