@@ -11,5 +11,10 @@ namespace CerealPlayer.Models.Web
 
         public HtmlProvider Html { get; } = new HtmlProvider();
         public VideoHosterModel VideoHoster { get; }
+
+        public void Dispose()
+        {
+            Html.Dispose();
+        }
     }
 }

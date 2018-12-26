@@ -39,7 +39,7 @@
         <system:Double x:Key="BigBorder">5</system:Double>
         <system:Double x:Key="SmallBorder">3</system:Double>
 
-        <system:Double x:Key="PlaylistBarWidth">300</system:Double>
+        <system:Double x:Key="PlaylistBarWidth">302</system:Double>
         <system:Double x:Key="PlaylistDialogWidth">330</system:Double>
         <system:Double x:Key="PlaylistItemWidth">270</system:Double>
         

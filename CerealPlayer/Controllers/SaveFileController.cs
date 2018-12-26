@@ -40,7 +40,7 @@ namespace CerealPlayer.Controllers
         /// <summary>
         /// saves all playlist files
         /// </summary>
-        public void Close()
+        public void Dispose()
         {
             foreach (var playlistModel in models.Playlists.List)
             {

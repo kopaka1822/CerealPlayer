@@ -43,9 +43,9 @@ namespace CerealPlayer.ViewModels
             NewPlaylistCommand = new NewPlaylistCommand(models);
         }
 
-        public void Close()
+        public void Dispose()
         {
-            SaveCtrl.Close();
+            SaveCtrl.Dispose();
         }
     }
 }

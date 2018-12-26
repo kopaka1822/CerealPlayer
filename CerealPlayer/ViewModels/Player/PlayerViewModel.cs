@@ -143,9 +143,9 @@ namespace CerealPlayer.ViewModels.Player
             }
         }
 
-        public Visibility PlayVisibility => isPausing ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility PauseVisibility => isPausing ? Visibility.Collapsed : Visibility.Visible;
 
-        public Visibility PauseVisibility => isPausing ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility PlayVisibility => isPausing ? Visibility.Visible : Visibility.Collapsed;
 
         // public properties
         public double Volume

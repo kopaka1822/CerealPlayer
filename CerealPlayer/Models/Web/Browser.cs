@@ -19,6 +19,7 @@ namespace CerealPlayer.Models.Web
 
         // chromium does not manage timeouts, so we'll implement one
         private readonly ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+        private readonly RequestContext context;
 
         public Browser()
         {
@@ -34,10 +35,16 @@ namespace CerealPlayer.Models.Web
             //Perform dependency check to make sure all relevant resources are in our     output directory.
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
 
-            var requestContext = new RequestContext();
-            Page = new ChromiumWebBrowser("", null, requestContext);
+            context = new RequestContext();
+            Page = new ChromiumWebBrowser("", null, context);
 
             SpinWait.SpinUntil(() => Page.IsBrowserInitialized);
+        }
+
+        public void Dispose()
+        {
+            Page.Dispose();
+            context.Dispose();
         }
 
         public async Task<string> GetSourceAsynch(string url)
@@ -59,7 +66,7 @@ namespace CerealPlayer.Models.Web
                 Page.LoadingStateChanged += PageLoadingStateChanged;
                 if (!Page.IsBrowserInitialized)
                     throw new Exception("OpenUrl - browser not initialized!");
-
+                
                 Page.Load(url);
 
                 //create a 60 sec timeout 

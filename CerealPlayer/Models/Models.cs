@@ -29,5 +29,10 @@ namespace CerealPlayer.Models
             Display = new DisplayModel();
             Player = new PlayerModel();
         }
+
+        public void Dispose()
+        {
+            Web.Dispose();
+        }
     }
 }

@@ -31,6 +31,11 @@ namespace CerealPlayer.Models.Web
             return await newTask;
         }
 
+        public void Dispose()
+        {
+            browser.Dispose();
+        }
+
         public async Task<string> GetAsynch(string website)
         {
             if (cachedWebsites.TryGetValue(website, out var existingTask))

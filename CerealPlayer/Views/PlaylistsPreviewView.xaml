@@ -20,7 +20,9 @@
             Grid.Row="0"
             ItemsSource="{Binding PlaylistItems}"
             SelectedItem="{Binding SelectedPlaylist}"
-            Margin="{StaticResource BottomBorder}"/>
+            Margin="{StaticResource BottomBorder}"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
 
         <StackPanel 
             Grid.Row="1"

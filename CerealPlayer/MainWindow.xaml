@@ -45,7 +45,9 @@
                 Width="{StaticResource PlaylistBarWidth}"
                 Visibility="{Binding Display.PlaylistVisibility}"
                 ItemsSource="{Binding ActivePlaylist.Videos}"
-                SelectedItem="{Binding ActivePlaylist.SelectedVideo}"/>
+                SelectedItem="{Binding ActivePlaylist.SelectedVideo}"
+                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
 
             <GridSplitter 
                 Visibility="{Binding Display.PlaylistVisibility}"
