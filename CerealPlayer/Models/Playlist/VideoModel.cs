@@ -18,6 +18,7 @@ namespace CerealPlayer.Models.Playlist
         {
             public string Website { get; set; }
             public string Name { get; set; }
+            public int Number { get; set; }
             public string Extension { get; set; }
             public bool IsDownloaded { get; set; }
         }
@@ -30,10 +31,12 @@ namespace CerealPlayer.Models.Playlist
             this.parent = parent;
 
             // try to find an appropriate downloader
-            this.Name = hoster.GetEpisodeTitle(initialWebsite);
+            var info = hoster.GetInfo(initialWebsite);
+            this.Name = info.EpisodeTitle;
+            this.Number = info.EpisodeNumber;
 
             // create download task
-            var task = new DownloadTaskModel(this);
+            var task = new VideoTaskModel(this);
             task.SetNewSubTask(hoster.GetDownloadTask(task, initialWebsite));
             task.PropertyChanged += TaskOnPropertyChanged;
             this.DownloadTask = task;
@@ -62,13 +65,13 @@ namespace CerealPlayer.Models.Playlist
             InitialWebsite = data.Website;
             this.parent = parent;
             Name = data.Name;
+            Number = data.Number;
             Extension = data.Extension;
 
             // create download task
-            var task = new DownloadTaskModel(this);
+            var task = new VideoTaskModel(this);
             if (data.IsDownloaded && File.Exists(FileLocation))
             {
-                task.Status = TaskModel.TaskStatus.Finished;
                 task.Description = "";
             }
             else
@@ -84,12 +87,14 @@ namespace CerealPlayer.Models.Playlist
 
         public string Name { get; }
 
+        public int Number { get; }
+
         public string Extension { get; set; } = ".mp4";
 
         public string FileLocation => parent.Directory + "/" + Name + Extension;
 
         [NotNull]
-        public DownloadTaskModel DownloadTask { get; }
+        public VideoTaskModel DownloadTask { get; }
 
         public SaveData GetSaveData()
         {
@@ -97,6 +102,7 @@ namespace CerealPlayer.Models.Playlist
             {
                 Website = InitialWebsite,
                 Name = Name,
+                Number = Number,
                 Extension = Extension,
                 IsDownloaded = DownloadTask.Status == TaskModel.TaskStatus.Finished
             };

@@ -245,7 +245,7 @@ namespace CerealPlayer.ViewModels.Player
 
         private void PlayerOnBufferingStarted(object sender, RoutedEventArgs routedEventArgs)
         {
-            int a = 3;
+            //int a = 3;
         }
 
         private void PlayerOnMediaOpened(object sender, RoutedEventArgs routedEventArgs)
@@ -257,7 +257,8 @@ namespace CerealPlayer.ViewModels.Player
         private void PlayerOnMediaFailed(object sender, ExceptionRoutedEventArgs exceptionRoutedEventArgs)
         {
             // cannot find file?
-            int a = 3;
+            MessageBox.Show(exceptionRoutedEventArgs.ErrorException.Message, "Playback Error", MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
 
         private void PlayerOnMediaEnded(object sender, RoutedEventArgs routedEventArgs)
@@ -329,7 +330,7 @@ namespace CerealPlayer.ViewModels.Player
             switch (video.DownloadTask.Status)
             {
                 case TaskModel.TaskStatus.Failed:
-                case TaskModel.TaskStatus.NotStarted:
+                case TaskModel.TaskStatus.ReadyToStart:
                     // wait for start
                     break;
                 case TaskModel.TaskStatus.Running:

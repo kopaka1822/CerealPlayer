@@ -13,10 +13,10 @@ namespace CerealPlayer.Models.Hoster
         class DownloadTask : ISubTask
         {
             private readonly Models models;
-            private readonly DownloadTaskModel parent;
+            private readonly VideoTaskModel parent;
             private readonly string website;
 
-            public DownloadTask(Models models, DownloadTaskModel parent, string website)
+            public DownloadTask(Models models, VideoTaskModel parent, string website)
             {
                 this.models = models;
                 this.parent = parent;
@@ -69,21 +69,23 @@ namespace CerealPlayer.Models.Hoster
             return website.Contains("www.mp4upload.com");
         }
 
-        public string GetSeriesTitle(string website)
+        public EpisodeInfo GetInfo(string website)
         {
             // the random string after the website title
             // TODO determine correct title
             var idx = website.LastIndexOf('/');
             if (idx < 0) throw new Exception(website + " does not contain a / to determine series title");
-            return website.Substring(idx + 1);
+            var res = website.Substring(idx + 1);
+
+            return new EpisodeInfo
+            {
+                SeriesTitle = res,
+                EpisodeTitle = res,
+                EpisodeNumber = 0
+            };
         }
 
-        public string GetEpisodeTitle(string website)
-        {
-            return GetSeriesTitle(website);
-        }
-
-        public ISubTask GetDownloadTask(DownloadTaskModel parent, string website)
+        public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
         {
             return new DownloadTask(models, parent, website);
         }

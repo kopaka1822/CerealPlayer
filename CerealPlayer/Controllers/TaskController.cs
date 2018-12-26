@@ -66,7 +66,7 @@ namespace CerealPlayer.Controllers
             }
 
             // restart next episode task if it failed
-            if (task.NextEpisodeTask?.Status == TaskModel.TaskStatus.NotStarted)
+            if (task.NextEpisodeTask?.Status == TaskModel.TaskStatus.ReadyToStart)
                 task.NextEpisodeTask.Start();
 
             if (inActive)
@@ -140,7 +140,7 @@ namespace CerealPlayer.Controllers
             {
                 switch (video.DownloadTask.Status)
                 {
-                    case TaskModel.TaskStatus.NotStarted:
+                    case TaskModel.TaskStatus.ReadyToStart:
                     {
                         var v = video;
                         PropertyChangedEventHandler statusHandler = null;
@@ -186,7 +186,7 @@ namespace CerealPlayer.Controllers
                 return;
             }
 
-            Debug.Assert(task.NextEpisodeTask.Status != TaskModel.TaskStatus.NotStarted);
+            Debug.Assert(task.NextEpisodeTask.Status != TaskModel.TaskStatus.ReadyToStart);
             if (task.NextEpisodeTask.Status == TaskModel.TaskStatus.Running)
                 return; // this task is still running. don't delete yet
 

@@ -43,5 +43,35 @@ namespace CerealPlayer.Utility
 
             return res;
         }
+
+        /// <summary>
+        /// combines all strings into on string using the seperator in between elements
+        /// </summary>
+        /// <param name="parts"></param>
+        /// <param name="seperator"></param>
+        /// <returns></returns>
+        public static string Reduce(string[] parts, string seperator)
+        {
+            return Reduce(parts, seperator, parts.Length);
+        }
+
+        /// <summary>
+        /// combines all strings into on string using the seperator in between elements
+        /// </summary>
+        /// <param name="parts"></param>
+        /// <param name="seperator"></param>
+        /// <param name="last">index of the last part (not included in the reduce)</param>
+        /// <returns></returns>
+        public static string Reduce(string[] parts, string seperator, int last)
+        {
+            last = Math.Min(parts.Length, last);
+            if (last == 0) return "";
+
+            var res = "";
+            for (int i = 0; i < last - 1; ++i)
+                res += parts[i] + seperator;
+
+            return res + parts[last - 1];
+        }
     }
 }

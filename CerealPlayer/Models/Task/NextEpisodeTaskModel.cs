@@ -9,8 +9,8 @@ namespace CerealPlayer.Models.Task
 {
     public class NextEpisodeTaskModel : TaskModel
     {
-        public NextEpisodeTaskModel(PlaylistModel playlist)
-        {
+        public NextEpisodeTaskModel(PlaylistModel playlist) : base(5, TimeSpan.FromSeconds(2))
+        {           
             Playlist = playlist;
         }
 

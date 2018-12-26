@@ -17,9 +17,9 @@ namespace CerealPlayer.Models.Hoster
         {
             private readonly Models models;
             private readonly string website;
-            private readonly DownloadTaskModel parent;
+            private readonly VideoTaskModel parent;
 
-            public DownloadTask(Models models, DownloadTaskModel parent, string website)
+            public DownloadTask(Models models, VideoTaskModel parent, string website)
             {
                 this.website = website;
                 this.parent = parent;
@@ -95,8 +95,8 @@ namespace CerealPlayer.Models.Hoster
                     }
                     else
                     {
-                        // no more episodes
-                        parent.Status = TaskModel.TaskStatus.Finished;
+                        // no more episodes (for now)
+                        parent.SetReadyToStart();
                     }
                 }
                 catch (Exception e)
@@ -124,18 +124,28 @@ namespace CerealPlayer.Models.Hoster
             return website.Contains("http://justdubsanime.net");
         }
 
-        public string GetSeriesTitle(string website)
+        public EpisodeInfo GetInfo(string website)
         {
             var idx = website.LastIndexOf('/');
             if (idx < 0) throw new Exception(website + " does not contain a / to determine series title");
             var episode = website.Substring(idx + 1);
-            
+
             // cut out the number part (everything is connected by "-")
             var parts = episode.Split('-');
-            if(parts.Length == 0) throw new Exception(website + " has an empty series title");
+            if (parts.Length == 0) throw new Exception(website + " has an empty series title");
 
-            if (!Int32.TryParse(parts.Last(), NumberStyles.Integer, culture, out var tmpNum))
-                return GetEpisodeTitle(website); // has only one episode
+            var episodeTitle = StringUtil.Reduce(parts, " ");
+
+            if (!Int32.TryParse(parts.Last(), NumberStyles.Integer, culture, out var episodeNum))
+            {
+                // has only one episode
+                return new EpisodeInfo
+                {
+                    SeriesTitle = episodeTitle,
+                    EpisodeTitle = episodeTitle,
+                    EpisodeNumber = 0
+                };
+            }
 
             var lastPartIndex = parts.Length - 1;
             if (lastPartIndex > 2)
@@ -145,21 +155,17 @@ namespace CerealPlayer.Models.Hoster
                     lastPartIndex--;
             }
 
-            var res = "";
-            for (var i = 0; i < lastPartIndex; ++i)
-                res += parts[i] + " ";
+            var seriesTitle = StringUtil.Reduce(parts, " ", lastPartIndex);
 
-            return res.TrimEnd(' ');
+            return new EpisodeInfo
+            {
+                SeriesTitle = seriesTitle,
+                EpisodeTitle = episodeTitle,
+                EpisodeNumber = episodeNum
+            };
         }
 
-        public string GetEpisodeTitle(string website)
-        {
-            var idx = website.LastIndexOf('/');
-            if (idx < 0) throw new Exception(website + " does not contain a / to determine episode title");
-            return website.Substring(idx + 1).Replace('-', ' ');
-        }
-
-        public ISubTask GetDownloadTask(DownloadTaskModel parent, string website)
+        public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
         {
             return new DownloadTask(models, parent, website);
         }

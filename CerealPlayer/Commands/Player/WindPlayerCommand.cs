@@ -29,6 +29,10 @@ namespace CerealPlayer.Commands.Player
             viewModel.Wind(time);
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
     }
 }

@@ -10,11 +10,11 @@ namespace CerealPlayer.Models.Task
     public class DefaultVideoDownloader : ISubTask
     {
         private Models models;
-        private readonly DownloadTaskModel parent;
+        private readonly VideoTaskModel parent;
         private readonly string link;
         private WebClient webClient = null;
 
-        public DefaultVideoDownloader(Models models, DownloadTaskModel parent, string link)
+        public DefaultVideoDownloader(Models models, VideoTaskModel parent, string link)
         {
             this.models = models;
             this.parent = parent;
@@ -34,7 +34,7 @@ namespace CerealPlayer.Models.Task
                 }
 
                 parent.Description = "finished download";
-                parent.Status = TaskModel.TaskStatus.Finished;
+                parent.SetFinished();
             }
             catch (Exception e)
             {

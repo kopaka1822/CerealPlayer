@@ -127,7 +127,8 @@
     <Compile Include="Models\Playlist\PlaylistsModel.cs" />
     <Compile Include="Models\Playlist\VideoModel.cs" />
     <Compile Include="Models\Task\DefaultVideoDownloader.cs" />
-    <Compile Include="Models\Task\DownloadTaskModel.cs" />
+    <Compile Include="Models\Task\DownloadPlaylistTask.cs" />
+    <Compile Include="Models\Task\VideoTaskModel.cs" />
     <Compile Include="Models\Task\ISubTask.cs" />
     <Compile Include="Models\Task\NextEpisodeTaskModel.cs" />
     <Compile Include="Models\Web\Browser.cs" />

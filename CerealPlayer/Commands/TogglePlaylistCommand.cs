@@ -26,6 +26,10 @@ namespace CerealPlayer.Commands
             models.Display.ShowPlaylist = !models.Display.ShowPlaylist;
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
     }
 }

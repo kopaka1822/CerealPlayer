@@ -7,9 +7,9 @@ using CerealPlayer.Models.Playlist;
 
 namespace CerealPlayer.Models.Task
 {
-    public class DownloadTaskModel : TaskModel
+    public class VideoTaskModel : TaskModel
     {
-        public DownloadTaskModel(VideoModel parent)
+        public VideoTaskModel(VideoModel parent) : base(5, TimeSpan.Zero)
         {
             Video = parent;
         }
