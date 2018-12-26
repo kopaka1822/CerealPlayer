@@ -147,6 +147,18 @@ namespace CerealPlayer.ViewModels.Player
 
         public Visibility PlayVisibility => isPausing ? Visibility.Visible : Visibility.Collapsed;
 
+        private string episodeTitle = "";
+        public string EpisodeTitle
+        {
+            get => episodeTitle;
+            set
+            {
+                if (episodeTitle == value) return;
+                episodeTitle = value;
+                OnPropertyChanged(nameof(EpisodeTitle));
+            }
+        }
+
         // public properties
         public double Volume
         {
@@ -305,10 +317,12 @@ namespace CerealPlayer.ViewModels.Player
             if (activeVideo == null)
             {
                 models.Player.VideoName = "";
+                EpisodeTitle = "";
                 return;
             }
 
             models.Player.VideoName = video.Name;
+            EpisodeTitle = video.Name;
 
             // subscribe to new event
             video.DownloadTask.PropertyChanged += DownloadTaskOnPropertyChanged;

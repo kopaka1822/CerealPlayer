@@ -51,6 +51,7 @@
         <Thickness x:Key="LeftBorder" Left="{StaticResource SmallBorder}"/>
         <Thickness x:Key="TopBorder" Top="{StaticResource SmallBorder}"/>
         <Thickness x:Key="BottomBorder" Bottom="{StaticResource SmallBorder}"/>
+        <Thickness x:Key="LeftRightBorder" Left="{StaticResource SmallBorder}" Right="{StaticResource SmallBorder}"/>
     </Application.Resources>
 </Application>
 
