@@ -28,7 +28,7 @@
                 Margin="{StaticResource RightBorder}"
                 Minimum="0"
                 Maximum="1"
-                SmallChange="0.001"
+                IsMoveToPointEnabled="True"
                 x:Name="Slider"/>
 
             <TextBlock
@@ -102,6 +102,7 @@
                     Width="100"
                     Minimum="0"
                     Maximum="1"
+                    IsMoveToPointEnabled="True"
                     Margin="{StaticResource RightBorder}"
                     VerticalAlignment="Center"/>
                 
