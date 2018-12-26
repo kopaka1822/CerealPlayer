@@ -41,6 +41,7 @@ namespace CerealPlayer.ViewModels
 
         public WindowStyle WindowStyle => models.Display.Fullscreen ? WindowStyle.None : WindowStyle.SingleBorderWindow;
 
+        private WindowState windowStateBeforeFullscreen = WindowState.Normal;
         private WindowState windowState = WindowState.Normal;
         public WindowState WindowState
         {
@@ -50,12 +51,6 @@ namespace CerealPlayer.ViewModels
                 if (value == windowState) return;
                 windowState = value;
                 OnPropertyChanged(nameof(WindowState));
-
-                if (windowState == WindowState.Normal && models.Display.Fullscreen)
-                {
-                    // someone tried to exit fullscreen
-                    models.Display.Fullscreen = false;
-                }
             }
         }
 
@@ -66,7 +61,21 @@ namespace CerealPlayer.ViewModels
                 case nameof(DisplayModel.Fullscreen):
                     OnPropertyChanged(nameof(FullscreenVisibility));
                     OnPropertyChanged(nameof(WindowStyle));
-                    WindowState = models.Display.Fullscreen ? WindowState.Maximized : WindowState.Normal;
+                    if (models.Display.Fullscreen)
+                    {
+                        windowStateBeforeFullscreen = WindowState;
+                        if (WindowState == WindowState.Maximized)
+                        {
+                            // if window state was already maximized we have to switch to another state first..
+                            WindowState = WindowState.Minimized;
+                        }
+
+                        WindowState = WindowState.Maximized;
+                    }
+                    else
+                    {
+                        WindowState = windowStateBeforeFullscreen;
+                    }
                     break;
                 case nameof(DisplayModel.ShowPlaylist):
                     OnPropertyChanged(nameof(PlaylistVisibility));
