@@ -38,6 +38,7 @@ namespace CerealPlayer.Commands.Player
                     if (prevPlaylist != null)
                     {
                         prevPlaylist.Videos.CollectionChanged -= VideosOnCollectionChanged;
+                        prevPlaylist.PropertyChanged -= PlaylistOnPropertyChanged;
                     }
 
                     prevPlaylist = models.Playlists.ActivePlaylist;
@@ -45,7 +46,18 @@ namespace CerealPlayer.Commands.Player
                     if (prevPlaylist != null)
                     {
                         prevPlaylist.Videos.CollectionChanged += VideosOnCollectionChanged;
+                        prevPlaylist.PropertyChanged += PlaylistOnPropertyChanged;
                     }
+                    break;
+            }
+        }
+
+        private void PlaylistOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(PlaylistModel.PlayingVideoIndex):
+                    OnCanExecuteChanged();
                     break;
             }
         }
