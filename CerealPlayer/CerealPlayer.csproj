@@ -210,7 +210,37 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Icons\app.ico" />
+    <Resource Include="Icons\backward.ico" />
+    <Resource Include="Icons\forward.ico" />
+    <Resource Include="Icons\pause.ico" />
+    <Resource Include="Icons\play.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\arrow_right.png" />
+    <Resource Include="Icons\backward.png" />
+    <Resource Include="Icons\cancel.png" />
+    <Resource Include="Icons\copy.png" />
+    <Resource Include="Icons\delete.png" />
+    <Resource Include="Icons\edit.png" />
+    <Resource Include="Icons\forward.png" />
+    <Resource Include="Icons\list.png" />
+    <Resource Include="Icons\mute.png" />
+    <Resource Include="Icons\next.png" />
+    <Resource Include="Icons\pause.png" />
+    <Resource Include="Icons\play.png" />
+    <Resource Include="Icons\plus.png" />
+    <Resource Include="Icons\previous.png" />
+    <Resource Include="Icons\repeat.png" />
+    <Resource Include="Icons\resize.png" />
+    <Resource Include="Icons\resume.png" />
+    <Resource Include="Icons\retry.png" />
+    <Resource Include="Icons\settings.png" />
+    <Resource Include="Icons\shuffle.png" />
+    <Resource Include="Icons\sound.png" />
+    <Resource Include="Icons\stop.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -84,7 +84,23 @@ namespace CerealPlayer.ViewModels.Player
         }
 
         private bool hasMedia => player.Source != null;
-        private bool isPausing = false;
+
+        private bool _isPausing = false;
+        private bool isPausing
+        {
+            get => _isPausing;
+            set
+            {
+                if (value == _isPausing) return;
+                _isPausing = value;
+                OnPropertyChanged(nameof(PlayVisibility));
+                OnPropertyChanged(nameof(PauseVisibility));
+            }
+        }
+
+        public Visibility PlayVisibility => isPausing ? Visibility.Collapsed : Visibility.Visible;
+
+        public Visibility PauseVisibility => isPausing ? Visibility.Visible : Visibility.Collapsed;
 
         // public properties
         public double Volume

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CerealPlayer.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="70" 
+             d:DesignHeight="75" 
              d:DesignWidth="600"
              Background="White"
              Visibility="{Binding BarVisibility, FallbackValue=Visible}">
@@ -19,7 +19,8 @@
             
             <TextBlock
                 Grid.Column="0"
-                Text="{Binding TimeElapsed, FallbackValue=00:00:50}"/>
+                Text="{Binding TimeElapsed, FallbackValue=00:00:50}"
+                Margin="{StaticResource RightBorder}"/>
             
             <Slider
                 Grid.Column="1"
@@ -47,7 +48,16 @@
             <Button 
                 Grid.Column="0"
                 Command="{Binding PlayCommand}">
-                Play
+                <StackPanel>
+                    <Image 
+                        Source="../Icons/play.png" 
+                        Height="{StaticResource IconHeight}"
+                        Visibility="{Binding PlayVisibility, FallbackValue=Visible}"/>
+                    <Image 
+                        Source="../Icons/pause.png" 
+                        Height="{StaticResource IconHeight}"
+                        Visibility="{Binding PauseVisibility, FallbackValue=Collapsed}"/>
+                </StackPanel>
             </Button>
             
             <StackPanel
@@ -56,22 +66,30 @@
                 <Button 
                     Margin="{StaticResource RightBorder}"
                     Command="{Binding PreviousEpisodeCommand}">
-                    &lt;&lt;
+                    <Image 
+                        Source="../Icons/previous.png"
+                        Height="{StaticResource IconHeight}"/>
                 </Button>
                 <Button
                     Margin="{StaticResource RightBorder}"
                     Command="{Binding WindBackCommand}">
-                    &lt;
+                    <Image 
+                        Source="../Icons/backward.png"
+                        Height="{StaticResource IconHeight}"/>
                 </Button>
                 <Button
                     Margin="{StaticResource RightBorder}"
                     Command="{Binding WindForwardCommand}">
-                    &gt;
+                    <Image 
+                        Source="../Icons/forward.png"
+                        Height="{StaticResource IconHeight}"/>
                 </Button>
                 <Button
                     Margin="{StaticResource RightBorder}"
                     Command="{Binding NextEpisodeCommand}">
-                    &gt;&gt;
+                    <Image 
+                        Source="../Icons/next.png"
+                        Height="{StaticResource IconHeight}"/>
                 </Button>
             </StackPanel>
             
@@ -84,17 +102,24 @@
                     Width="100"
                     Minimum="0"
                     Maximum="1"
-                    Margin="{StaticResource RightBorder}"/>
+                    Margin="{StaticResource RightBorder}"
+                    VerticalAlignment="Center"/>
                 
                 <Button
                     Margin="{StaticResource RightBorder}"
-                    Command="{Binding TogglePlaylistCommand}">
-                    list
+                    Command="{Binding TogglePlaylistCommand}"
+                    ToolTip="Playlist">
+                    <Image 
+                        Source="../Icons/list.png"
+                        Height="{StaticResource IconHeight}"/>
                 </Button>
 
                 <Button
-                    Command="{Binding ToggleFullscreenCommand}">
-                    full
+                    Command="{Binding ToggleFullscreenCommand}"
+                    ToolTip="Toggle Fullscreen">
+                    <Image 
+                        Source="../Icons/resize.png"
+                        Height="{StaticResource IconHeight}"/>
                 </Button>
             </StackPanel>
         </Grid>

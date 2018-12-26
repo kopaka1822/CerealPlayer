@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:CerealPlayer.Views"
              mc:Ignorable="d" 
              d:DesignHeight="70"
-             Width="{StaticResource PlaylistItemWidth}">
+             Width="{StaticResource PlaylistItemWidth}"
+             Background="White">
     <StackPanel>
         <Grid Margin="{StaticResource BottomBorder}">
             <Grid.ColumnDefinitions>
@@ -22,13 +23,17 @@
                 Grid.Column="1"
                 Command="{Binding RetryCommand}"
                 Visibility="{Binding RetryVisibility}">
-                Retry
+                <Image 
+                    Source="../Icons/retry.png"
+                    Height="{StaticResource SmallIconHeight}"/>
             </Button>
             <Button
                 Grid.Column="2"
                 Command="{Binding StopCommand}"
                 Visibility="{Binding StopVisibility}">
-                Stop
+                <Image 
+                    Source="../Icons/stop.png"
+                    Height="{StaticResource SmallIconHeight}"/>
             </Button>
         </Grid>
         

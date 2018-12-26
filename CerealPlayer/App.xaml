@@ -7,16 +7,29 @@
     <Application.Resources>
         <Style TargetType="{x:Type Control}" x:Key="BaseStyle">
             <Setter Property="FontSize" Value="20" />
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Black"/>
         </Style>
         <Style TargetType="{x:Type Control}" x:Key="TextStyle">
             <Setter Property="FontSize" Value="16" />
         </Style>
 
         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource BaseStyle}">
-            <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="White"/>
         </Style>
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseStyle}"></Style>
+
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        
+        <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        
+        <Style TargetType="{x:Type Thumb}" BasedOn="{StaticResource BaseStyle}">
+            
+        </Style>
 
         <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextStyle}"></Style>
         <Style TargetType="{x:Type TextBlock}">
@@ -25,10 +38,13 @@
 
         <system:Double x:Key="BigBorder">5</system:Double>
         <system:Double x:Key="SmallBorder">3</system:Double>
-        
+
         <system:Double x:Key="PlaylistBarWidth">300</system:Double>
         <system:Double x:Key="PlaylistDialogWidth">330</system:Double>
         <system:Double x:Key="PlaylistItemWidth">270</system:Double>
+        
+        <system:Double x:Key="IconHeight">32</system:Double>
+        <system:Double x:Key="SmallIconHeight">16</system:Double>
 
         <Thickness x:Key="DialogBorder" Bottom="{StaticResource BigBorder}" Left="{StaticResource BigBorder}" Right="{StaticResource BigBorder}" Top="{StaticResource BigBorder}"/>
         <Thickness x:Key="RightBorder" Right="{StaticResource SmallBorder}"/>

@@ -23,19 +23,25 @@
                 Grid.Column="1"
                 Command="{Binding RetryCommand}"
                 Visibility="{Binding RetryVisibility}">
-                Retry
+                <Image 
+                    Source="../Icons/retry.png"
+                    Height="{StaticResource SmallIconHeight}"/>
             </Button>
             <Button
                 Grid.Column="2"
                 Command="{Binding StopCommand}"
                 Visibility="{Binding StopVisibility}">
-                Stop
+                <Image 
+                    Source="../Icons/stop.png"
+                    Height="{StaticResource SmallIconHeight}"/>
             </Button>
             <Button 
                 Grid.Column="3"
                 Command="{Binding PlayCommand}"
                 Margin="{StaticResource LeftBorder}">
-                Play
+                <Image 
+                    Source="../Icons/play.png"
+                    Height="{StaticResource SmallIconHeight}"/>
             </Button>
         </Grid>
 

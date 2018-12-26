@@ -12,7 +12,8 @@
         Background="White"
         Closed="MainWindow_OnClosed"
         WindowStyle="{Binding Display.WindowStyle}"
-        WindowState="{Binding Display.WindowState}">
+        WindowState="{Binding Display.WindowState}"
+        Icon="Icons/app.ico">
     <DockPanel Background="Black">
         <Grid 
             DockPanel.Dock="Top" 

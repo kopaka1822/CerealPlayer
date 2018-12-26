@@ -21,7 +21,9 @@
             <Button
                 Grid.Column="1"
                 Command="{Binding UpdateCommand}">
-                Update
+                <Image 
+                    Source="../Icons/retry.png"
+                    Height="{StaticResource SmallIconHeight}"/>
             </Button>
         </Grid>
     </StackPanel>
