@@ -35,6 +35,7 @@ namespace CerealPlayer.Models.Hoster
             
             hoster.Add(new Mp4Upload(models));
             hoster.Add(new JustDubs(models));
+            hoster.Add(new GoGoAnimes(models));
         }
 
         /// <summary>

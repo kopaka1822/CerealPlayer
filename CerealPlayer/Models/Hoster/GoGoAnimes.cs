@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using CerealPlayer.Models.Task;
@@ -11,19 +9,19 @@ using CerealPlayer.Utility;
 
 namespace CerealPlayer.Models.Hoster
 {
-    public class JustDubs : IVideoHoster
+    public class GoGoAnimes : IVideoHoster
     {
         private readonly CultureInfo culture = new CultureInfo("en-US");
         private readonly Models models;
 
-        public JustDubs(Models models)
+        public GoGoAnimes(Models models)
         {
             this.models = models;
         }
 
         public bool Supports(string website)
         {
-            return website.Contains("http://justdubsanime.net");
+            return website.Contains(".gogoanimes.tv") || website.Contains(".gogoanimes.in");
         }
 
         public EpisodeInfo GetInfo(string website)
@@ -80,7 +78,6 @@ namespace CerealPlayer.Models.Hoster
 
         public string FindCompatibleLink(string websiteSource)
         {
-            // TODO add justdubsanime.net thing
             return null;
         }
     }

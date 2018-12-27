@@ -125,10 +125,12 @@
     <Compile Include="Controllers\TaskControllerBase.cs" />
     <Compile Include="Models\AppModel.cs" />
     <Compile Include="Models\DisplayModel.cs" />
+    <Compile Include="Models\Hoster\GoGoAnimes.cs" />
     <Compile Include="Models\Hoster\IVideoHoster.cs" />
     <Compile Include="Models\Hoster\JustDubs.cs" />
     <Compile Include="Models\Hoster\Mp4Upload.cs" />
     <Compile Include="Models\Hoster\RecursiveHosterDownloadTask.cs" />
+    <Compile Include="Models\Hoster\TestWebsiteExistsTask.cs" />
     <Compile Include="Models\Hoster\VideoHosterModel.cs" />
     <Compile Include="Models\Player\PlayerModel.cs" />
     <Compile Include="Models\Playlist\PlaylistModel.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="Models\Web\HtmlProvider.cs" />
     <Compile Include="Models\Web\WebModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Utility\HosterUtil.cs" />
     <Compile Include="Utility\StringUtil.cs" />
     <Compile Include="ViewModels\DisplayViewModel.cs" />
     <Compile Include="ViewModels\Player\PlayerViewModel.cs" />
