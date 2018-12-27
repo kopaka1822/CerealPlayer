@@ -3,13 +3,13 @@ using System.Windows.Input;
 using CerealPlayer.ViewModels.Playlist;
 using CerealPlayer.Views;
 
-namespace CerealPlayer.Commands.Playlist
+namespace CerealPlayer.Commands.Playlist.NonLoaded
 {
-    public class OpenPlaylistCommand : ICommand
+    public class NewPlaylistCommand : ICommand
     {
         private readonly Models.Models models;
 
-        public OpenPlaylistCommand(Models.Models models)
+        public NewPlaylistCommand(Models.Models models)
         {
             this.models = models;
         }
@@ -21,8 +21,10 @@ namespace CerealPlayer.Commands.Playlist
 
         public void Execute(object parameter)
         {
-            var view = new PlaylistsPreviewView();
-            view.DataContext = new PlaylistsPreviewViewModel(models, view);
+            var view = new PlaylistCreationView
+            {
+                DataContext = new PlaylistCreationViewModel(models)
+            };
 
             models.App.ShowDialog(view);
         }

@@ -24,7 +24,7 @@ namespace CerealPlayer.Models.Playlist
             {
                 if (ReferenceEquals(value, activePlaylist)) return;
                 // should be in the playlists list
-                Debug.Assert(List.Contains(value));
+                Debug.Assert(value == null || List.Contains(value));
 
                 activePlaylist = value;
                 OnPropertyChanged(nameof(ActivePlaylist));

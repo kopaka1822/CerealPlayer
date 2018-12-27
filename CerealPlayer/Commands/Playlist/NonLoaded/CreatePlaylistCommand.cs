@@ -1,27 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.ViewModels.Playlist;
-using CerealPlayer.Views;
 
-namespace CerealPlayer.Commands.Playlist
+namespace CerealPlayer.Commands.Playlist.NonLoaded
 {
     public class CreatePlaylistCommand : ICommand
     {
         private readonly PlaylistCreationViewModel viewModel;
-        private readonly Window view;
         private readonly Models.Models models;
 
-        public CreatePlaylistCommand(Models.Models models, PlaylistCreationViewModel viewModel, Window view)
+        public CreatePlaylistCommand(Models.Models models, PlaylistCreationViewModel viewModel)
         {
             this.viewModel = viewModel;
-            this.view = view;
             this.models = models;
             viewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
@@ -48,7 +41,7 @@ namespace CerealPlayer.Commands.Playlist
                 var playlist = new PlaylistModel(models, viewModel.Address);
                 models.Playlists.List.Add(playlist);
                 models.Playlists.ActivePlaylist = playlist;
-                view.DialogResult = true;
+                models.App.TopmostWindow.DialogResult = true;
             }
             catch (Exception e)
             {

@@ -121,7 +121,7 @@ namespace CerealPlayer.Models.Hoster
                     else
                     {
                         // no more episodes (for now)
-                        parent.SetError("no more episodes");
+                        parent.SetError("");
                     }
                 }
                 catch (Exception e)

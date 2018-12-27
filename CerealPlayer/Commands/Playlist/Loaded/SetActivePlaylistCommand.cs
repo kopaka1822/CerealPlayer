@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
 
-namespace CerealPlayer.Commands.Playlist
+namespace CerealPlayer.Commands.Playlist.Loaded
 {
     public class SetActivePlaylistCommand : ICommand
     {
@@ -17,12 +14,18 @@ namespace CerealPlayer.Commands.Playlist
         {
             this.models = models;
             this.model = model;
+            this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
+        }
+
+        private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if(args.PropertyName == nameof(PlaylistsModel.ActivePlaylist)) OnCanExecuteChanged();
         }
 
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return !ReferenceEquals(models.Playlists.ActivePlaylist, model);
         }
 
         public void Execute(object parameter)
@@ -30,10 +33,11 @@ namespace CerealPlayer.Commands.Playlist
             models.Playlists.ActivePlaylist = model;
         }
 
-        public event EventHandler CanExecuteChanged
+        public event EventHandler CanExecuteChanged;
+
+        protected virtual void OnCanExecuteChanged()
         {
-            add { }
-            remove { }
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

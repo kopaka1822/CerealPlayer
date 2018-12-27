@@ -30,8 +30,16 @@ namespace CerealPlayer.Commands.Playlist.NonLoaded
             if (MessageBox.Show(models.App.TopmostWindow, $"Do you want to delete \"{Path.GetFileName(directory)}\"?", "Delete Playlist",
                     MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
             {
-                // delete the folder
-                System.IO.Directory.Delete(directory, true);
+                try
+                {
+                    // delete the folder
+                    System.IO.Directory.Delete(directory, true);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(models.App.TopmostWindow, e.Message, "Error", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
                 models.Playlists.OnDirectoryRefresh();
             }
         }

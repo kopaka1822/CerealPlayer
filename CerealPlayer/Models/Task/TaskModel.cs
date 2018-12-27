@@ -30,13 +30,14 @@ namespace CerealPlayer.Models.Task
         private readonly int maxTries;
         private int curRetries = 0;
 
-        public ObservableCollection<string> History { get; } = new ObservableCollection<string>{"Pending"};
+        public ObservableCollection<string> History { get; } = new ObservableCollection<string>();
 
         public string Description
         {
             get => History.Count > 0 ? History.Last() : "";
             set
             {
+                if(Description == value) return;
                 History.Add(value);
                 OnPropertyChanged(nameof(Description));
             }
@@ -78,6 +79,11 @@ namespace CerealPlayer.Models.Task
             }
         }
 
+        /// <summary>
+        /// returns true if the status is either ReadyToStart or Running
+        /// </summary>
+        public bool ReadyOrRunning => Status == TaskStatus.ReadyToStart || Status == TaskStatus.Running;
+
         private ISubTask subTask;
 
         /// <param name="maxTries">maximum number of tries to get a subtask done before the failed flag is set</param>
@@ -100,9 +106,18 @@ namespace CerealPlayer.Models.Task
 
         public void Stop()
         {
-            Debug.Assert(Status == TaskStatus.Running);
-            stopRequested = true;
-            subTask.Stop();
+            Debug.Assert(Status == TaskStatus.Running || Status == TaskStatus.ReadyToStart);
+            if (Status == TaskStatus.Running)
+            {
+                stopRequested = true;
+                subTask.Stop();
+            }
+            else if(Status == TaskStatus.ReadyToStart)
+            {
+                // prevent execution by setting the failed flag
+                Description = "Stopped by user";
+                Status = TaskStatus.Failed;
+            }
         }
 
         /// <summary>
@@ -145,7 +160,7 @@ namespace CerealPlayer.Models.Task
         public async void SetError(string error)
         {
             Debug.Assert(Status == TaskStatus.Running || Status == TaskStatus.Failed);
-            if(!string.IsNullOrEmpty(error))
+            if(error != null)
                 Description = error;
             // retry if max retries not reached
             if (++curRetries < maxTries && !stopRequested)

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands.Playlist;
+using CerealPlayer.Commands.Playlist.Loaded;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 
@@ -23,11 +24,27 @@ namespace CerealPlayer.ViewModels.Playlist
         {
             this.models = models;
             this.parent = parent;
-            parent.DownloadPlaylistTask.PropertyChanged += DownloadPlaylistTaskOnPropertyChanged;
+            parent.DownloadPlaylistTask.PropertyChanged += PlaylistTaskOnPropertyChanged;
+            parent.NextEpisodeTask.PropertyChanged += PlaylistTaskOnPropertyChanged;
+            models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
+
             PlayCommand = new SetActivePlaylistCommand(models, parent);
+            StopCommand = new StopPlaylistUpdateCommand(models, parent);
+            RetryCommand = new RetryPlaylistUpdateCommand(models, parent);
+            DeleteCommand = new DeletePlaylistCommand(models, parent);
         }
 
-        private void DownloadPlaylistTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(PlaylistsModel.ActivePlaylist):
+                    OnPropertyChanged(nameof(PlayVisibility));
+                    break;
+            }
+        }
+
+        private void PlaylistTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
             {
@@ -39,15 +56,33 @@ namespace CerealPlayer.ViewModels.Playlist
                     break;
                 case nameof(TaskModel.Status):
                     OnPropertyChanged(nameof(ProgressVisibility));
-                    OnPropertyChanged(nameof(RetryCommand));
+                    OnPropertyChanged(nameof(RetryVisibility));
                     OnPropertyChanged(nameof(StopVisibility));
+                    OnPropertyChanged(nameof(Status));
                     break;
             }
         }
 
         public string Name => parent.Name;
 
-        public string Status => parent.DownloadPlaylistTask.Description;
+        public string Status
+        {
+            get
+            {
+                // display download task
+                if (parent.DownloadPlaylistTask.Status != TaskModel.TaskStatus.Finished)
+                {
+                    return parent.DownloadPlaylistTask.Description;
+                }
+                // display next episode task
+                if (parent.NextEpisodeTask.Status != TaskModel.TaskStatus.Finished)
+                {
+                    return parent.NextEpisodeTask.Description;
+                }
+
+                return "";
+            }
+        } 
 
         public int Progress
         {
@@ -59,15 +94,13 @@ namespace CerealPlayer.ViewModels.Playlist
             ? Visibility.Visible
             : Visibility.Collapsed;
 
-        public Visibility StopVisibility => ProgressVisibility;
+        public Visibility StopVisibility => DoesAnyTask() ? Visibility.Visible : Visibility.Collapsed;
+
+        public Visibility RetryVisibility => (!DoesAnyTask()) ? Visibility.Visible : Visibility.Collapsed;
 
         public Visibility PlayVisibility => ReferenceEquals(models.Playlists.ActivePlaylist, parent) 
             ? Visibility.Collapsed 
             : Visibility.Visible;
-
-        public Visibility RetryVisibility => parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Failed
-            ? Visibility.Visible
-            : Visibility.Collapsed;
 
         public ICommand DeleteCommand { get; }
 
@@ -76,6 +109,11 @@ namespace CerealPlayer.ViewModels.Playlist
         public ICommand StopCommand { get; }
 
         public ICommand PlayCommand { get; }
+
+        private bool DoesAnyTask()
+        {
+            return parent.DownloadPlaylistTask.ReadyOrRunning || parent.NextEpisodeTask.ReadyOrRunning;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

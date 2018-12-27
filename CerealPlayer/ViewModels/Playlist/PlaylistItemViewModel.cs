@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands.Playlist;
+using CerealPlayer.Commands.Playlist.Video;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 

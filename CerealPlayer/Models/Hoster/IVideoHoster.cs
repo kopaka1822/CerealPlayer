@@ -38,7 +38,7 @@ namespace CerealPlayer.Models.Hoster
         /// Note: The task status should change to Failed if
         /// the next episode does not exits yet but may come in the future.
         /// Only set the finished flag if it is certain that there will be
-        /// no more episodes 
+        /// no more episodes. (use task.setError(""))
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="website"></param>

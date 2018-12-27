@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CerealPlayer.Commands;
 using CerealPlayer.Commands.Playlist;
+using CerealPlayer.Commands.Playlist.NonLoaded;
 using CerealPlayer.Controllers;
 using CerealPlayer.ViewModels.Player;
 using CerealPlayer.ViewModels.Playlist;
@@ -41,7 +42,7 @@ namespace CerealPlayer.ViewModels
             Display = new DisplayViewModel(models);
 
             // commands
-            OpenPlaylistCommand = new OpenPlaylistCommand(models);
+            OpenPlaylistCommand = new OpenPlaylistsCommand(models);
             NewPlaylistCommand = new NewPlaylistCommand(models);
         }
 

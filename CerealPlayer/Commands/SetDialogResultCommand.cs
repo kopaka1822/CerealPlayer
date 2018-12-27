@@ -8,15 +8,18 @@ using System.Windows.Input;
 
 namespace CerealPlayer.Commands
 {
+    /// <summary>
+    /// sets the result of the topmost window/dialog
+    /// </summary>
     public class SetDialogResultCommand : ICommand
     {
-        private readonly Window dialog;
+        private readonly Models.Models models;
         private readonly bool result;
 
-        public SetDialogResultCommand(Window dialog, bool result)
+        public SetDialogResultCommand(Models.Models models, bool result)
         {
-            this.dialog = dialog;
             this.result = result;
+            this.models = models;
         }
 
         public bool CanExecute(object parameter)
@@ -26,7 +29,7 @@ namespace CerealPlayer.Commands
 
         public void Execute(object parameter)
         {
-            dialog.DialogResult = result;
+            models.App.TopmostWindow.DialogResult = result;
         }
 
         public event EventHandler CanExecuteChanged

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands;
 using CerealPlayer.Commands.Playlist;
+using CerealPlayer.Commands.Playlist.NonLoaded;
 using CerealPlayer.Views;
 
 namespace CerealPlayer.ViewModels.Playlist
@@ -17,11 +18,11 @@ namespace CerealPlayer.ViewModels.Playlist
     {
         private readonly Models.Models models;
 
-        public PlaylistCreationViewModel(Models.Models models, PlaylistCreationView view)
+        public PlaylistCreationViewModel(Models.Models models)
         {
             this.models = models;
-            CancelCommand = new SetDialogResultCommand(view, false);
-            CreatePlaylistCommand = new CreatePlaylistCommand(models, this, view);
+            CancelCommand = new SetDialogResultCommand(models, false);
+            CreatePlaylistCommand = new CreatePlaylistCommand(models, this);
         }
 
         public ICommand CancelCommand { get; }
