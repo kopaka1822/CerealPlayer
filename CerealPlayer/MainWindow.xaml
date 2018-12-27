@@ -21,9 +21,6 @@
             Visibility="{Binding Display.FullscreenVisibility}">
             <Menu Grid.Column="0" Background="White">
                 <MenuItem Header="File">
-                    <MenuItem 
-                        Header="Open Playlist"
-                        Command="{Binding OpenPlaylistCommand}"/>
                     <MenuItem
                         Header="New Playlist"
                         Command="{Binding NewPlaylistCommand}"/>
@@ -36,28 +33,94 @@
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <!--<ColumnDefinition Width="Auto"/>-->
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <ListBox
-                Grid.Column="0"
+            <Border 
+                Background="White"
                 Width="{StaticResource PlaylistBarWidth}"
-                Visibility="{Binding Display.PlaylistVisibility}"
-                ItemsSource="{Binding ActivePlaylist.Videos}"
-                SelectedItem="{Binding ActivePlaylist.SelectedVideo}"
-                ScrollViewer.VerticalScrollBarVisibility="Visible"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                Visibility="{Binding Display.PlaylistVisibility}">
+                <Grid>
+                    <TabControl>
 
-            <GridSplitter 
+                        <TabItem Header="Playlists">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="246*"/>
+                                    <RowDefinition Height="67*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <ListBox
+                                    Grid.Row="0"
+                                    ItemsSource="{Binding PlaylistPreview.PlaylistItems}"
+                                    SelectedItem="{Binding PlaylistPreview.SelectedPlaylist}"
+                                    Margin="{StaticResource BottomBorder}"
+                                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.RowSpan="2"/>
+
+                                <StackPanel 
+                                    Grid.Row="2"
+                                    Orientation="Horizontal" 
+                                    HorizontalAlignment="Left">
+                                    <Button 
+                                        Margin="{StaticResource RightBorder}"
+                                        Command="{Binding NewPlaylistCommand}"
+                                        ToolTip="Add new playlist">
+                                        <Image
+                                            Source="Icons/plus.png"
+                                            Height="{StaticResource IconHeight}"/>
+                                    </Button>
+                                    <Button
+                                        Margin="{StaticResource RightBorder}"
+                                        Command="{Binding UpdateAllCommand}"
+                                        ToolTip="Update all playlists">
+                                        <Image
+                                            Source="Icons/retry.png"
+                                            Height="{StaticResource IconHeight}"/>
+                                    </Button>
+                                    <Button
+                                        Margin="{StaticResource RightBorder}"
+                                        Command="{Binding StopAllCommand}"
+                                        ToolTip="Stop all tasks/downloads">
+                                        <Image
+                                                Source="Icons/stop.png"
+                                                Height="{StaticResource IconHeight}"/>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Playing">
+                            <ListBox
+                                ItemsSource="{Binding ActivePlaylist.Videos}"
+                                SelectedItem="{Binding ActivePlaylist.SelectedVideo}"
+                                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                        </TabItem>
+                    </TabControl>
+
+                    <!-- close button overlay -->
+                    <Button 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Top" 
+                        Margin="0 3 3 0"
+                        Command="{Binding Player.TogglePlaylistCommand}"
+                        ToolTip="Hide playlist tab">
+                        <Image Source="Icons/list.png" Height="{StaticResource SmallIconHeight}"/>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!--<GridSplitter 
                 Visibility="{Binding Display.PlaylistVisibility}"
                 Grid.Column="1"
                 Width="10"
                 HorizontalAlignment="Stretch"
-                Background="White"/>
+                Background="White"/>-->
 
 
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>

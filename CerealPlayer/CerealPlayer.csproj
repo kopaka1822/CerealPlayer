@@ -104,13 +104,14 @@
     <Compile Include="Commands\Player\ChangeEpisodeCommand.cs" />
     <Compile Include="Commands\Player\PlayPauseCommand.cs" />
     <Compile Include="Commands\Player\WindPlayerCommand.cs" />
+    <Compile Include="Commands\Playlist\All\StopAllTasksCommand.cs" />
+    <Compile Include="Commands\Playlist\All\UpdateAllPlaylistsCommand.cs" />
     <Compile Include="Commands\Playlist\Loaded\DeletePlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\Loaded\RetryPlaylistUpdateCommand.cs" />
     <Compile Include="Commands\Playlist\Loaded\StopPlaylistUpdateCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\CreatePlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\NewPlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\DeletePlaylistCommand.cs" />
-    <Compile Include="Commands\Playlist\OpenPlaylistsCommand.cs" />
     <Compile Include="Commands\Playlist\Video\RetryVideoDownloadCommand.cs" />
     <Compile Include="Commands\Playlist\Loaded\SetActivePlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\Video\StopVideoDownloadCommand.cs" />
@@ -161,9 +162,6 @@
     <Compile Include="Views\PlaylistItemView.xaml.cs">
       <DependentUpon>PlaylistItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PlaylistsPreviewView.xaml.cs">
-      <DependentUpon>PlaylistsPreviewView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\PlaylistTaskView.xaml.cs">
       <DependentUpon>PlaylistTaskView.xaml</DependentUpon>
     </Compile>
@@ -188,10 +186,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PlaylistItemView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PlaylistsPreviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

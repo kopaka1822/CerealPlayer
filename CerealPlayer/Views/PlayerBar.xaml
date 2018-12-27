@@ -116,7 +116,7 @@
                 <Button
                     Margin="{StaticResource RightBorder}"
                     Command="{Binding TogglePlaylistCommand}"
-                    ToolTip="Playlist">
+                    ToolTip="Toggle playlist visibility">
                     <Image 
                         Source="../Icons/list.png"
                         Height="{StaticResource IconHeight}"/>
@@ -124,7 +124,7 @@
 
                 <Button
                     Command="{Binding ToggleFullscreenCommand}"
-                    ToolTip="Toggle Fullscreen">
+                    ToolTip="Toggle fullscreen">
                     <Image 
                         Source="../Icons/resize.png"
                         Height="{StaticResource IconHeight}"/>

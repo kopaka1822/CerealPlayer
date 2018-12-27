@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
 
@@ -30,11 +31,19 @@ namespace CerealPlayer.Commands.Playlist.NonLoaded
 
         public void Execute(object parameter)
         {
-            // add new playlist model            
-            var model = PlaylistModel.LoadFromDirectory(directory, models);
-            models.Playlists.List.Add(model);
-            if (playPlaylist)
-                models.Playlists.ActivePlaylist = model;
+            try
+            {
+                // add new playlist model            
+                var model = PlaylistModel.LoadFromDirectory(directory, models);
+                models.Playlists.List.Add(model);
+                if (playPlaylist)
+                    models.Playlists.ActivePlaylist = model;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(models.App.TopmostWindow, e.Message, "Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         public event EventHandler CanExecuteChanged

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CerealPlayer.Commands;
 using CerealPlayer.Commands.Playlist;
+using CerealPlayer.Commands.Playlist.All;
 using CerealPlayer.Commands.Playlist.NonLoaded;
 using CerealPlayer.Controllers;
 using CerealPlayer.ViewModels.Player;
@@ -17,6 +18,7 @@ namespace CerealPlayer.ViewModels
     {
         // view models
         public ActivePlaylistViewModel ActivePlaylist { get; }
+        public PlaylistsPreviewViewModel PlaylistPreview { get; }
         public PlayerViewModel Player { get; }
         public DisplayViewModel Display { get; }
 
@@ -26,8 +28,9 @@ namespace CerealPlayer.ViewModels
         public SaveFileController SaveCtrl { get; }
 
         // commands
-        public ICommand OpenPlaylistCommand { get; }
         public ICommand NewPlaylistCommand { get; }
+        public ICommand StopAllCommand { get; }
+        public ICommand UpdateAllCommand { get; }
 
         public ViewModels(Models.Models models)
         {
@@ -38,12 +41,14 @@ namespace CerealPlayer.ViewModels
 
             // view models
             ActivePlaylist = new ActivePlaylistViewModel(models);
+            PlaylistPreview = new PlaylistsPreviewViewModel(models);
             Player = new PlayerViewModel(models);
             Display = new DisplayViewModel(models);
 
             // commands
-            OpenPlaylistCommand = new OpenPlaylistsCommand(models);
             NewPlaylistCommand = new NewPlaylistCommand(models);
+            StopAllCommand = new StopAllTasksCommand(models);
+            UpdateAllCommand = new UpdateAllPlaylistsCommand(models, PlaylistPreview);
         }
 
         public void Dispose()
