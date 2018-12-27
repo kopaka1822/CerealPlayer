@@ -13,83 +13,6 @@ namespace CerealPlayer.Models.Hoster
 {
     public class JustDubs : IVideoHoster
     {
-        class DownloadTask : ISubTask
-        {
-            private readonly Models models;
-            private readonly string website;
-            private readonly VideoTaskModel parent;
-
-            public DownloadTask(Models models, VideoTaskModel parent, string website)
-            {
-                this.website = website;
-                this.parent = parent;
-                this.models = models;
-            }
-
-            public async void Start()
-            {
-                try
-                {
-                    parent.Description = "resolving " + website;
-                    var source = await models.Web.Html.GetAsynch(website);
-                    //var source = await models.Web.Html.GetAsynch(website);
-
-                    // search for iframe src="http://www.mp4upload.com
-                    var subIndex = source.IndexOf("iframe src=\"http://www.mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
-                    if (subIndex < 0)
-                    {
-                        // https version
-                        subIndex = source.IndexOf("iframe src=\"https://www.mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
-                    }
-
-                    string address = null;
-                    if (subIndex < 0)
-                    {
-                        // the link is probably hidden within player.mp4cloud.net
-                        var linkLenght = "iframe src=\"https://player.mp4cloud.net/mp4upload.php?id=".Length;
-                        subIndex = source.IndexOf("iframe src=\"https://player.mp4cloud.net/mp4upload.php?id=", StringComparison.OrdinalIgnoreCase);
-                        if (subIndex < 0) // try http version
-                        {
-                            subIndex = source.IndexOf("iframe src=\"http://player.mp4cloud.net/mp4upload.php?id=", StringComparison.OrdinalIgnoreCase);
-                            linkLenght--;
-                        }
-
-                        if (subIndex < 0)
-                            throw new Exception($"failed to locate \"iframe src=\"http://www.mp4upload.com/embed-\" or \"iframe src=\"http://player.mp4cloud.net/mp4upload.php?id=\" in {website}");
-                        
-                        // the embed link is given after id
-                        var id = StringUtil.SubstringUntil(
-                            source,
-                            subIndex + linkLenght,
-                            '\"');
-
-                        address = "https://www.mp4upload.com/embed-" + id + ".html";
-                    }
-                    else
-                    {
-                        // get address of hoster
-                        address = StringUtil.SubstringUntil(
-                            source,
-                            subIndex + "iframe src=\"".Length,
-                            '\"');
-                    }
-
-                    // give work to video hoster
-                    var newHoster = models.Web.VideoHoster.GetCompatibleHoster(address);
-                    parent.SetNewSubTask(newHoster.GetDownloadTask(parent, address));
-                }
-                catch (Exception e)
-                {
-                    parent.SetError(e.Message);
-                }
-            }
-
-            public void Stop()
-            {
-                
-            }
-        }
-
         class NextEpisodeTask : ISubTask
         {
             private readonly Models models;
@@ -192,7 +115,7 @@ namespace CerealPlayer.Models.Hoster
 
         public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
         {
-            return new DownloadTask(models, parent, website);
+            return new RecursiveHosterDownloadTask(models, parent, website, false);
         }
 
         public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
@@ -214,6 +137,12 @@ namespace CerealPlayer.Models.Hoster
             nextWebsite += (currentNumber + 1);
 
             return new NextEpisodeTask(models, parent, nextWebsite, this);
+        }
+
+        public string FindCompatibleLink(string websiteSource)
+        {
+            // TODO add justdubsanime.net thing
+            return null;
         }
     }
 }

@@ -27,6 +27,40 @@ namespace CerealPlayer.Utility
         }
 
         /// <summary>
+        /// returns a substring from source[from] until the first whitespace or " character
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="from"></param>
+        /// <returns></returns>
+        public static string ReadLink(string source, int from)
+        {
+            string res = "";
+            while (from < source.Length && !Char.IsWhiteSpace(source[from]) && source[from] != '\"')
+            {
+                res += source[from++];
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// returns the first index after "from" where the character "to" appears
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="from">start index</param>
+        /// <param name="to">searched character</param>
+        /// <returns></returns>
+        public static int SkipUntil(string source, int from, char to)
+        {
+            while (from < source.Length && source[from] != to)
+            {
+                ++from;
+            }
+
+            return from;
+        }
+
+        /// <summary>
         /// returns a substring from source that ends at index "lastIndex" and start after the first occurence of "to" ("to" not included)
         /// </summary>
         /// <param name="source"></param>

@@ -44,5 +44,12 @@ namespace CerealPlayer.Models.Hoster
         /// <param name="website"></param>
         /// <returns>may be null if a next episode cannot be determined</returns>
         ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website);
+
+        /// <summary>
+        /// tries to find a link that is supported by this hoster on the given website source
+        /// </summary>
+        /// <param name="websiteSource"></param>
+        /// <returns>a compatible link or null if incompatible</returns>
+        string FindCompatibleLink(string websiteSource);
     }
 }

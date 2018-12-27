@@ -95,5 +95,34 @@ namespace CerealPlayer.Models.Hoster
             // does not support next episode
             return null;
         }
+
+        public string FindCompatibleLink(string websiteSource)
+        {
+            // crawl to find supported links
+            // http version
+            var index = websiteSource.IndexOf("http://www.mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
+            if(index < 0) // https version
+                index = websiteSource.IndexOf("https://www.mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
+
+            if (index >= 0)
+            {
+                // found link
+                return StringUtil.ReadLink(websiteSource, index);
+            }
+
+            // the link is probably hidden within player.mp4cloud.net
+            index = websiteSource.IndexOf("https://player.mp4cloud.net/mp4upload.php?id=", StringComparison.InvariantCultureIgnoreCase);
+            if(index < 0) // http version
+                index = websiteSource.IndexOf("http://player.mp4cloud.net/mp4upload.php?id=", StringComparison.InvariantCultureIgnoreCase);
+
+            if (index < 0) return null;
+
+            // the embed link is given after id
+            index = StringUtil.SkipUntil(websiteSource, index, '=');
+            // read id string
+            var id = StringUtil.ReadLink(websiteSource, index + 1);
+
+            return "https://www.mp4upload.com/embed-" + id + ".html";
+        }
     }
 }
