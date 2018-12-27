@@ -38,26 +38,7 @@ namespace CerealPlayer.Models.Playlist
             // create download task
             var task = new VideoTaskModel(this);
             task.SetNewSubTask(hoster.GetDownloadTask(task, initialWebsite));
-            task.PropertyChanged += TaskOnPropertyChanged;
             this.DownloadTask = task;
-        }
-
-        private void TaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            switch (args.PropertyName)
-            {
-                case nameof(TaskModel.Status):
-                    parent.DownloadStatus = DownloadTask.Status;
-                    if (DownloadTask.Status == TaskModel.TaskStatus.Running)
-                        parent.DownloadProgress = 0; // reset download progress
-                    break;
-                case nameof(TaskModel.Description):
-                    parent.DownloadDescription = DownloadTask.Description;
-                    break;
-                case nameof(TaskModel.Percentage):
-                    parent.DownloadProgress = DownloadTask.Percentage;
-                    break;
-            }
         }
 
         public VideoModel(Models models, PlaylistModel parent, IVideoHoster hoster, SaveData data)
@@ -77,7 +58,6 @@ namespace CerealPlayer.Models.Playlist
             else
             {
                 task.SetNewSubTask(hoster.GetDownloadTask(task, data.Website));
-                task.PropertyChanged += TaskOnPropertyChanged;
             }
 
             this.DownloadTask = task;

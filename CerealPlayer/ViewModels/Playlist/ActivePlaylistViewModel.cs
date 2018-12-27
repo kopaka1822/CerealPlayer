@@ -20,12 +20,10 @@ namespace CerealPlayer.ViewModels.Playlist
     {
         private readonly Models.Models models;
         private PlaylistModel activePlaylist = null;
-        private readonly TaskController taskController;
 
-        public ActivePlaylistViewModel(Models.Models models, TaskController taskController)
+        public ActivePlaylistViewModel(Models.Models models)
         {
             this.models = models;
-            this.taskController = taskController;
             this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
             
             if(models.Playlists.ActivePlaylist != null)
@@ -54,7 +52,7 @@ namespace CerealPlayer.ViewModels.Playlist
                 var view = new PlaylistItemView
                 {
                     DataContext = new PlaylistItemViewModel(models, playlistVideo, 
-                        new RetryVideoDownloadCommand(activePlaylist, taskController))
+                        new RetryVideoDownloadCommand(activePlaylist))
                 };
                 Videos.Add(view);
             }
@@ -72,7 +70,7 @@ namespace CerealPlayer.ViewModels.Playlist
             Videos.Add(new PlaylistItemView
             {
                 DataContext = new PlaylistItemViewModel(models, activePlaylist.Videos.Last(),
-                    new RetryVideoDownloadCommand(activePlaylist, taskController))
+                    new RetryVideoDownloadCommand(activePlaylist))
             });
         }
 

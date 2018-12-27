@@ -14,12 +14,10 @@ namespace CerealPlayer.Commands.Playlist
     public class RetryVideoDownloadCommand : ICommand
     {
         private readonly PlaylistModel playlist;
-        private readonly TaskController ctrl;
 
-        public RetryVideoDownloadCommand(PlaylistModel playlist, TaskController controller)
+        public RetryVideoDownloadCommand(PlaylistModel playlist)
         {
             this.playlist = playlist;
-            this.ctrl = controller;
         }
 
         public bool CanExecute(object parameter)
@@ -29,7 +27,7 @@ namespace CerealPlayer.Commands.Playlist
 
         public void Execute(object parameter)
         {
-            ctrl.RetryTask(playlist);   
+            playlist.DownloadPlaylistTask.ResetStatus();
         }
 
         public event EventHandler CanExecuteChanged;

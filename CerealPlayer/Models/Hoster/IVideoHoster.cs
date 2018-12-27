@@ -35,7 +35,7 @@ namespace CerealPlayer.Models.Hoster
         
         /// <summary>
         /// get task that checks if the next episode exists.
-        /// Note: The task status should change to ReadyToStart if
+        /// Note: The task status should change to Failed if
         /// the next episode does not exits yet but may come in the future.
         /// Only set the finished flag if it is certain that there will be
         /// no more episodes 

@@ -31,23 +31,48 @@ namespace CerealPlayer.Models.Hoster
                 try
                 {
                     parent.Description = "resolving " + website;
-                    //var source = await models.Web.Html.GetJsAsynch(website);
                     var source = await models.Web.Html.GetAsynch(website);
+                    //var source = await models.Web.Html.GetAsynch(website);
 
                     // search for iframe src="http://www.mp4upload.com
-                    var subIndex = source.IndexOf("iframe src=\"http://www.mp4upload.com/embed-", StringComparison.Ordinal);
+                    var subIndex = source.IndexOf("iframe src=\"http://www.mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
                     if (subIndex < 0)
                     {
                         // https version
-                        subIndex = source.IndexOf("iframe src=\"https://www.mp4upload.com/embed-", StringComparison.Ordinal);
+                        subIndex = source.IndexOf("iframe src=\"https://www.mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
                     }
-                    if (subIndex < 0) throw new Exception($"failed to locate \"iframe src=\"http://www.mp4upload.com/embed-\" in {website}");
 
-                    // get address of hoster
-                    var address = StringUtil.SubstringUntil(
-                        source,
-                        subIndex + "iframe src=\"".Length,
-                        '\"');
+                    string address = null;
+                    if (subIndex < 0)
+                    {
+                        // the link is probably hidden within player.mp4cloud.net
+                        var linkLenght = "iframe src=\"https://player.mp4cloud.net/mp4upload.php?id=".Length;
+                        subIndex = source.IndexOf("iframe src=\"https://player.mp4cloud.net/mp4upload.php?id=", StringComparison.OrdinalIgnoreCase);
+                        if (subIndex < 0) // try http version
+                        {
+                            subIndex = source.IndexOf("iframe src=\"http://player.mp4cloud.net/mp4upload.php?id=", StringComparison.OrdinalIgnoreCase);
+                            linkLenght--;
+                        }
+
+                        if (subIndex < 0)
+                            throw new Exception($"failed to locate \"iframe src=\"http://www.mp4upload.com/embed-\" or \"iframe src=\"http://player.mp4cloud.net/mp4upload.php?id=\" in {website}");
+                        
+                        // the embed link is given after id
+                        var id = StringUtil.SubstringUntil(
+                            source,
+                            subIndex + linkLenght,
+                            '\"');
+
+                        address = "https://www.mp4upload.com/embed-" + id + ".html";
+                    }
+                    else
+                    {
+                        // get address of hoster
+                        address = StringUtil.SubstringUntil(
+                            source,
+                            subIndex + "iframe src=\"".Length,
+                            '\"');
+                    }
 
                     // give work to video hoster
                     var newHoster = models.Web.VideoHoster.GetCompatibleHoster(address);
@@ -96,7 +121,7 @@ namespace CerealPlayer.Models.Hoster
                     else
                     {
                         // no more episodes (for now)
-                        parent.SetReadyToStart();
+                        parent.SetError("no more episodes");
                     }
                 }
                 catch (Exception e)

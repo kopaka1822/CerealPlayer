@@ -114,8 +114,10 @@
     <Compile Include="Commands\SetDialogResultCommand.cs" />
     <Compile Include="Commands\ToggleFullscreenCommand.cs" />
     <Compile Include="Commands\TogglePlaylistCommand.cs" />
+    <Compile Include="Controllers\DownloadTaskController.cs" />
+    <Compile Include="Controllers\NextEpisodeTaskController.cs" />
     <Compile Include="Controllers\SaveFileController.cs" />
-    <Compile Include="Controllers\TaskController.cs" />
+    <Compile Include="Controllers\TaskControllerBase.cs" />
     <Compile Include="Models\AppModel.cs" />
     <Compile Include="Models\DisplayModel.cs" />
     <Compile Include="Models\Hoster\IVideoHoster.cs" />

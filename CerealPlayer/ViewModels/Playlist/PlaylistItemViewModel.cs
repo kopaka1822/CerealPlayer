@@ -41,7 +41,7 @@ namespace CerealPlayer.ViewModels.Playlist
                 case nameof(TaskModel.Description):
                     OnPropertyChanged(nameof(Status));
                     break;
-                case nameof(TaskModel.Percentage):
+                case nameof(TaskModel.Progress):
                     OnPropertyChanged(nameof(Progress));
                     break;
             }
@@ -67,7 +67,7 @@ namespace CerealPlayer.ViewModels.Playlist
 
         public int Progress
         {
-            get => video.DownloadTask.Percentage;
+            get => video.DownloadTask.Progress;
             set { } // dummy set
         }
 

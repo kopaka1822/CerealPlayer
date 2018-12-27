@@ -44,7 +44,7 @@ namespace CerealPlayer.Models.Task
 
         private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            parent.Percentage = e.ProgressPercentage;
+            parent.Progress = e.ProgressPercentage;
         }
 
         public void Stop()

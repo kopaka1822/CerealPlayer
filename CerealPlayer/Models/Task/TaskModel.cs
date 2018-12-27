@@ -42,17 +42,17 @@ namespace CerealPlayer.Models.Task
             }
         }
 
-        private int percentage = 0;
+        private int progress = 0;
 
-        public int Percentage
+        public int Progress
         {
-            get => percentage;
+            get => progress;
             set
             {
                 var clamped = Math.Min(Math.Max(value, 0), 100);
-                if (percentage == clamped) return;
-                percentage = clamped;
-                OnPropertyChanged(nameof(Percentage));
+                if (progress == clamped) return;
+                progress = clamped;
+                OnPropertyChanged(nameof(Progress));
             }
         }
 
@@ -91,7 +91,7 @@ namespace CerealPlayer.Models.Task
         public void Start()
         {
             Debug.Assert(subTask != null);
-            Debug.Assert(Status == TaskStatus.ReadyToStart);
+            Debug.Assert(Status == TaskStatus.ReadyToStart || Status == TaskStatus.Failed);
             stopRequested = false;
             Status = TaskStatus.Running;
             subTask.Start();
@@ -170,20 +170,7 @@ namespace CerealPlayer.Models.Task
         {
             Debug.Assert(Status == TaskStatus.Running);
             subTask = null;
-            OnSetFinished();
-
-            if(subTask == null)
-                Status = TaskStatus.Finished;
-        }
-
-        /// <summary>
-        /// will be called if the sub tasks called SetFinished (from a running task).
-        /// A new subtask can be set to avoid the task from setting the finished flag
-        /// </summary>
-        /// <returns></returns>
-        protected virtual void OnSetFinished()
-        {
-            
+            Status = TaskStatus.Finished;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

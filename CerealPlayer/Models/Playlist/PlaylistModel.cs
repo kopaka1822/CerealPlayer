@@ -31,6 +31,7 @@ namespace CerealPlayer.Models.Playlist
         {
             this.models = models;
             LastWebsite = initialWebsite;
+            DownloadPlaylistTask = new DownloadPlaylistTask(this);
 
             // get series info
             hoster = models.Web.VideoHoster.GetCompatibleHoster(initialWebsite);
@@ -45,14 +46,15 @@ namespace CerealPlayer.Models.Playlist
             if (subTask != null)
             {
                 task.SetNewSubTask(subTask);
-                this.NextEpisodeTask = task;
             }
+            this.NextEpisodeTask = task;
         }
 
         public PlaylistModel(Models models, SaveData data)
         {
             this.models = models;
             LastWebsite = data.LastWebsite;
+            DownloadPlaylistTask = new DownloadPlaylistTask(this);
 
             // get series info
             hoster = models.Web.VideoHoster.GetCompatibleHoster(LastWebsite);
@@ -72,8 +74,8 @@ namespace CerealPlayer.Models.Playlist
             if (subTask != null)
             {
                 task.SetNewSubTask(subTask);
-                this.NextEpisodeTask = task;
             }
+            this.NextEpisodeTask = task;
         }
 
         public void AddNextEpisode(string website)
@@ -87,19 +89,6 @@ namespace CerealPlayer.Models.Playlist
         public string LastWebsite { get; private set; }
 
         public string Directory => models.App.PlaylistDirectory + "/" + Name;
-
-        private TaskModel.TaskStatus downloadStatus = TaskModel.TaskStatus.Finished;
-
-        public TaskModel.TaskStatus DownloadStatus
-        {
-            get => downloadStatus;
-            set
-            {
-                if (downloadStatus == value) return;
-                downloadStatus = value;
-                OnPropertyChanged(nameof(DownloadStatus));
-            }
-        }
 
         private int playingVideoIndex = 0;
 
@@ -117,35 +106,13 @@ namespace CerealPlayer.Models.Playlist
             }
         }
 
-        private int downloadProgress = 0;
-
-        public int DownloadProgress
-        {
-            get => downloadProgress;
-            set
-            {
-                if (value == downloadProgress) return;
-                downloadProgress = value;
-                OnPropertyChanged(nameof(DownloadProgress));
-            }
-        }
-
-        private string downloadDescription = "";
-
-        public string DownloadDescription
-        {
-            get => downloadDescription;
-            set
-            {
-                if (value == downloadDescription) return;
-                downloadDescription = value;
-                OnPropertyChanged(nameof(DownloadDescription));
-            }
-        }
-
         public ObservableCollection<VideoModel> Videos = new ObservableCollection<VideoModel>();
 
-        public NextEpisodeTaskModel NextEpisodeTask { get; } = null;
+        [NotNull]
+        public DownloadPlaylistTask DownloadPlaylistTask { get; }
+
+        [NotNull]
+        public NextEpisodeTaskModel NextEpisodeTask { get; }
 
         public string SettingsLocation => GetSettingsLocation(Directory);
 

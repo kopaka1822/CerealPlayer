@@ -23,22 +23,21 @@ namespace CerealPlayer.ViewModels.Playlist
         {
             this.models = models;
             this.parent = parent;
-            parent.PropertyChanged += ParentOnPropertyChanged;
-
+            parent.DownloadPlaylistTask.PropertyChanged += DownloadPlaylistTaskOnPropertyChanged;
             PlayCommand = new SetActivePlaylistCommand(models, parent);
         }
 
-        private void ParentOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        private void DownloadPlaylistTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
             {
-                case nameof(PlaylistModel.DownloadDescription):
+                case nameof(TaskModel.Description):
                     OnPropertyChanged(nameof(Status));
                     break;
-                case nameof(PlaylistModel.DownloadProgress):
+                case nameof(TaskModel.Progress):
                     OnPropertyChanged(nameof(Progress));
                     break;
-                case nameof(PlaylistModel.DownloadStatus):
+                case nameof(TaskModel.Status):
                     OnPropertyChanged(nameof(ProgressVisibility));
                     OnPropertyChanged(nameof(RetryCommand));
                     OnPropertyChanged(nameof(StopVisibility));
@@ -48,21 +47,21 @@ namespace CerealPlayer.ViewModels.Playlist
 
         public string Name => parent.Name;
 
-        public string Status => parent.DownloadDescription;
+        public string Status => parent.DownloadPlaylistTask.Description;
 
         public int Progress
         {
-            get => parent.DownloadProgress;
+            get => parent.DownloadPlaylistTask.Progress;
             set { }
         }
 
-        public Visibility ProgressVisibility => parent.DownloadStatus == TaskModel.TaskStatus.Running
+        public Visibility ProgressVisibility => parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running
             ? Visibility.Visible
             : Visibility.Collapsed;
 
         public Visibility StopVisibility => ProgressVisibility;
 
-        public Visibility RetryVisibility => parent.DownloadStatus == TaskModel.TaskStatus.Failed
+        public Visibility RetryVisibility => parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Failed
             ? Visibility.Visible
             : Visibility.Collapsed;
 

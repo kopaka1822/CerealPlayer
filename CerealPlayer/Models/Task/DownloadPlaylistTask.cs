@@ -54,14 +54,17 @@ namespace CerealPlayer.Models.Task
                     }
                     if (activeVideo.DownloadTask.Status == TaskStatus.Finished)
                     {
+                        UnregisterActiveTask();
+                        // set next subtask (if any) but dont execute yet (this will be handled by the download task controller)
                         SetFinished();
+                        StartNextTask();
                     }
                     break;
                 case nameof(Description):
                     Description = $"{activeVideo.Number} - {activeVideo.DownloadTask.Description}";
                     break;
-                case nameof(Percentage):
-                    Percentage = activeVideo.DownloadTask.Percentage;
+                case nameof(Progress):
+                    Progress = activeVideo.DownloadTask.Progress;
                     break;
             }
         }
@@ -71,7 +74,7 @@ namespace CerealPlayer.Models.Task
             Debug.Assert(activeVideo == null);
             activeVideo = video;
             video.DownloadTask.PropertyChanged += DownloadTaskOnPropertyChanged;
-            Percentage = video.DownloadTask.Percentage;
+            Progress = video.DownloadTask.Progress;
             SetNewSubTask(video.DownloadTask);
         }
 
@@ -79,13 +82,6 @@ namespace CerealPlayer.Models.Task
         {
             activeVideo.DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
             activeVideo = null;
-        }
-
-        protected override void OnSetFinished()
-        {
-            // find a new task to be executed
-            UnregisterActiveTask();
-            StartNextTask();
         }
 
         private void StartNextTask()

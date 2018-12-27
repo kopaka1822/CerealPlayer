@@ -335,7 +335,7 @@ namespace CerealPlayer.ViewModels.Player
                     break;
                 case TaskModel.TaskStatus.Running:
                     // start if video has started downloading
-                    /*if (video.DownloadTask.Percentage > 0)
+                    /*if (video.DownloadTask.Progress > 0)
                     {
                         player.Source = new Uri(video.FileLocation);
                     }*/ // for now wait until it is finished downloading
@@ -367,8 +367,8 @@ namespace CerealPlayer.ViewModels.Player
                             break;
                     }
                     break;
-                case nameof(TaskModel.Percentage):
-                    /*if (player.Source == null && activeVideo.DownloadTask.Percentage > 0)
+                case nameof(TaskModel.Progress):
+                    /*if (player.Source == null && activeVideo.DownloadTask.Progress > 0)
                     {
                         // set source
                         player.Source = new Uri(activeVideo.FileLocation);
