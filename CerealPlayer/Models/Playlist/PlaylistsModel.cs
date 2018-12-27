@@ -31,6 +31,19 @@ namespace CerealPlayer.Models.Playlist
             }
         }
 
+        /// <summary>
+        /// this event should be raised if anything in the playlist/ directory changed and the contents should be reloaded
+        /// </summary>
+        public event EventHandler DirectoryRefresh;
+
+        /// <summary>
+        /// raises the DirectoryRefresh event
+        /// </summary>
+        public virtual void OnDirectoryRefresh()
+        {
+            DirectoryRefresh?.Invoke(this, EventArgs.Empty);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

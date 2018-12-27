@@ -52,7 +52,7 @@ namespace CerealPlayer.Commands.Playlist
             }
             catch (Exception e)
             {
-                MessageBox.Show(models.App.Window, e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(models.App.TopmostWindow, e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

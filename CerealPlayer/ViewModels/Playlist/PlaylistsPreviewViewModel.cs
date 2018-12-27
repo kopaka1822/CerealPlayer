@@ -54,7 +54,7 @@ namespace CerealPlayer.ViewModels.Playlist
                         // this playlist is already open
                         var v = new PlaylistTaskView
                         {
-                            DataContext = new PlaylistTaskViewModel(models, openPlaylist)
+                            DataContext = new LoadedPlaylistTaskViewModel(models, openPlaylist)
                         };
                         PlaylistItems.Add(v);
 
@@ -67,9 +67,9 @@ namespace CerealPlayer.ViewModels.Playlist
                 if(!File.Exists(saveFileLocation)) continue;
 
                 // add file that is not open
-                var view = new PlaylistPreviewView
+                var view = new PlaylistTaskView
                 {
-                    DataContext = new PlaylistPreviewViewModel(models, dir)
+                    DataContext = new NonLoadedPlaylistTaskModel(models, dir)
                 };
                 PlaylistItems.Add(view);
 

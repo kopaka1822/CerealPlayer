@@ -24,7 +24,7 @@ namespace CerealPlayer.Commands.Playlist
             var view = new PlaylistsPreviewView();
             view.DataContext = new PlaylistsPreviewViewModel(models, view);
 
-            view.ShowDialog();
+            models.App.ShowDialog(view);
         }
 
         public event EventHandler CanExecuteChanged

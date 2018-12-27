@@ -24,7 +24,7 @@ namespace CerealPlayer.Models
             }
         }
 
-        private bool showPlaylist = true;
+        private bool showPlaylist = false;
 
         public bool ShowPlaylist
         {

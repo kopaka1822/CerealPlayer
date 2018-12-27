@@ -257,7 +257,7 @@ namespace CerealPlayer.ViewModels.Player
         private void PlayerOnMediaFailed(object sender, ExceptionRoutedEventArgs exceptionRoutedEventArgs)
         {
             // cannot find file?
-            MessageBox.Show(exceptionRoutedEventArgs.ErrorException.Message, "Playback Error", MessageBoxButton.OK,
+            MessageBox.Show(models.App.TopmostWindow, exceptionRoutedEventArgs.ErrorException.Message, "Playback Error", MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }
 
@@ -362,7 +362,7 @@ namespace CerealPlayer.ViewModels.Player
                             }
                             break;
                         case TaskModel.TaskStatus.Failed:
-                            MessageBox.Show("download failed");
+                            MessageBox.Show(models.App.TopmostWindow ,"download failed");
                             // oh no :(
                             break;
                     }

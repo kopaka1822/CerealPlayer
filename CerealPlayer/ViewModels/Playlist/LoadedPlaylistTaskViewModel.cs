@@ -14,12 +14,12 @@ using CerealPlayer.Models.Task;
 
 namespace CerealPlayer.ViewModels.Playlist
 {
-    public class PlaylistTaskViewModel : INotifyPropertyChanged
+    public class LoadedPlaylistTaskViewModel : INotifyPropertyChanged, IPlaylistTaskViewModel
     {
         private readonly Models.Models models;
         private readonly PlaylistModel parent;
 
-        public PlaylistTaskViewModel(Models.Models models, PlaylistModel parent)
+        public LoadedPlaylistTaskViewModel(Models.Models models, PlaylistModel parent)
         {
             this.models = models;
             this.parent = parent;
@@ -61,9 +61,15 @@ namespace CerealPlayer.ViewModels.Playlist
 
         public Visibility StopVisibility => ProgressVisibility;
 
+        public Visibility PlayVisibility => ReferenceEquals(models.Playlists.ActivePlaylist, parent) 
+            ? Visibility.Collapsed 
+            : Visibility.Visible;
+
         public Visibility RetryVisibility => parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Failed
             ? Visibility.Visible
             : Visibility.Collapsed;
+
+        public ICommand DeleteCommand { get; }
 
         public ICommand RetryCommand { get; }
         

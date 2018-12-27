@@ -28,8 +28,8 @@ namespace CerealPlayer.Commands.Playlist
         {
             var view = new PlaylistCreationView();
             view.DataContext = new PlaylistCreationViewModel(models, view);
-            
-            view.ShowDialog();
+
+            models.App.ShowDialog(view);
         }
 
         public event EventHandler CanExecuteChanged
