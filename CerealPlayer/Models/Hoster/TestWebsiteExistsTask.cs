@@ -9,10 +9,10 @@ namespace CerealPlayer.Models.Hoster
 {
     public class TestWebsiteExistsTask : ISubTask
     {
-        private readonly Models models;
-        private readonly NextEpisodeTaskModel parent;
-        private readonly IVideoHoster hoster;
-        private readonly string website;
+        protected readonly Models models;
+        protected readonly NextEpisodeTaskModel parent;
+        protected readonly IVideoHoster hoster;
+        protected readonly string website;
 
         public TestWebsiteExistsTask(Models models, NextEpisodeTaskModel parent, string website, IVideoHoster hoster)
         {
@@ -21,6 +21,14 @@ namespace CerealPlayer.Models.Hoster
             this.website = website;
             this.hoster = hoster;
         }
+
+        /// <summary>
+        /// this method will be called if the website exists.
+        /// An error should be thrown if the next episode does not exist nevertheless
+        /// </summary>
+#pragma warning disable 1998
+        protected virtual async System.Threading.Tasks.Task OnWebsiteExists() { }
+#pragma warning restore 1998
 
         public async void Start()
         {
@@ -31,6 +39,7 @@ namespace CerealPlayer.Models.Hoster
                 var existing = await models.Web.Html.IsAvailable(website);
                 if (existing)
                 {
+                    await OnWebsiteExists();
                     // schedule next episode and start new task
                     parent.Playlist.AddNextEpisode(website);
                     parent.SetNewSubTask(hoster.GetNextEpisodeTask(parent, website));

@@ -130,6 +130,7 @@
     <Compile Include="Models\Hoster\JustDubs.cs" />
     <Compile Include="Models\Hoster\Mp4Upload.cs" />
     <Compile Include="Models\Hoster\RecursiveHosterDownloadTask.cs" />
+    <Compile Include="Models\Hoster\TestWebsiteAndHosterExists.cs" />
     <Compile Include="Models\Hoster\TestWebsiteExistsTask.cs" />
     <Compile Include="Models\Hoster\VideoHosterModel.cs" />
     <Compile Include="Models\Player\PlayerModel.cs" />

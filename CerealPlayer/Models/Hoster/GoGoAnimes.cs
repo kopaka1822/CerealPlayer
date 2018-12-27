@@ -73,7 +73,7 @@ namespace CerealPlayer.Models.Hoster
         public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
         {
             var nextWebsite = HosterUtil.IncrementLastNumber(website);
-            return new TestWebsiteExistsTask(models, parent, nextWebsite, this);
+            return new TestWebsiteAndHosterExists(models, parent, nextWebsite, this, false);
         }
 
         public string FindCompatibleLink(string websiteSource)
