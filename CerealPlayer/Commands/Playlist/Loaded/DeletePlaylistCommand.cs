@@ -45,7 +45,7 @@ namespace CerealPlayer.Commands.Playlist.Loaded
             }
             catch (Exception e)
             {
-                MessageBox.Show(models.App.TopmostWindow, e.Message, "Error", MessageBoxButton.OK,
+                MessageBox.Show(models.App.TopmostWindow, "Could not delete all files. " + e.Message, "Error", MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
 

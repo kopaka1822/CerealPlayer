@@ -289,6 +289,7 @@ namespace CerealPlayer.ViewModels.Player
             }
 
             player.Stop();
+            player.Source = null;
             activePlaylist = models.Playlists.ActivePlaylist;
             if (activePlaylist == null) return;
 
