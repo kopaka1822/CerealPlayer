@@ -109,11 +109,19 @@ namespace CerealPlayer.ViewModels.Player
         {
             OnPropertyChanged(nameof(TimeElapsed));
             OnPropertyChanged(nameof(TimeRemaining));
+
+            if (activePlaylist != null 
+                && player.Position != TimeSpan.Zero) // ignore this => media is still loading
+            {
+                
+                activePlaylist.PlayingVideoPosition = player.Position;
+
+            }
             if (!sliderOccupied)
                 OnPropertyChanged(nameof(TimeProgress));
 
             // hide play bar?
-            if(models.App.Window.PlayerBar.IsMouseOver) mouseMoveStopwatch.Restart();
+            if (models.App.Window.PlayerBar.IsMouseOver) mouseMoveStopwatch.Restart();
 
             if (hasMedia && !isPausing && mouseMoveStopwatch.Elapsed > TimeSpan.FromSeconds(5))
             {
@@ -214,11 +222,19 @@ namespace CerealPlayer.ViewModels.Player
             isPausing = !isPausing;
             if (isPausing)
             {
-                if(hasMedia) player.Pause();
+                if (hasMedia)
+                {
+                    player.Pause();
+                    activePlaylist.PlayingVideoPosition = player.Position;
+                }
             }
             else
             {
-                if(hasMedia) player.Play();
+                if (hasMedia)
+                {
+                    player.Play();
+                    player.Position = activePlaylist.PlayingVideoPosition;
+                }
             }
         }
 
@@ -250,8 +266,11 @@ namespace CerealPlayer.ViewModels.Player
 
         private void PlayerOnMediaOpened(object sender, RoutedEventArgs routedEventArgs)
         {
-            if(!isPausing)
+            if (!isPausing)
+            {
                 player.Play();
+            }
+            player.Position = activePlaylist.PlayingVideoPosition;
         }
 
         private void PlayerOnMediaFailed(object sender, ExceptionRoutedEventArgs exceptionRoutedEventArgs)
@@ -295,15 +314,15 @@ namespace CerealPlayer.ViewModels.Player
 
             activePlaylist.PropertyChanged += ActivePlaylistOnPropertyChanged;
             // where did we left of?
-            PlayVideo(activePlaylist.ActiveVideo);
+            PlayVideo(activePlaylist.PlayingVideo);
         }
 
         private void ActivePlaylistOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
             {
-                case nameof(PlaylistModel.ActiveVideo):
-                    PlayVideo(activePlaylist.ActiveVideo);
+                case nameof(PlaylistModel.PlayingVideo):
+                    PlayVideo(activePlaylist.PlayingVideo);
                     break;
             }
         }

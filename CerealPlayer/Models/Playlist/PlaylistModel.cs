@@ -27,6 +27,7 @@ namespace CerealPlayer.Models.Playlist
             public string LastWebsite { get; set; }
             public string Name { get; set; }
             public int PlayingVideo { get; set; }
+            public long PlayingPosition { get; set; }
         }
 
         public PlaylistModel(Models models, string initialWebsite)
@@ -70,6 +71,7 @@ namespace CerealPlayer.Models.Playlist
             }
 
             PlayingVideoIndex = data.PlayingVideo;
+            PlayingVideoPosition = new TimeSpan(data.PlayingPosition);
 
             // restore next episode task
             var task = new NextEpisodeTaskModel(this);
@@ -91,9 +93,9 @@ namespace CerealPlayer.Models.Playlist
         {
             LastWebsite = website;
             videos.Add(new VideoModel(models, website, this, hoster));
-            if (activeVideo == null)
+            if (playingVideo == null)
             {
-                ActiveVideo = videos.Last();
+                PlayingVideo = videos.Last();
             }
         }
 
@@ -106,7 +108,7 @@ namespace CerealPlayer.Models.Playlist
         {
             Debug.Assert(videos.Contains(video));
             // is it the active video?
-            if (ReferenceEquals(video, activeVideo))
+            if (ReferenceEquals(video, playingVideo))
             {
                 // take the next episode
                 if (PlayingVideoIndex < videos.Count - 1)
@@ -121,10 +123,10 @@ namespace CerealPlayer.Models.Playlist
                 // set active video to null
                 else
                 {
-                    ActiveVideo = null;
+                    PlayingVideo = null;
                 }
             }
-            Debug.Assert(!ReferenceEquals(video, activeVideo));
+            Debug.Assert(!ReferenceEquals(video, playingVideo));
             videos.Remove(video);
             // did the play index change?
             var prevPlayIndex = playingVideoIndex;
@@ -150,28 +152,39 @@ namespace CerealPlayer.Models.Playlist
 
         #region Active Video
 
-        private VideoModel activeVideo = null;
+        private VideoModel playingVideo = null;
 
         /// <summary>
         /// video that is currently played or should be played if the playlist is active.
         /// Can be null (if waiting for a new episode to be added)
         /// </summary>
-        public VideoModel ActiveVideo
+        public VideoModel PlayingVideo
         {
-            get => activeVideo;
+            get => playingVideo;
             set
             {
                 Debug.Assert(value == null || videos.Contains(value));
-                if (ReferenceEquals(value, activeVideo)) return;
-                activeVideo = value;
+                if (ReferenceEquals(value, playingVideo)) return;
+
+                playingVideo = value;
                 var prevPlayingIndex = playingVideoIndex;
                 RecalcPlaylingVideoIndex();
-                OnPropertyChanged(nameof(ActiveVideo));
+
+                // reset play position
+                PlayingVideoPosition = TimeSpan.Zero;
+
+                OnPropertyChanged(nameof(PlayingVideo));
 
                 if (prevPlayingIndex != playingVideoIndex)
                     OnPropertyChanged(nameof(PlayingVideoIndex));
             }
         }
+
+        /// <summary>
+        /// The position of the playing video in TimeSpan ticks.
+        /// This property is excluded from INotifyPropertyChanged.
+        /// </summary>
+        public TimeSpan PlayingVideoPosition { get; set; } = TimeSpan.Zero;
 
         // set to -1 to reset value in models contructor
         private int playingVideoIndex = -1;
@@ -190,7 +203,7 @@ namespace CerealPlayer.Models.Playlist
 
                 if (playingVideoIndex == value) return;
                 playingVideoIndex = value;
-                ActiveVideo = playingVideoIndex == Videos.Count ? null : videos[playingVideoIndex];
+                PlayingVideo = playingVideoIndex == Videos.Count ? null : videos[playingVideoIndex];
                 OnPropertyChanged(nameof(PlayingVideoIndex));
             }
         } 
@@ -247,7 +260,8 @@ namespace CerealPlayer.Models.Playlist
                 Videos = vs.ToArray(),
                 LastWebsite = LastWebsite,
                 Name = Name,
-                PlayingVideo = PlayingVideoIndex
+                PlayingVideo = PlayingVideoIndex,
+                PlayingPosition = PlayingVideoPosition.Ticks
             };
         }
 
@@ -256,12 +270,12 @@ namespace CerealPlayer.Models.Playlist
         /// </summary>
         private void RecalcPlaylingVideoIndex()
         {
-            if (activeVideo == null)
+            if (playingVideo == null)
             {
                 playingVideoIndex = videos.Count;
                 return;
             }
-            playingVideoIndex = videos.IndexOf(activeVideo);
+            playingVideoIndex = videos.IndexOf(playingVideo);
             Debug.Assert(playingVideoIndex >= 0);
         }
 
