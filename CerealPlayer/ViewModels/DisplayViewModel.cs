@@ -9,31 +9,63 @@ using System.Windows;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models;
 using CerealPlayer.Models.Player;
+using CerealPlayer.Models.Playlist;
 
 namespace CerealPlayer.ViewModels
 {
     public class DisplayViewModel : INotifyPropertyChanged
     {
         private readonly Models.Models models;
+        private PlaylistModel activePlaylist = null;
 
         public DisplayViewModel(Models.Models models)
         {
             this.models = models;
             this.models.Display.PropertyChanged += DisplayOnPropertyChanged;
-            this.models.Player.PropertyChanged += PlayerOnPropertyChanged;
+            this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
         }
 
-        private void PlayerOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
             {
-                case nameof(PlayerModel.VideoName):
+                case nameof(PlaylistsModel.ActivePlaylist):
+                    if (activePlaylist != null)
+                    {
+                        activePlaylist.PropertyChanged -= ActivePlaylistOnPropertyChanged;
+                    }
+
+                    activePlaylist = models.Playlists.ActivePlaylist;
+                    if (activePlaylist != null)
+                    {
+                        activePlaylist.PropertyChanged += ActivePlaylistOnPropertyChanged;
+                    }
                     OnPropertyChanged(nameof(WindowTitle));
                     break;
             }
         }
 
-        public string WindowTitle => "Cereal Player" + (models.Player.VideoName.Length > 0? " - " + models.Player.VideoName : "");
+        private void ActivePlaylistOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(PlaylistModel.PlayingVideo):
+                    OnPropertyChanged(nameof(WindowTitle));
+                    break;
+            }
+        }
+
+        public string WindowTitle
+        {
+            get
+            {
+                if (activePlaylist == null)
+                    return "Cereal Player";
+                if (activePlaylist.PlayingVideo == null)
+                    return "Cereal Player " + activePlaylist.Name;
+                return "Cereal Player " + activePlaylist.PlayingVideo.Name;
+            }
+        }
 
         public Visibility PlaylistVisibility => models.Display.ShowPlaylist ? Visibility.Visible : Visibility.Collapsed;
 

@@ -11,16 +11,42 @@ namespace CerealPlayer.Models.Player
 {
     public class PlayerModel : INotifyPropertyChanged
     {
-        private string videoName = "";
+        private bool isPausing = false;
 
-        public string VideoName
+        public bool IsPausing
         {
-            get => videoName;
+            get => isPausing;
             set
             {
-                if(value == videoName) return;
-                videoName = value;
-                OnPropertyChanged(nameof(VideoName));
+                if(value == isPausing) return;
+                isPausing = value;
+                OnPropertyChanged(nameof(IsPausing));
+            }
+        }
+
+        private double volume = 1.0;
+
+        public double Volume
+        {
+            get => volume;
+            set
+            {
+                if(Equals(value, volume)) return;
+                volume = value;
+                OnPropertyChanged(nameof(Volume));
+            }
+        }
+
+        private bool isPlayerBarVisible = true;
+
+        public bool IsPlayerBarVisible
+        {
+            get => isPlayerBarVisible;
+            set
+            {
+                if(value == isPlayerBarVisible) return;
+                isPlayerBarVisible = value;
+                OnPropertyChanged(nameof(IsPlayerBarVisible));
             }
         }
 

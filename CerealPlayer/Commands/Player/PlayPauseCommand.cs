@@ -10,11 +10,11 @@ namespace CerealPlayer.Commands.Player
 {
     public class PlayPauseCommand : ICommand
     {
-        private readonly PlayerViewModel viewModel;
+        private readonly Models.Models models;
 
-        public PlayPauseCommand(PlayerViewModel viewModel)
+        public PlayPauseCommand(Models.Models models)
         {
-            this.viewModel = viewModel;
+            this.models = models;
         }
 
         public bool CanExecute(object parameter)
@@ -24,7 +24,7 @@ namespace CerealPlayer.Commands.Player
 
         public void Execute(object parameter)
         {
-            viewModel.PlayPause();
+            models.Player.IsPausing = !models.Player.IsPausing;
         }
 
         public event EventHandler CanExecuteChanged

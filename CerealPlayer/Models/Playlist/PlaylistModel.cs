@@ -172,6 +172,7 @@ namespace CerealPlayer.Models.Playlist
 
                 // reset play position
                 PlayingVideoPosition = TimeSpan.Zero;
+                PlayingVideoDuration = TimeSpan.Zero;
 
                 OnPropertyChanged(nameof(PlayingVideo));
 
@@ -180,11 +181,32 @@ namespace CerealPlayer.Models.Playlist
             }
         }
 
+        private TimeSpan playingVideoPosition = TimeSpan.Zero;
+
         /// <summary>
         /// The position of the playing video in TimeSpan ticks.
         /// This property is excluded from INotifyPropertyChanged.
+        /// This property has an exclusive changed handler (PlayingVideoPositionChanged)
         /// </summary>
-        public TimeSpan PlayingVideoPosition { get; set; } = TimeSpan.Zero;
+        public TimeSpan PlayingVideoPosition
+        {
+            get => playingVideoPosition;
+            set
+            {
+                if(value == playingVideoPosition) return;
+                playingVideoPosition = value;
+                OnPlayingVideoPositionChanged();
+            }
+        }
+
+        public event EventHandler PlayingVideoPositionChanged;
+
+        /// <summary>
+        /// this will be set by the player controller as soon
+        /// as the video is loaded.
+        /// This property is excluded from INotifyPropertyChanged
+        /// </summary>
+        public TimeSpan PlayingVideoDuration { get; set; } = TimeSpan.Zero;
 
         // set to -1 to reset value in models contructor
         private int playingVideoIndex = -1;
@@ -285,6 +307,11 @@ namespace CerealPlayer.Models.Playlist
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected virtual void OnPlayingVideoPositionChanged()
+        {
+            PlayingVideoPositionChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
