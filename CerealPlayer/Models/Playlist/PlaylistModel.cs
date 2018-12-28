@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -39,7 +41,8 @@ namespace CerealPlayer.Models.Playlist
             System.IO.Directory.CreateDirectory(Directory);
 
             // create video and download task
-            Videos.Add(new VideoModel(models, initialWebsite, this, hoster));
+            videos.Add(new VideoModel(models, initialWebsite, this, hoster));
+            PlayingVideoIndex = 0;
 
             var task = new NextEpisodeTaskModel(this);
             var subTask = hoster.GetNextEpisodeTask(task, initialWebsite);
@@ -63,10 +66,10 @@ namespace CerealPlayer.Models.Playlist
             // restore video tasks
             foreach (var video in data.Videos)
             {
-                Videos.Add(new VideoModel(models, this, hoster, video));
+                videos.Add(new VideoModel(models, this, hoster, video));
             }
 
-            playingVideoIndex = data.PlayingVideo;
+            PlayingVideoIndex = data.PlayingVideo;
 
             // restore next episode task
             var task = new NextEpisodeTaskModel(this);
@@ -78,35 +81,138 @@ namespace CerealPlayer.Models.Playlist
             this.NextEpisodeTask = task;
         }
 
-        public void AddNextEpisode(string website)
+        /// <summary>
+        /// adds a new episode to the end of the list
+        /// and sets LastWebsite to website.
+        /// Additionally sets active video if it was null
+        /// </summary>
+        /// <param name="website"></param>
+        public void AddNextEpisode([NotNull] string website)
         {
             LastWebsite = website;
-            Videos.Add(new VideoModel(models, website, this, hoster));
+            videos.Add(new VideoModel(models, website, this, hoster));
+            if (activeVideo == null)
+            {
+                ActiveVideo = videos.Last();
+            }
         }
 
+        /// <summary>
+        /// deletes a video from the list and chooses another playing video if
+        /// this was the playing video
+        /// </summary>
+        /// <param name="video"></param>
+        public void DeleteEpisode([NotNull] VideoModel video)
+        {
+            Debug.Assert(videos.Contains(video));
+            // is it the active video?
+            if (ReferenceEquals(video, activeVideo))
+            {
+                // take the next episode
+                if (PlayingVideoIndex < videos.Count - 1)
+                {
+                    PlayingVideoIndex++;
+                }
+                //take the previous episode
+                else if(PlayingVideoIndex > 0)
+                {
+                    PlayingVideoIndex--;
+                }
+                // set active video to null
+                else
+                {
+                    ActiveVideo = null;
+                }
+            }
+            Debug.Assert(!ReferenceEquals(video, activeVideo));
+            videos.Remove(video);
+            // did the play index change?
+            var prevPlayIndex = playingVideoIndex;
+            RecalcPlaylingVideoIndex();
+            if(prevPlayIndex != playingVideoIndex)
+                OnPropertyChanged(nameof(PlayingVideoIndex));
+        }
+
+        /// <summary>
+        /// name of the series
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// link of the last videos website
+        /// </summary>
         public string LastWebsite { get; private set; }
 
+        /// <summary>
+        /// full directory path of the playlist
+        /// </summary>
         public string Directory => models.App.PlaylistDirectory + "/" + Name;
 
-        private int playingVideoIndex = 0;
+        #region Active Video
 
+        private VideoModel activeVideo = null;
+
+        /// <summary>
+        /// video that is currently played or should be played if the playlist is active.
+        /// Can be null (if waiting for a new episode to be added)
+        /// </summary>
+        public VideoModel ActiveVideo
+        {
+            get => activeVideo;
+            set
+            {
+                Debug.Assert(value == null || videos.Contains(value));
+                if (ReferenceEquals(value, activeVideo)) return;
+                activeVideo = value;
+                var prevPlayingIndex = playingVideoIndex;
+                RecalcPlaylingVideoIndex();
+                OnPropertyChanged(nameof(ActiveVideo));
+
+                if (prevPlayingIndex != playingVideoIndex)
+                    OnPropertyChanged(nameof(PlayingVideoIndex));
+            }
+        }
+
+        // set to -1 to reset value in models contructor
+        private int playingVideoIndex = -1;
+
+        /// <summary>
+        /// shows the index of the video that is currently played 
+        /// or Videos.Count if the next episode that will be added should be played
+        /// </summary>
         public int PlayingVideoIndex
         {
             get => playingVideoIndex;
             set
             {
-                if (value >= Videos.Count) return;
-                if(value < 0) return;
-                
+                if (value > Videos.Count) return;
+                if (value < 0) return;
+
                 if (playingVideoIndex == value) return;
                 playingVideoIndex = value;
+                ActiveVideo = playingVideoIndex == Videos.Count ? null : videos[playingVideoIndex];
                 OnPropertyChanged(nameof(PlayingVideoIndex));
+            }
+        } 
+
+        #endregion
+
+        #region Video Collection
+
+        private readonly ObservableCollection<VideoModel> videos = new ObservableCollection<VideoModel>();
+
+        public IReadOnlyCollection<VideoModel> Videos => videos;
+
+        public event NotifyCollectionChangedEventHandler VideosCollectionChanged
+        {
+            add => videos.CollectionChanged += value;
+            remove
+            {
+                if (value != null) videos.CollectionChanged -= value;
             }
         }
 
-        public ObservableCollection<VideoModel> Videos = new ObservableCollection<VideoModel>();
+        #endregion
 
         [NotNull]
         public DownloadPlaylistTask DownloadPlaylistTask { get; }
@@ -143,6 +249,20 @@ namespace CerealPlayer.Models.Playlist
                 Name = Name,
                 PlayingVideo = PlayingVideoIndex
             };
+        }
+
+        /// <summary>
+        /// sets the playing video index without rasing its changed event
+        /// </summary>
+        private void RecalcPlaylingVideoIndex()
+        {
+            if (activeVideo == null)
+            {
+                playingVideoIndex = videos.Count;
+                return;
+            }
+            playingVideoIndex = videos.IndexOf(activeVideo);
+            Debug.Assert(playingVideoIndex >= 0);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

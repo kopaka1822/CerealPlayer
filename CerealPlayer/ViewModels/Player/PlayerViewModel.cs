@@ -295,16 +295,15 @@ namespace CerealPlayer.ViewModels.Player
 
             activePlaylist.PropertyChanged += ActivePlaylistOnPropertyChanged;
             // where did we left of?
-            var idx = activePlaylist.PlayingVideoIndex;
-            PlayVideo(activePlaylist.Videos[idx]);
+            PlayVideo(activePlaylist.ActiveVideo);
         }
 
         private void ActivePlaylistOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
             {
-                case nameof(PlaylistModel.PlayingVideoIndex):
-                    PlayVideo(activePlaylist.Videos[activePlaylist.PlayingVideoIndex]);
+                case nameof(PlaylistModel.ActiveVideo):
+                    PlayVideo(activePlaylist.ActiveVideo);
                     break;
             }
         }

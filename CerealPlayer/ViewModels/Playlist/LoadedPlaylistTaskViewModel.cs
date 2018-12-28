@@ -74,13 +74,15 @@ namespace CerealPlayer.ViewModels.Playlist
                 {
                     return parent.DownloadPlaylistTask.Description;
                 }
-                // display next episode task
-                if (parent.NextEpisodeTask.Status != TaskModel.TaskStatus.Finished)
-                {
-                    return parent.NextEpisodeTask.Description;
-                }
 
-                return "";
+                // display next episode task
+                if (parent.NextEpisodeTask.Status == TaskModel.TaskStatus.Finished
+                    || (parent.NextEpisodeTask.Status == TaskModel.TaskStatus.Failed 
+                        && parent.NextEpisodeTask.Description.Length == 0))
+                    return "up-to-date";
+
+                return parent.NextEpisodeTask.Description;
+
             }
         } 
 

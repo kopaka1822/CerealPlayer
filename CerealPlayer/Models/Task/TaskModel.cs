@@ -100,8 +100,8 @@ namespace CerealPlayer.Models.Task
             Debug.Assert(Status == TaskStatus.ReadyToStart || Status == TaskStatus.Failed);
             stopRequested = false;
             Status = TaskStatus.Running;
-            subTask.Start();
             curRetries = 0;
+            subTask.Start();
         }
 
         public void Stop()

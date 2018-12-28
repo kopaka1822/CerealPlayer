@@ -59,7 +59,7 @@ namespace CerealPlayer.ViewModels.Playlist
             }
 
             // add future videos
-            models.Playlists.ActivePlaylist.Videos.CollectionChanged += VideosOnCollectionChanged;
+            models.Playlists.ActivePlaylist.VideosCollectionChanged += VideosOnCollectionChanged;
         }
 
         private void VideosOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
@@ -80,7 +80,7 @@ namespace CerealPlayer.ViewModels.Playlist
             // remove all event subscriptions
             if (activePlaylist != null)
             {
-                activePlaylist.Videos.CollectionChanged -= VideosOnCollectionChanged;
+                activePlaylist.VideosCollectionChanged -= VideosOnCollectionChanged;
             }
             Videos.Clear();
             SelectedVideo = null;

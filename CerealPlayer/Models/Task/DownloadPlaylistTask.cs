@@ -21,7 +21,7 @@ namespace CerealPlayer.Models.Task
             Debug.Assert(playlist.Videos.Count == 0);
 
             this.playlist = playlist;
-            playlist.Videos.CollectionChanged += VideosOnCollectionChanged;
+            playlist.VideosCollectionChanged += VideosOnCollectionChanged;
         }
 
         private void VideosOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)

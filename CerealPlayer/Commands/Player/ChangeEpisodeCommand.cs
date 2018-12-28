@@ -37,7 +37,7 @@ namespace CerealPlayer.Commands.Player
                     // unsubsribe from old event
                     if (prevPlaylist != null)
                     {
-                        prevPlaylist.Videos.CollectionChanged -= VideosOnCollectionChanged;
+                        prevPlaylist.VideosCollectionChanged -= VideosOnCollectionChanged;
                         prevPlaylist.PropertyChanged -= PlaylistOnPropertyChanged;
                     }
 
@@ -45,7 +45,7 @@ namespace CerealPlayer.Commands.Player
                     // subscribe to new event
                     if (prevPlaylist != null)
                     {
-                        prevPlaylist.Videos.CollectionChanged += VideosOnCollectionChanged;
+                        prevPlaylist.VideosCollectionChanged += VideosOnCollectionChanged;
                         prevPlaylist.PropertyChanged += PlaylistOnPropertyChanged;
                     }
                     break;
