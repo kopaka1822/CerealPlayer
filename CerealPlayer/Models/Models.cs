@@ -20,6 +20,7 @@ namespace CerealPlayer.Models
         public PlaylistsModel Playlists { get; }
         public DisplayModel Display { get; }
         public PlayerModel Player { get; }
+        public SettingsModel Settings { get; }
 
         public Models(MainWindow window)
         {
@@ -28,6 +29,7 @@ namespace CerealPlayer.Models
             Playlists = new PlaylistsModel();
             Display = new DisplayModel();
             Player = new PlayerModel();
+            Settings = new SettingsModel();
         }
 
         public void Dispose()

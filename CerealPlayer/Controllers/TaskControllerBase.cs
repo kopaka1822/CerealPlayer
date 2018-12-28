@@ -12,7 +12,7 @@ namespace CerealPlayer.Controllers
 {
     public abstract class TaskControllerBase
     {
-        private readonly Models.Models models;
+        protected readonly Models.Models models;
         private readonly List<PlaylistModel> priorityQueue = new List<PlaylistModel>();
 
         protected TaskControllerBase(Models.Models models)
@@ -42,6 +42,9 @@ namespace CerealPlayer.Controllers
 
         // indicates if one new task may be started
         protected abstract bool CanExecuteTasks();
+
+        // indicates if the task for this playlist should be started
+        protected abstract bool CanExecuteTask(PlaylistModel playlist);
 
         // keep priority queu up to date
         private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
@@ -73,7 +76,10 @@ namespace CerealPlayer.Controllers
             StartNewTasks();
         }
 
-        private void StartNewTasks()
+        /// <summary>
+        /// tests if new tasks can be executed
+        /// </summary>
+        protected void StartNewTasks()
         {
             if(!CanExecuteTasks()) return;
 
@@ -82,6 +88,8 @@ namespace CerealPlayer.Controllers
             {
                 var task = GetTask(playlistModel);
                 if (task.Status != TaskModel.TaskStatus.ReadyToStart) continue;
+
+                if(!CanExecuteTask(playlistModel)) continue;
 
                 task.Start();
                 if(!CanExecuteTasks()) return;

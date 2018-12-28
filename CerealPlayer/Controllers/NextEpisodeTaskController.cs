@@ -23,5 +23,10 @@ namespace CerealPlayer.Controllers
         {
             return true;
         }
+
+        protected override bool CanExecuteTask(PlaylistModel playlist)
+        {
+            return true;
+        }
     }
 }
