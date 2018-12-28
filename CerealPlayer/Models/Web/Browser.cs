@@ -59,6 +59,10 @@ namespace CerealPlayer.Models.Web
 
         public void Dispose()
         {
+            foreach (var browserPage in pages)
+            {
+                browserPage?.Dispose();
+            }
             Cef.Shutdown();
         }
     }
