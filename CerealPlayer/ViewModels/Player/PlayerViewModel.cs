@@ -40,6 +40,11 @@ namespace CerealPlayer.ViewModels.Player
 
             ToggleFullscreenCommand = new ToggleFullscreenCommand(models);
             TogglePlaylistCommand = new TogglePlaylistCommand(models);
+
+            // allow user to modify slider
+            var slider = models.App.Window.PlayerBar.Slider;
+            slider.PreviewMouseDown += (sender, args) => userHoldsTime = true;
+            slider.PreviewMouseUp += (sender, args) => userHoldsTime = false;
         }
 
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -73,7 +78,8 @@ namespace CerealPlayer.ViewModels.Player
         {
             OnPropertyChanged(nameof(TimeElapsed));
             OnPropertyChanged(nameof(TimeRemaining));
-            OnPropertyChanged(nameof(TimeProgress));
+            if(!userHoldsTime)
+                OnPropertyChanged(nameof(TimeProgress));
         }
 
         private void ActivePlaylistOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -147,12 +153,18 @@ namespace CerealPlayer.ViewModels.Player
             }
         }
 
+        // this variable will be used if the user is holding down the trackbar
+        private double userTimeProgress = 0;
+        private bool userHoldsTime = false;
+
         public double TimeProgress
         {
             get
             {
                 if (!HasMedia) return 0;
                 if (activePlaylist.PlayingVideoDuration == TimeSpan.Zero) return 0;
+                if (userHoldsTime) return userTimeProgress;
+
                 return (double) activePlaylist.PlayingVideoPosition.Ticks / activePlaylist.PlayingVideoDuration.Ticks;
             }
             set
@@ -160,7 +172,11 @@ namespace CerealPlayer.ViewModels.Player
                 if(!HasMedia) return;
                 if(activePlaylist.PlayingVideoDuration == TimeSpan.Zero) return;
                 var ticks = (long) (activePlaylist.PlayingVideoDuration.Ticks * value);
-                activePlaylist.PlayingVideoPosition = TimeSpan.FromTicks(ticks);
+                var newPos = TimeSpan.FromTicks(ticks);
+
+                userTimeProgress = (double)newPos.Ticks / activePlaylist.PlayingVideoDuration.Ticks;
+
+                activePlaylist.PlayingVideoPosition = newPos;
             }
         }
 
