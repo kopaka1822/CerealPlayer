@@ -145,6 +145,7 @@
     <Compile Include="Models\Task\ISubTask.cs" />
     <Compile Include="Models\Task\NextEpisodeTaskModel.cs" />
     <Compile Include="Models\Web\Browser.cs" />
+    <Compile Include="Models\Web\BrowserPage.cs" />
     <Compile Include="Models\Web\HtmlProvider.cs" />
     <Compile Include="Models\Web\WebModel.cs" />
     <Compile Include="Properties\Annotations.cs" />

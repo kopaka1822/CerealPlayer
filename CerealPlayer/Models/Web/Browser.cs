@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,14 +15,8 @@ namespace CerealPlayer.Models.Web
 {
     public class Browser
     {
-        /// <summary>
-        /// The browser page
-        /// </summary>
-        private ChromiumWebBrowser Page { get; }
-
-        // chromium does not manage timeouts, so we'll implement one
-        private readonly ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-        private readonly RequestContext context;
+        private static readonly int MaxPages = 6;
+        private ConcurrentStack<BrowserPage> pages = new ConcurrentStack<BrowserPage>();
 
         public Browser()
         {
@@ -29,80 +26,40 @@ namespace CerealPlayer.Models.Web
                 CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CefSharp\\Cache"),
             };
 
-            //Autoshutdown when closing
-            CefSharpSettings.ShutdownOnExit = true;
+            CefSharpSettings.ShutdownOnExit = false;
 
-            //Perform dependency check to make sure all relevant resources are in our     output directory.
+            //Perform dependency check to make sure all relevant resources are in our output directory.
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
 
-            context = new RequestContext();
-            Page = new ChromiumWebBrowser("", null, context);
-
-            SpinWait.SpinUntil(() => Page.IsBrowserInitialized);
-        }
-
-        public void Dispose()
-        {
-            Page.Dispose();
-            context.Dispose();
+            // add some emtpy pages to the stack. the pages will be created if needed
+            for(int i = 0; i < MaxPages; ++i)
+                pages.Push(null);
         }
 
         public async Task<string> GetSourceAsynch(string url)
         {
-            await System.Threading.Tasks.Task.Run(() => OpenUrl(url));
-            var source = await Page.GetSourceAsync();
-            return source;
-        }
+            BrowserPage page = null;
 
-        /// <summary>
-        /// Open the given url
-        /// </summary>
-        /// <param name="url">the url</param>
-        /// <returns></returns>
-        private void OpenUrl(string url)
-        {
-            try
+            await System.Threading.Tasks.Task.Run(() =>
             {
-                Page.LoadingStateChanged += PageLoadingStateChanged;
-                if (!Page.IsBrowserInitialized)
-                    throw new Exception("OpenUrl - browser not initialized!");
-                
-                Page.Load(url);
-
-                //create a 60 sec timeout 
-                bool isSignalled = manualResetEvent.WaitOne(TimeSpan.FromSeconds(60));
-                manualResetEvent.Reset();
-
-                //As the request may actually get an answer, we'll force stop when the timeout is passed
-                if (!isSignalled)
+                // get page
+                SpinWait.SpinUntil(() => pages.TryPop(out page));
+                if (page == null)
                 {
-                    Page.Stop();
+                    // create browser instance
+                    page = new BrowserPage();
                 }
+            });
 
-            }
-            catch (ObjectDisposedException)
-            {
-                //happens on the manualResetEvent.Reset(); when a cancelation token has disposed the context
-            }
-            finally
-            {
-                Page.LoadingStateChanged -= PageLoadingStateChanged;
-            }
+            Debug.Assert(page != null);
+            var res = await page.GetSourceAsynch(url);
+            pages.Push(page);
+            return res;
         }
 
-        /// <summary>
-        /// Manage the IsLoading parameter
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PageLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
+        public void Dispose()
         {
-            // Check to see if loading is complete - this event is called twice, one when loading starts
-            // second time when it's finished
-            if (!e.IsLoading)
-            {
-                manualResetEvent.Set();
-            }
+            Cef.Shutdown();
         }
     }
 }
