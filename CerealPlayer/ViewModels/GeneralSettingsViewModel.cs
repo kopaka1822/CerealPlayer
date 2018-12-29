@@ -99,7 +99,7 @@ namespace CerealPlayer.ViewModels
             set
             {
                 if (value == hidePlaybarTime) return;
-                hidePlaybarTime = Math.Max(value, 0);
+                hidePlaybarTime = Math.Max(value, 1);
                 OnPropertyChanged(nameof(HidePlaybarTime));
             }
         }

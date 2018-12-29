@@ -106,7 +106,7 @@ namespace CerealPlayer.Controllers
             // hide play bar?
             if (models.App.Window.PlayerBar.IsMouseOver) mouseMoveStopwatch.Restart();
 
-            if (HasMedia && !models.Player.IsPausing && mouseMoveStopwatch.Elapsed > TimeSpan.FromSeconds(5))
+            if (HasMedia && !models.Player.IsPausing && mouseMoveStopwatch.Elapsed > TimeSpan.FromSeconds(models.Settings.HidePlaybarTime))
             {
                 models.Player.IsPlayerBarVisible = false;
             }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CerealPlayer.Views"
         mc:Ignorable="d"
         Title="Settings" 
-        Height="450" 
+        Height="470" 
         Width="350"
         WindowStyle="ToolWindow">
     <DockPanel
@@ -109,7 +109,7 @@
                 <TextBlock
                     Margin="{StaticResource BigBottomBorder}"
                     Style="{StaticResource DescriptionStyle}">
-                    The Chromium Embedded Framework is used to execute javascript on websites.
+                    The Chromium Embedded Framework is used to execute javascript on websites (restart required).
                 </TextBlock>
             </StackPanel>
 

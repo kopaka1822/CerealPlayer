@@ -80,7 +80,7 @@ namespace CerealPlayer.Models
             get => Settings.Default.HidePlaybarTime;
             set
             {
-                Debug.Assert(value >= 0);
+                Debug.Assert(value >= 1);
                 if(Settings.Default.HidePlaybarTime == value) return;
                 Settings.Default.HidePlaybarTime = value;
                 OnPropertyChanged(nameof(HidePlaybarTime));
