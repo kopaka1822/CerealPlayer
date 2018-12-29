@@ -75,6 +75,35 @@ namespace CerealPlayer.Models
             }
         }
 
+        public int HidePlaybarTime
+        {
+            get => Settings.Default.HidePlaybarTime;
+            set
+            {
+                Debug.Assert(value >= 0);
+                if(Settings.Default.HidePlaybarTime == value) return;
+                Settings.Default.HidePlaybarTime = value;
+                OnPropertyChanged(nameof(HidePlaybarTime));
+            }
+        }
+
+        public int MaxChromiumInstances
+        {
+            get => Settings.Default.MaxChromiumInstances;
+            set
+            {
+                Debug.Assert(value >= 1);
+                if(Settings.Default.MaxChromiumInstances == value) return;
+                Settings.Default.MaxChromiumInstances = value;
+                OnPropertyChanged(nameof(MaxChromiumInstances));
+            }
+        }
+
+        public void Save()
+        {
+            Settings.Default.Save();
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

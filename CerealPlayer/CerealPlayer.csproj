@@ -119,6 +119,7 @@
     <Compile Include="Commands\Playlist\Video\StopVideoDownloadCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\UpdatePlaylistDirectoryCommand.cs" />
     <Compile Include="Commands\SetDialogResultCommand.cs" />
+    <Compile Include="Commands\ShowGeneralSettingsCommand.cs" />
     <Compile Include="Commands\ToggleFullscreenCommand.cs" />
     <Compile Include="Commands\TogglePlaylistCommand.cs" />
     <Compile Include="Controllers\DownloadTaskController.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Utility\HosterUtil.cs" />
     <Compile Include="Utility\StringUtil.cs" />
     <Compile Include="ViewModels\DisplayViewModel.cs" />
+    <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\Player\PlayerViewModel.cs" />
     <Compile Include="ViewModels\Playlist\IPlaylistTaskViewModel.cs" />
     <Compile Include="ViewModels\Playlist\NonLoadedPlaylistTaskModel.cs" />
@@ -163,6 +165,9 @@
     <Compile Include="ViewModels\Playlist\ActivePlaylistViewModel.cs" />
     <Compile Include="ViewModels\Playlist\LoadedPlaylistTaskViewModel.cs" />
     <Compile Include="ViewModels\ViewModels.cs" />
+    <Compile Include="Views\GeneralSettingsView.xaml.cs">
+      <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PlayerBar.xaml.cs">
       <DependentUpon>PlayerBar.xaml</DependentUpon>
     </Compile>
@@ -187,6 +192,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\GeneralSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PlayerBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

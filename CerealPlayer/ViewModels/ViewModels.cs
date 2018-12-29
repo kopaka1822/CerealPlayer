@@ -32,6 +32,7 @@ namespace CerealPlayer.ViewModels
         public ICommand NewPlaylistCommand { get; }
         public ICommand StopAllCommand { get; }
         public ICommand UpdateAllCommand { get; }
+        public ICommand GeneralSettingsCommand { get; }
 
         public ViewModels(Models.Models models)
         {
@@ -51,6 +52,7 @@ namespace CerealPlayer.ViewModels
             NewPlaylistCommand = new NewPlaylistCommand(models);
             StopAllCommand = new StopAllTasksCommand(models);
             UpdateAllCommand = new UpdateAllPlaylistsCommand(models, PlaylistPreview);
+            GeneralSettingsCommand = new ShowGeneralSettingsCommand(models);
         }
 
         public void Dispose()

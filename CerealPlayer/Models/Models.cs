@@ -34,6 +34,7 @@ namespace CerealPlayer.Models
 
         public void Dispose()
         {
+            Settings.Save();
             Web.Dispose();
         }
     }

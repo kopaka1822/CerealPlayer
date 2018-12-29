@@ -70,5 +70,29 @@ namespace CerealPlayer.Properties {
                 this["DownloadSpeed"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int HidePlaybarTime {
+            get {
+                return ((int)(this["HidePlaybarTime"]));
+            }
+            set {
+                this["HidePlaybarTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int MaxChromiumInstances {
+            get {
+                return ((int)(this["MaxChromiumInstances"]));
+            }
+            set {
+                this["MaxChromiumInstances"] = value;
+            }
+        }
     }
 }
