@@ -118,6 +118,7 @@
     <Compile Include="Commands\Playlist\NonLoaded\CreatePlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\NewPlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\DeletePlaylistCommand.cs" />
+    <Compile Include="Commands\Playlist\Video\DeleteVideoCommand.cs" />
     <Compile Include="Commands\Playlist\Video\RetryVideoDownloadCommand.cs" />
     <Compile Include="Commands\Playlist\Loaded\SetActivePlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\Video\SetActiveVideoCommand.cs" />

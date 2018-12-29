@@ -21,15 +21,16 @@ namespace CerealPlayer.ViewModels.Playlist
         private readonly Models.Models models;
         private readonly VideoModel video;
 
-        public PlaylistItemViewModel(Models.Models models, VideoModel video, RetryVideoDownloadCommand retryCommand)
+        public PlaylistItemViewModel(Models.Models models, VideoModel video)
         {
             this.models = models;
             this.video = video;
             video.DownloadTask.PropertyChanged += DownloadTaskOnPropertyChanged;
 
-            RetryCommand = retryCommand;
+            RetryCommand = new RetryVideoDownloadCommand(video.Parent);
             StopCommand = new StopVideoDownloadCommand(video.DownloadTask);
             PlayCommand = new SetActiveVideoCommand(models, video);
+            DeleteCommand = new DeleteVideoCommand(models, video, true);
         }
 
         private void DownloadTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -57,6 +58,8 @@ namespace CerealPlayer.ViewModels.Playlist
         public ICommand RetryCommand { get; }
 
         public ICommand StopCommand { get; }
+
+        public ICommand DeleteCommand { get; }
 
         public Visibility RetryVisibility =>
             video.DownloadTask.Status == TaskModel.TaskStatus.Failed

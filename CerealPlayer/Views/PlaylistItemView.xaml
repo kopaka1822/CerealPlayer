@@ -25,20 +25,33 @@
             <TextBlock 
                 Text="{Binding Name, FallbackValue=Episode Title}"
                 FontWeight="Bold"/>
-            <Button
+
+            <StackPanel 
+                Orientation="Horizontal"
                 Grid.Column="1"
-                Command="{Binding RetryCommand}"
-                Visibility="{Binding RetryVisibility}">
-                <Image 
-                    Source="../Icons/retry.png"
-                    Height="{StaticResource SmallIconHeight}"/>
-            </Button>
-            <Button
+                Margin="{StaticResource LeftBorder}">
+                <Button
+                    Command="{Binding RetryCommand}"
+                    Visibility="{Binding RetryVisibility}">
+                    <Image 
+                        Source="../Icons/retry.png"
+                        Height="{StaticResource SmallIconHeight}"/>
+                </Button>
+                <Button
+                    Command="{Binding StopCommand}"
+                    Visibility="{Binding StopVisibility, FallbackValue=Collapsed}">
+                    <Image 
+                        Source="../Icons/stop.png"
+                        Height="{StaticResource SmallIconHeight}"/>
+                </Button>
+            </StackPanel>
+
+            <Button 
                 Grid.Column="2"
-                Command="{Binding StopCommand}"
-                Visibility="{Binding StopVisibility}">
+                Command="{Binding DeleteCommand}"
+                Margin="{StaticResource LeftBorder}">
                 <Image 
-                    Source="../Icons/stop.png"
+                    Source="../Icons/delete.png"
                     Height="{StaticResource SmallIconHeight}"/>
             </Button>
         </Grid>

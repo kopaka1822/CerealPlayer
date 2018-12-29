@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,28 @@ namespace CerealPlayer.Controllers
             prevMaxDownloads = models.Settings.MaxDownloads;
             prevMaxAdvanceDownloads = models.Settings.MaxAdvanceDownloads;
             models.Settings.PropertyChanged += SettingsOnPropertyChanged;
+            models.Playlists.List.CollectionChanged += PlaylistOnCollectionChanged;
+        }
+
+        private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+        {
+            if(args.NewItems == null) return;
+            foreach (var item in args.NewItems)
+            {
+                var playlist = (PlaylistModel) item;
+                playlist.PropertyChanged += PlaylistOnPropertyChanged;
+            }
+        }
+
+        private void PlaylistOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(PlaylistModel.PlayingVideo):
+                    // max advance download restriction might have changed
+                    StartNewTasks();
+                    break;
+            }
         }
 
         private void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs args)

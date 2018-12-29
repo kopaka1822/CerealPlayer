@@ -80,6 +80,9 @@ namespace CerealPlayer.Models.Task
 
         private void UnregisterActiveTask()
         {
+            if(activeVideo.DownloadTask.Status == TaskStatus.Running)
+                activeVideo.DownloadTask.Stop();
+
             activeVideo.DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
             activeVideo = null;
         }

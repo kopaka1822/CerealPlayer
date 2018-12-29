@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
+using CerealPlayer.Models.Task;
 
 namespace CerealPlayer.Commands.Playlist.Loaded
 {
@@ -37,9 +39,17 @@ namespace CerealPlayer.Commands.Playlist.Loaded
 
             // remove from playlists
             models.Playlists.List.Remove(playlist);
+            DeletePlaylistAsynch();
+        }
 
+        private async void DeletePlaylistAsynch()
+        {
             try
             {
+                // wait until the download task aborted
+                await System.Threading.Tasks.Task.Run(() =>
+                    SpinWait.SpinUntil(() => playlist.DownloadPlaylistTask.Status != TaskModel.TaskStatus.Running));
+
                 // delete the folder
                 System.IO.Directory.Delete(playlist.Directory, true);
             }

@@ -52,8 +52,7 @@ namespace CerealPlayer.ViewModels.Playlist
             {
                 var view = new PlaylistItemView
                 {
-                    DataContext = new PlaylistItemViewModel(models, playlistVideo, 
-                        new RetryVideoDownloadCommand(activePlaylist))
+                    DataContext = new PlaylistItemViewModel(models, playlistVideo)
                 };
                 Videos.Add(view);
             }
@@ -64,15 +63,29 @@ namespace CerealPlayer.ViewModels.Playlist
 
         private void VideosOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
-            Debug.Assert(args.Action == NotifyCollectionChangedAction.Add);
-            Debug.Assert(args.NewStartingIndex == Videos.Count);
-
-            // add to the end of the list
-            Videos.Add(new PlaylistItemView
+            if (args.NewItems != null)
             {
-                DataContext = new PlaylistItemViewModel(models, activePlaylist.Videos.Last(),
-                    new RetryVideoDownloadCommand(activePlaylist))
-            });
+                Debug.Assert(args.NewStartingIndex == Videos.Count);
+                // add to the end of the list
+                foreach (var item in args.NewItems)
+                {
+                    var video = (VideoModel) item;
+                    // add to the end of the list
+                    Videos.Add(new PlaylistItemView
+                    {
+                        DataContext = new PlaylistItemViewModel(models, video)
+                    });
+                }
+            }
+
+            if (args.OldItems != null)
+            {
+                var numRemoved = args.OldItems.Count;
+                for (int i = 0; i < numRemoved; ++i)
+                {
+                    Videos.RemoveAt(args.OldStartingIndex);
+                }
+            }
         }
 
         private void Reset()
