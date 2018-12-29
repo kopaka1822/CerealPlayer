@@ -27,6 +27,7 @@ namespace CerealPlayer.ViewModels
         public DownloadTaskController DownloadTaskCtrl { get; }
         public SaveFileController SaveCtrl { get; }
         public PlayerController PlayerCtrl { get; }
+        public DeleteAfterWatchedController DeleteAfterWatchedCtrl { get; }
 
         // commands
         public ICommand NewPlaylistCommand { get; }
@@ -41,6 +42,7 @@ namespace CerealPlayer.ViewModels
             DownloadTaskCtrl = new DownloadTaskController(models);
             SaveCtrl = new SaveFileController(models);
             PlayerCtrl = new PlayerController(models);
+            DeleteAfterWatchedCtrl = new DeleteAfterWatchedController(models);
 
             // view models
             ActivePlaylist = new ActivePlaylistViewModel(models);

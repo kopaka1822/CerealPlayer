@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CerealPlayer.Annotations;
+using CerealPlayer.Commands.Playlist.Video;
 using CerealPlayer.Models.Hoster;
 using CerealPlayer.Models.Task;
 using Newtonsoft.Json;
@@ -26,23 +27,25 @@ namespace CerealPlayer.Models.Playlist
         public VideoModel(Models models, string initialWebsite, PlaylistModel parent, IVideoHoster hoster)
         {
             InitialWebsite = initialWebsite;
-            this.Parent = parent;
+            Parent = parent;
+            DeleteTask = CreateDeleteTask(models);
 
             // try to find an appropriate downloader
             var info = hoster.GetInfo(initialWebsite);
-            this.Name = info.EpisodeTitle;
-            this.Number = info.EpisodeNumber;
+            Name = info.EpisodeTitle;
+            Number = info.EpisodeNumber;
 
             // create download task
             var task = new VideoTaskModel(this);
             task.SetNewSubTask(hoster.GetDownloadTask(task, initialWebsite));
-            this.DownloadTask = task;
+            DownloadTask = task;
         }
 
         public VideoModel(Models models, PlaylistModel parent, IVideoHoster hoster, SaveData data)
         {
             InitialWebsite = data.Website;
-            this.Parent = parent;
+            Parent = parent;
+            DeleteTask = CreateDeleteTask(models);
             Name = data.Name;
             Number = data.Number;
             Extension = data.Extension;
@@ -58,7 +61,7 @@ namespace CerealPlayer.Models.Playlist
                 task.SetNewSubTask(hoster.GetDownloadTask(task, data.Website));
             }
 
-            this.DownloadTask = task;
+            DownloadTask = task;
         }
 
         public PlaylistModel Parent { get; }
@@ -76,6 +79,12 @@ namespace CerealPlayer.Models.Playlist
         [NotNull]
         public VideoTaskModel DownloadTask { get; }
 
+        /// <summary>
+        /// task that will be used for the delayed delete (if delete episode after watching is true)
+        /// </summary>
+        [NotNull]
+        public TaskModel DeleteTask { get; }
+
         public SaveData GetSaveData()
         {
             return new SaveData
@@ -87,5 +96,16 @@ namespace CerealPlayer.Models.Playlist
                 IsDownloaded = DownloadTask.Status == TaskModel.TaskStatus.Finished
             };
         }
+
+        private TaskModel CreateDeleteTask(Models models)
+        {
+            var task = new TaskModel(1, TimeSpan.Zero);
+            var deleteCommand = new DeleteVideoCommand(models, this, false);
+            task.SetNewSubTask(new DelayedCommandTask(task, deleteCommand, 10, "deleting video in "));
+            // set this task to failed (don't delete the video yet)
+            task.Stop();
+            return task;
+        }
+
     }
 }

@@ -96,7 +96,8 @@
                 VerticalAlignment="Top"
                 Height="{Binding ActualHeight, ElementName=MaxDownloadsLabel}"
                 Margin="{StaticResource BottomBorder}"
-                Text="{Binding DownloadSpeed}"/>
+                Text="{Binding DownloadSpeed}"
+                IsEnabled="False"/>
 
             <!-- Chromium Instances -->
             <StackPanel

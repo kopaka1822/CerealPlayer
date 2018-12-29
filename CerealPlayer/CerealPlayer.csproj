@@ -122,12 +122,14 @@
     <Compile Include="Commands\Playlist\Video\RetryVideoDownloadCommand.cs" />
     <Compile Include="Commands\Playlist\Loaded\SetActivePlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\Video\SetActiveVideoCommand.cs" />
+    <Compile Include="Commands\Playlist\Video\StopVideoDeletionCommand.cs" />
     <Compile Include="Commands\Playlist\Video\StopVideoDownloadCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\UpdatePlaylistDirectoryCommand.cs" />
     <Compile Include="Commands\SetDialogResultCommand.cs" />
     <Compile Include="Commands\ShowGeneralSettingsCommand.cs" />
     <Compile Include="Commands\ToggleFullscreenCommand.cs" />
     <Compile Include="Commands\TogglePlaylistCommand.cs" />
+    <Compile Include="Controllers\DeleteAfterWatchedController.cs" />
     <Compile Include="Controllers\DownloadTaskController.cs" />
     <Compile Include="Controllers\NextEpisodeTaskController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Models\Playlist\VideoModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Models\Task\DefaultVideoDownloader.cs" />
+    <Compile Include="Models\Task\DelayedCommandTask.cs" />
     <Compile Include="Models\Task\DownloadPlaylistTask.cs" />
     <Compile Include="Models\Task\VideoTaskModel.cs" />
     <Compile Include="Models\Task\ISubTask.cs" />

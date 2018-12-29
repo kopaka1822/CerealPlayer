@@ -55,11 +55,28 @@
                     Height="{StaticResource SmallIconHeight}"/>
             </Button>
         </Grid>
-        
-        <TextBlock 
-            Text="{Binding Status, FallbackValue=Status}"
-            TextWrapping="Wrap"
-            Margin="{StaticResource BottomBorder}"/>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock 
+                Text="{Binding Status, FallbackValue=Status}"
+                TextWrapping="Wrap"
+                Margin="{StaticResource BottomBorder}"/>
+
+            <Button
+                Grid.Column="1"
+                Command="{Binding StopDeleteCommand}"
+                Visibility="{Binding StopDeleteVisibility, FallbackValue=Visible}">
+                <Image 
+                    Source="../Icons/stop.png"
+                    Height="{StaticResource SmallIconHeight}"/>
+            </Button>
+        </Grid>
+
         <ProgressBar
             Height="20"
             Value="{Binding Progress, FallbackValue=40}"

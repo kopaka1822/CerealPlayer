@@ -25,15 +25,17 @@ namespace CerealPlayer.ViewModels.Playlist
         {
             this.models = models;
             this.video = video;
-            video.DownloadTask.PropertyChanged += DownloadTaskOnPropertyChanged;
+            video.DownloadTask.PropertyChanged += TaskOnPropertyChanged;
+            video.DeleteTask.PropertyChanged += TaskOnPropertyChanged;
 
             RetryCommand = new RetryVideoDownloadCommand(video.Parent);
             StopCommand = new StopVideoDownloadCommand(video.DownloadTask);
             PlayCommand = new SetActiveVideoCommand(models, video);
             DeleteCommand = new DeleteVideoCommand(models, video, true);
+            StopDeleteCommand = new StopVideoDeletionCommand(models, video);
         }
 
-        private void DownloadTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        private void TaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
             {
@@ -41,6 +43,8 @@ namespace CerealPlayer.ViewModels.Playlist
                     OnPropertyChanged(nameof(RetryVisibility));
                     OnPropertyChanged(nameof(StopVisibility));
                     OnPropertyChanged(nameof(ProgressVisibility));
+                    OnPropertyChanged(nameof(StopDeleteVisibility));
+                    OnPropertyChanged(nameof(Status));
                     break;
                 case nameof(TaskModel.Description):
                     OnPropertyChanged(nameof(Status));
@@ -61,6 +65,8 @@ namespace CerealPlayer.ViewModels.Playlist
 
         public ICommand DeleteCommand { get; }
 
+        public ICommand StopDeleteCommand { get; }
+
         public Visibility RetryVisibility =>
             video.DownloadTask.Status == TaskModel.TaskStatus.Failed
                 ? Visibility.Visible
@@ -73,14 +79,17 @@ namespace CerealPlayer.ViewModels.Playlist
 
         public Visibility ProgressVisibility => StopVisibility;
 
+        public Visibility StopDeleteVisibility => video.DeleteTask.Status == TaskModel.TaskStatus.Running
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
         public int Progress
         {
             get => video.DownloadTask.Progress;
             set { } // dummy set
         }
 
-        // TODO add current play position if playing
-        public string Status => video.DownloadTask.Description;
+        public string Status => video.DeleteTask.ReadyOrRunning ? video.DeleteTask.Description : video.DownloadTask.Description;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

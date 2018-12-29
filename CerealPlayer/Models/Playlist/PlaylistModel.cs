@@ -107,6 +107,10 @@ namespace CerealPlayer.Models.Playlist
         public void DeleteEpisode([NotNull] VideoModel video)
         {
             Debug.Assert(videos.Contains(video));
+            // stop automatic deletion
+            if (video.DeleteTask.ReadyOrRunning)
+                video.DeleteTask.Stop();
+
             // is it the active video?
             if (ReferenceEquals(video, playingVideo))
             {

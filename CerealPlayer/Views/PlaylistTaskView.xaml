@@ -70,6 +70,7 @@
             Text="{Binding Status, FallbackValue=Status}"
             TextWrapping="Wrap"
             Margin="{StaticResource BottomBorder}"/>
+
         <ProgressBar
             Height="20"
             Value="{Binding Progress, FallbackValue=40}"
