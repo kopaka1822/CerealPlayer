@@ -72,6 +72,9 @@ namespace CerealPlayer.ViewModels.Playlist
                 // display download task
                 if (parent.DownloadPlaylistTask.Status != TaskModel.TaskStatus.Finished)
                 {
+                    if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.ReadyToStart)
+                        return "pausing due to download restrictions";
+
                     return parent.DownloadPlaylistTask.Description;
                 }
 

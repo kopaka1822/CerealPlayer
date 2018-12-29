@@ -89,7 +89,22 @@ namespace CerealPlayer.ViewModels.Playlist
             set { } // dummy set
         }
 
-        public string Status => video.DeleteTask.ReadyOrRunning ? video.DeleteTask.Description : video.DownloadTask.Description;
+        public string Status
+        {
+            get
+            {
+                if (video.DeleteTask.ReadyOrRunning)
+                    return video.DeleteTask.Description;
+
+                if (video.DownloadTask.Status == TaskModel.TaskStatus.Finished)
+                {
+                    return "downloaded";
+                }
+                return video.DownloadTask.Description;
+            }
+        }
+
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 

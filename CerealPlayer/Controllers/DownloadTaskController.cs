@@ -22,6 +22,16 @@ namespace CerealPlayer.Controllers
             prevMaxAdvanceDownloads = models.Settings.MaxAdvanceDownloads;
             models.Settings.PropertyChanged += SettingsOnPropertyChanged;
             models.Playlists.List.CollectionChanged += PlaylistOnCollectionChanged;
+            models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
+        }
+
+        private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if(args.PropertyName != nameof(PlaylistsModel.ActivePlaylist)) return;
+            if(models.Playlists.ActivePlaylist == null) return;
+            // download restruction of active playlist lifted?
+            if(CanExecuteTask(models.Playlists.ActivePlaylist))
+                StartNewTasks();
         }
 
         private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
@@ -90,8 +100,11 @@ namespace CerealPlayer.Controllers
             }
 
             var episodesAhead = nextDownloadIndex - playlist.PlayingVideoIndex;
-
-            return episodesAhead <= models.Settings.MaxAdvanceDownloads;
+            if (episodesAhead < models.Settings.MaxAdvanceDownloads) return true;
+            if (episodesAhead > models.Settings.MaxAdvanceDownloads) return false;
+            // equal => is the video being played?
+            return ReferenceEquals(models.Playlists.ActivePlaylist, playlist) || 
+                playlist.PlayingVideoPosition > TimeSpan.Zero;
         }
     }
 }

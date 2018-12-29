@@ -197,8 +197,12 @@ namespace CerealPlayer.Models.Playlist
             get => playingVideoPosition;
             set
             {
-                if(value == playingVideoPosition) return;
-                playingVideoPosition = value;
+                var clamped = value;
+                if(clamped < TimeSpan.Zero)
+                    clamped = TimeSpan.Zero;
+                
+                if(clamped == playingVideoPosition) return;
+                playingVideoPosition = clamped;
                 OnPlayingVideoPositionChanged();
             }
         }

@@ -51,7 +51,8 @@ namespace CerealPlayer.Controllers
                     // schedule deletion of previous video
                     if (models.Settings.DeleteAfterWatching && playingVideo != null)
                     {
-                        if (playingVideo.DeleteTask.Status == TaskModel.TaskStatus.Failed)
+                        if (playingVideo.DeleteTask.Status == TaskModel.TaskStatus.Failed
+                            || playingVideo.DeleteTask.Status == TaskModel.TaskStatus.ReadyToStart)
                         {
                             // only delete if the new video has a higher index than the previous one
                             if (activePlaylist.PlayingVideo == null
