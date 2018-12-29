@@ -2,7 +2,7 @@
 
 Video player for streaming websites.
 
-Supported streaming website:
+Supported streaming websites:
 - http://justdubs.org/
 - https://www06.gogoanimes.tv/
 
