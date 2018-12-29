@@ -23,12 +23,10 @@ namespace CerealPlayer.Models.Playlist
             public bool IsDownloaded { get; set; }
         }
 
-        private readonly PlaylistModel parent;
-
         public VideoModel(Models models, string initialWebsite, PlaylistModel parent, IVideoHoster hoster)
         {
             InitialWebsite = initialWebsite;
-            this.parent = parent;
+            this.Parent = parent;
 
             // try to find an appropriate downloader
             var info = hoster.GetInfo(initialWebsite);
@@ -44,7 +42,7 @@ namespace CerealPlayer.Models.Playlist
         public VideoModel(Models models, PlaylistModel parent, IVideoHoster hoster, SaveData data)
         {
             InitialWebsite = data.Website;
-            this.parent = parent;
+            this.Parent = parent;
             Name = data.Name;
             Number = data.Number;
             Extension = data.Extension;
@@ -63,6 +61,8 @@ namespace CerealPlayer.Models.Playlist
             this.DownloadTask = task;
         }
 
+        public PlaylistModel Parent { get; }
+
         public string InitialWebsite { get; }
 
         public string Name { get; }
@@ -71,7 +71,7 @@ namespace CerealPlayer.Models.Playlist
 
         public string Extension { get; set; } = ".mp4";
 
-        public string FileLocation => parent.Directory + "/" + Name + Extension;
+        public string FileLocation => Parent.Directory + "/" + Name + Extension;
 
         [NotNull]
         public VideoTaskModel DownloadTask { get; }

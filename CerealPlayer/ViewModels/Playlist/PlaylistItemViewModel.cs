@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CerealPlayer.Annotations;
+using CerealPlayer.Commands.Player;
 using CerealPlayer.Commands.Playlist;
 using CerealPlayer.Commands.Playlist.Video;
 using CerealPlayer.Models.Playlist;
@@ -28,6 +29,7 @@ namespace CerealPlayer.ViewModels.Playlist
 
             RetryCommand = retryCommand;
             StopCommand = new StopVideoDownloadCommand(video.DownloadTask);
+            PlayCommand = new SetActiveVideoCommand(models, video);
         }
 
         private void DownloadTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -49,6 +51,8 @@ namespace CerealPlayer.ViewModels.Playlist
         }
 
         public string Name => video.Name;
+
+        public ICommand PlayCommand { get; }
 
         public ICommand RetryCommand { get; }
 
