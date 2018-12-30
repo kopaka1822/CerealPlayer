@@ -104,9 +104,10 @@ namespace CerealPlayer.Models.Playlist
         /// this was the playing video
         /// </summary>
         /// <param name="video"></param>
-        public void DeleteEpisode([NotNull] VideoModel video)
+        /// <returns>true if the video was deleted. False if it was already deleted</returns>
+        public bool DeleteEpisode([NotNull] VideoModel video)
         {
-            Debug.Assert(videos.Contains(video));
+            if (!videos.Contains(video)) return false;
             // stop automatic deletion
             if (video.DeleteTask.ReadyOrRunning)
                 video.DeleteTask.Stop();
@@ -137,6 +138,8 @@ namespace CerealPlayer.Models.Playlist
             RecalcPlaylingVideoIndex();
             if(prevPlayIndex != playingVideoIndex)
                 OnPropertyChanged(nameof(PlayingVideoIndex));
+
+            return true;
         }
 
         /// <summary>

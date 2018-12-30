@@ -40,8 +40,10 @@ namespace CerealPlayer.Commands.Playlist.Video
             if(askUser && MessageBox.Show(models.App.TopmostWindow, $"Do you want to delete \"{video.Name}\"?", "Delete Video", 
                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
 
-            video.Parent.DeleteEpisode(video);
-            DeleteAsynch();
+            if(video.Parent.DeleteEpisode(video))
+            {
+                DeleteAsynch();
+            }
         }
 
         private async void DeleteAsynch()
