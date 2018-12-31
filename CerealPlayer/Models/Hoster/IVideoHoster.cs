@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models.Task;
+using CerealPlayer.Models.Task.Hoster;
 
 namespace CerealPlayer.Models.Hoster
 {

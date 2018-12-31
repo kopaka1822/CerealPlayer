@@ -9,6 +9,7 @@ using CerealPlayer.Annotations;
 using CerealPlayer.Commands.Playlist.Video;
 using CerealPlayer.Models.Hoster;
 using CerealPlayer.Models.Task;
+using CerealPlayer.Models.Task.Hoster;
 using Newtonsoft.Json;
 
 namespace CerealPlayer.Models.Playlist

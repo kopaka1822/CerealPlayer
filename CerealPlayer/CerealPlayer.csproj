@@ -137,25 +137,27 @@
     <Compile Include="Controllers\TaskControllerBase.cs" />
     <Compile Include="Models\AppModel.cs" />
     <Compile Include="Models\DisplayModel.cs" />
-    <Compile Include="Models\Hoster\GoGoAnimes.cs" />
+    <Compile Include="Models\Hoster\Series\GoGoAnimes.cs" />
     <Compile Include="Models\Hoster\IVideoHoster.cs" />
-    <Compile Include="Models\Hoster\JustDubs.cs" />
-    <Compile Include="Models\Hoster\Mp4Upload.cs" />
-    <Compile Include="Models\Hoster\RecursiveHosterDownloadTask.cs" />
-    <Compile Include="Models\Hoster\TestWebsiteAndHosterExists.cs" />
-    <Compile Include="Models\Hoster\TestWebsiteExistsTask.cs" />
+    <Compile Include="Models\Hoster\Series\JustDubs.cs" />
+    <Compile Include="Models\Hoster\Stream\Mp4Upload.cs" />
+    <Compile Include="Models\Hoster\Stream\Openload.cs" />
+    <Compile Include="Models\Hoster\Tasks\RecursiveHosterDownloadTask.cs" />
+    <Compile Include="Models\Hoster\Tasks\TestWebsiteAndHosterExists.cs" />
+    <Compile Include="Models\Hoster\Tasks\TestWebsiteExistsTask.cs" />
     <Compile Include="Models\Hoster\VideoHosterModel.cs" />
     <Compile Include="Models\Player\PlayerModel.cs" />
     <Compile Include="Models\Playlist\PlaylistModel.cs" />
     <Compile Include="Models\Playlist\PlaylistsModel.cs" />
     <Compile Include="Models\Playlist\VideoModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
-    <Compile Include="Models\Task\DefaultVideoDownloader.cs" />
+    <Compile Include="Models\Hoster\Tasks\DefaultVideoDownloader.cs" />
     <Compile Include="Models\Task\DelayedCommandTask.cs" />
     <Compile Include="Models\Task\DownloadPlaylistTask.cs" />
-    <Compile Include="Models\Task\VideoTaskModel.cs" />
+    <Compile Include="Models\Hoster\VideoTaskModel.cs" />
     <Compile Include="Models\Task\ISubTask.cs" />
-    <Compile Include="Models\Task\NextEpisodeTaskModel.cs" />
+    <Compile Include="Models\Hoster\NextEpisodeTaskModel.cs" />
+    <Compile Include="Models\Hoster\Tasks\YoutubeDlLinkTask.cs" />
     <Compile Include="Models\Web\Browser.cs" />
     <Compile Include="Models\Web\BrowserPage.cs" />
     <Compile Include="Models\Web\HtmlProvider.cs" />
@@ -163,6 +165,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Utility\HosterUtil.cs" />
     <Compile Include="Utility\StringUtil.cs" />
+    <Compile Include="Utility\YoutubeDl.cs" />
     <Compile Include="ViewModels\DisplayViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\Player\PlayerViewModel.cs" />
@@ -242,6 +245,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="deps\LICENSE.BSD">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -296,6 +302,20 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="deps\phantomjs.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\third-party.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\youtube-dl.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Task\Hoster\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

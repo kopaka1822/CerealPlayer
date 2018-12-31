@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models.Hoster;
 using CerealPlayer.Models.Task;
+using CerealPlayer.Models.Task.Hoster;
 using Newtonsoft.Json;
 
 namespace CerealPlayer.Models.Playlist
