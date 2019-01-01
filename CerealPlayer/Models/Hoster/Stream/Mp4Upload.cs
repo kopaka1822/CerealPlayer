@@ -17,7 +17,7 @@ namespace CerealPlayer.Models.Hoster.Stream
 
         public bool Supports(string website)
         {
-            return website.Contains("www.mp4upload.com");
+            return website.Contains("mp4upload.com");
         }
 
         public EpisodeInfo GetInfo(string website)
