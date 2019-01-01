@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using CerealPlayer.Models.Hoster.Tasks;
 using CerealPlayer.Models.Task;
 using CerealPlayer.Models.Task.Hoster;
@@ -6,18 +10,18 @@ using CerealPlayer.Utility;
 
 namespace CerealPlayer.Models.Hoster.Stream
 {
-    class Openload : IVideoHoster
+    public class Oload : IVideoHoster
     {
         private readonly Models models;
 
-        public Openload(Models models)
+        public Oload(Models models)
         {
             this.models = models;
         }
 
         public bool Supports(string website)
         {
-            return website.Contains("openload.co");
+            return website.Contains("oload.tv");
         }
 
         public EpisodeInfo GetInfo(string website)
@@ -48,7 +52,7 @@ namespace CerealPlayer.Models.Hoster.Stream
 
         public string FindCompatibleLink(string websiteSource)
         {
-            var idx = websiteSource.IndexOf("openload.co/embed/", StringComparison.OrdinalIgnoreCase);
+            var idx = websiteSource.IndexOf("oload.tv/embed/", StringComparison.OrdinalIgnoreCase);
             if (idx < 0) return null;
 
             // read entire link

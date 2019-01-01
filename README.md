@@ -1,1 +1,1 @@
-# CerealPlayerVideo player for streaming websites.Supported streaming websites:- http://justdubs.org/- https://www06.gogoanimes.tv/- https://www.masterani.me/Supported video hoster:- https://www.mp4upload.com/- https://openload.co/
+# CerealPlayerVideo player for streaming websites.Supported streaming websites:- http://justdubs.org/- https://www06.gogoanimes.tv/- https://www.masterani.me/Supported video hoster:- https://www.mp4upload.com/- https://openload.co/- https://oload.tv/

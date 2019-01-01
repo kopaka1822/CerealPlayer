@@ -142,6 +142,7 @@
     <Compile Include="Models\Hoster\Series\JustDubs.cs" />
     <Compile Include="Models\Hoster\Series\MasterAnime.cs" />
     <Compile Include="Models\Hoster\Stream\Mp4Upload.cs" />
+    <Compile Include="Models\Hoster\Stream\Oload.cs" />
     <Compile Include="Models\Hoster\Stream\Openload.cs" />
     <Compile Include="Models\Hoster\Tasks\RecursiveHosterDownloadTask.cs" />
     <Compile Include="Models\Hoster\Tasks\TestWebsiteAndHosterExists.cs" />

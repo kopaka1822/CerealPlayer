@@ -37,7 +37,9 @@ namespace CerealPlayer.Models.Hoster
             // order determines internal ration: The first hoster is the preferred hoster
             
             hoster.Add(new Openload(models));
+            hoster.Add(new Oload(models));
             hoster.Add(new Mp4Upload(models));
+
 
             hoster.Add(new JustDubs(models));
             hoster.Add(new GoGoAnimes(models));
