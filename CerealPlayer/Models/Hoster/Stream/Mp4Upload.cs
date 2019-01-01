@@ -97,10 +97,7 @@ namespace CerealPlayer.Models.Hoster.Stream
         public string FindCompatibleLink(string websiteSource)
         {
             // crawl to find supported links
-            // http version
-            var index = websiteSource.IndexOf("http://www.mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
-            if(index < 0) // https version
-                index = websiteSource.IndexOf("https://www.mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
+            var index = websiteSource.IndexOf("mp4upload.com/embed-", StringComparison.OrdinalIgnoreCase);
 
             if (index >= 0)
             {
@@ -109,9 +106,7 @@ namespace CerealPlayer.Models.Hoster.Stream
             }
 
             // the link is probably hidden within player.mp4cloud.net
-            index = websiteSource.IndexOf("https://player.mp4cloud.net/mp4upload.php?id=", StringComparison.InvariantCultureIgnoreCase);
-            if(index < 0) // http version
-                index = websiteSource.IndexOf("http://player.mp4cloud.net/mp4upload.php?id=", StringComparison.InvariantCultureIgnoreCase);
+            index = websiteSource.IndexOf("player.mp4cloud.net/mp4upload.php?id=", StringComparison.InvariantCultureIgnoreCase);
 
             if (index < 0) return null;
 

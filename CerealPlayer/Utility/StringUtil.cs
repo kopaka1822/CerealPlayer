@@ -27,14 +27,22 @@ namespace CerealPlayer.Utility
         }
 
         /// <summary>
-        /// returns a substring from source[from] until the first whitespace or " character
+        /// returns a substring from 'source' from the first whitespace 
+        /// or " character before 'from' until the first whitespace or " character after 'from'
         /// </summary>
         /// <param name="source"></param>
-        /// <param name="from"></param>
+        /// <param name="from">character index within the link</param>
         /// <returns></returns>
         public static string ReadLink(string source, int from)
         {
             string res = "";
+
+            // search for link start
+            while (from > 0 && !Char.IsWhiteSpace(source[from - 1]) && source[from - 1] != '\"')
+            {
+                from--;
+            }
+            // read until link end
             while (from < source.Length && !Char.IsWhiteSpace(source[from]) && source[from] != '\"')
             {
                 res += source[from++];
@@ -86,7 +94,7 @@ namespace CerealPlayer.Utility
         /// <returns></returns>
         public static string Reduce(string[] parts, string seperator)
         {
-            return Reduce(parts, seperator, parts.Length);
+            return Reduce(parts, seperator, 0, parts.Length);
         }
 
         /// <summary>
@@ -94,15 +102,16 @@ namespace CerealPlayer.Utility
         /// </summary>
         /// <param name="parts"></param>
         /// <param name="seperator"></param>
+        /// <param name="first">start index (included)</param>
         /// <param name="last">index of the last part (not included in the reduce)</param>
         /// <returns></returns>
-        public static string Reduce(string[] parts, string seperator, int last)
+        public static string Reduce(string[] parts, string seperator, int first, int last)
         {
             last = Math.Min(parts.Length, last);
-            if (last == 0) return "";
+            if (first >= last) return "";
 
             var res = "";
-            for (int i = 0; i < last - 1; ++i)
+            for (int i = first; i < last - 1; ++i)
                 res += parts[i] + seperator;
 
             return res + parts[last - 1];

@@ -1,7 +1,8 @@
 ﻿using System;
 using CerealPlayer.Models.Playlist;
+using CerealPlayer.Models.Task;
 
-namespace CerealPlayer.Models.Task.Hoster
+namespace CerealPlayer.Models.Hoster
 {
     public class VideoTaskModel : TaskModel
     {

@@ -54,7 +54,7 @@ namespace CerealPlayer.Models.Hoster.Series
                     lastPartIndex--;
             }
 
-            var seriesTitle = StringUtil.Reduce(parts, " ", lastPartIndex);
+            var seriesTitle = StringUtil.Reduce(parts, " ", 0, lastPartIndex);
 
             return new EpisodeInfo
             {

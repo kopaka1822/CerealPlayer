@@ -48,7 +48,7 @@ namespace CerealPlayer.Models.Hoster.Stream
 
         public string FindCompatibleLink(string websiteSource)
         {
-            var idx = websiteSource.IndexOf("https://openload.co/embed/", StringComparison.OrdinalIgnoreCase);
+            var idx = websiteSource.IndexOf("openload.co/embed/", StringComparison.OrdinalIgnoreCase);
             if (idx < 0) return null;
 
             // read entire link
