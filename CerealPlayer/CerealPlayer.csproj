@@ -147,6 +147,7 @@
     <Compile Include="Models\Hoster\Stream\Openload.cs" />
     <Compile Include="Models\Hoster\Stream\RapidVideo.cs" />
     <Compile Include="Models\Hoster\Stream\StreamAnGo.cs" />
+    <Compile Include="Models\Hoster\Stream\Streamcloud.cs" />
     <Compile Include="Models\Hoster\Tasks\RecursiveHosterDownloadTask.cs" />
     <Compile Include="Models\Hoster\Tasks\SearchVideoLinkTask.cs" />
     <Compile Include="Models\Hoster\Tasks\TestWebsiteAndHosterExists.cs" />
