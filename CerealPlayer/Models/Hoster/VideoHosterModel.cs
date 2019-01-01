@@ -38,8 +38,9 @@ namespace CerealPlayer.Models.Hoster
             
             hoster.Add(new Openload(models));
             hoster.Add(new Oload(models));
+            hoster.Add(new StreamAnGo(models));
             hoster.Add(new Mp4Upload(models));
-
+            
 
             hoster.Add(new JustDubs(models));
             hoster.Add(new GoGoAnimes(models));
