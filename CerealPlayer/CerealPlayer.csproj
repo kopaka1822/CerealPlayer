@@ -137,6 +137,7 @@
     <Compile Include="Controllers\TaskControllerBase.cs" />
     <Compile Include="Models\AppModel.cs" />
     <Compile Include="Models\DisplayModel.cs" />
+    <Compile Include="Models\Hoster\Series\BurningSeries.cs" />
     <Compile Include="Models\Hoster\Series\GoGoAnimes.cs" />
     <Compile Include="Models\Hoster\IVideoHoster.cs" />
     <Compile Include="Models\Hoster\Series\JustDubs.cs" />

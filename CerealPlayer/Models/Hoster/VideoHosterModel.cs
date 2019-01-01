@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,6 +48,28 @@ namespace CerealPlayer.Models.Hoster
             hoster.Add(new GoGoAnimes(models));
             hoster.Add(new MasterAnime(models));
             hoster.Add(new ProxerMe(models));
+            //hoster.Add(new BurningSeries(models));
+        }
+
+        /// <summary>
+        /// returns the preferred hoster according to the priority list
+        /// </summary>
+        /// <param name="hosterPairs"></param>
+        /// <returns></returns>
+        public WebsiteHosterPair GetPreferredHoster(List<WebsiteHosterPair> hosterPairs)
+        {
+            Debug.Assert(hosterPairs.Count > 0);
+
+            foreach (var videoHoster in hoster)
+            {
+                foreach (var pair in hosterPairs)
+                {
+                    if (ReferenceEquals(pair.Hoster, videoHoster))
+                        return pair;
+                }
+            }
+
+            throw new Exception("GetPreferredHoster - no matching hoster");
         }
 
         /// <summary>
