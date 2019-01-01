@@ -8,53 +8,6 @@ namespace CerealPlayer.Models.Hoster.Stream
 {
     public class Mp4Upload : IVideoHoster
     {
-        class DownloadTask : ISubTask
-        {
-            private readonly Models models;
-            private readonly VideoTaskModel parent;
-            private readonly string website;
-
-            public DownloadTask(Models models, VideoTaskModel parent, string website)
-            {
-                this.models = models;
-                this.parent = parent;
-                this.website = website;
-            }
-
-            public async void Start()
-            {
-                try
-                {
-                    parent.Description = "resolving " + website;
-                    var source = await models.Web.Html.GetJsAsynch(website);
-                    // search .mp4"
-                    var subIndex = source.IndexOf(".mp4\"", StringComparison.Ordinal);
-                    if (subIndex < 0)
-                    {
-                        // remove website from cache (did not load correctly)
-                        models.Web.Html.RemoveCachedJs(website);
-                        throw new Exception($"failed to locate \".mp4\"\" in {website}");
-                    }
-
-                    var address = StringUtil.BackwardSubstringUntil(
-                                  source,
-                                  subIndex - 1,
-                                  '\"') + ".mp4";
-
-                    parent.SetNewSubTask(new DefaultVideoDownloader(models, parent, address));
-                }
-                catch (Exception e)
-                {
-                    parent.SetError(e.Message);
-                }
-            }
-
-            public void Stop()
-            {
-                
-            }
-        }
-
         private readonly Models models;
 
         public Mp4Upload(Models models)
@@ -85,7 +38,7 @@ namespace CerealPlayer.Models.Hoster.Stream
 
         public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
         {
-            return new DownloadTask(models, parent, website);
+            return new SearchVideoLinkTask(models, parent, website, ".mp4\"", true);
         }
 
         public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
