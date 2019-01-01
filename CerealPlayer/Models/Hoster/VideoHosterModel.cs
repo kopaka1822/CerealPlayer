@@ -45,6 +45,7 @@ namespace CerealPlayer.Models.Hoster
             hoster.Add(new JustDubs(models));
             hoster.Add(new GoGoAnimes(models));
             hoster.Add(new MasterAnime(models));
+            hoster.Add(new ProxerMe(models));
         }
 
         /// <summary>
@@ -61,6 +62,39 @@ namespace CerealPlayer.Models.Hoster
             }
 
             throw new Exception("no compatible hoster for " + website);
+        }
+
+        /// <summary>
+        /// tries to find a compatible hoster for the given website
+        /// </summary>
+        /// <param name="website">parent website (for exception message)</param>
+        /// <param name="websites">potential video hoster websites</param>
+        /// <returns></returns>
+        public async Task<WebsiteHosterPair> GetHosterFromWebsitesAsynch([NotNull] string website,
+            [NotNull] List<string> websites)
+        {
+            var task = await System.Threading.Tasks.Task.Run(() =>
+            {
+                foreach (var videoHoster in hoster)
+                {
+                    foreach (var site in websites)
+                    {
+                        if(videoHoster.Supports(site))
+                            return new WebsiteHosterPair
+                            {
+                                Hoster = videoHoster,
+                                Website = site
+                            };
+                    }
+                }
+
+                return null;
+            });
+
+            if(task == null)
+                throw new Exception("no compatible hosters found on " + website + " [" + StringUtil.Reduce(websites.ToArray(), ", ") + "]");
+
+            return task;
         }
 
         /// <summary>
