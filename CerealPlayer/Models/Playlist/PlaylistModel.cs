@@ -39,7 +39,7 @@ namespace CerealPlayer.Models.Playlist
 
             // get series info
             hoster = models.Web.VideoHoster.GetCompatibleHoster(initialWebsite);
-            Name = hoster.GetInfo(initialWebsite).SeriesTitle;
+            Name = hoster.GetInfo(initialWebsite).SeriesTitle.Trim();
             System.IO.Directory.CreateDirectory(Directory);
 
             // create video and download task
