@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CerealPlayer.Views"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
         Title="Hoster Preferences" 
         Height="300" 
@@ -18,7 +19,10 @@
         <ListBox
             Margin="{StaticResource BigBottomBorder}"
             ItemsSource="{Binding Items}"
-            SelectedItem="{Binding SelectedItem}">
+            SelectedItem="{Binding SelectedItem}"
+            dd:DragDrop.IsDragSource="True"
+            dd:DragDrop.IsDropTarget="True"
+            dd:DragDrop.DropHandler="{Binding}">
             
         </ListBox>
 
