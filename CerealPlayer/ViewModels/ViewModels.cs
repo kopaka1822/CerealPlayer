@@ -8,6 +8,7 @@ using CerealPlayer.Commands;
 using CerealPlayer.Commands.Playlist;
 using CerealPlayer.Commands.Playlist.All;
 using CerealPlayer.Commands.Playlist.NonLoaded;
+using CerealPlayer.Commands.Settings;
 using CerealPlayer.Controllers;
 using CerealPlayer.ViewModels.Player;
 using CerealPlayer.ViewModels.Playlist;
@@ -34,6 +35,7 @@ namespace CerealPlayer.ViewModels
         public ICommand StopAllCommand { get; }
         public ICommand UpdateAllCommand { get; }
         public ICommand GeneralSettingsCommand { get; }
+        public ICommand HosterPreferencesCommand { get; }
 
         public ViewModels(Models.Models models)
         {
@@ -55,6 +57,7 @@ namespace CerealPlayer.ViewModels
             StopAllCommand = new StopAllTasksCommand(models);
             UpdateAllCommand = new UpdateAllPlaylistsCommand(models, PlaylistPreview);
             GeneralSettingsCommand = new ShowGeneralSettingsCommand(models);
+            HosterPreferencesCommand = new ShowHosterPreferencesCommand(models);
         }
 
         public void Dispose()

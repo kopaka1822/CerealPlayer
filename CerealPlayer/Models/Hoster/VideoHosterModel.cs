@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -126,6 +127,27 @@ namespace CerealPlayer.Models.Hoster
                 throw new Exception("no compatible hosters found on " + website);
 
             return task;
+        }
+
+        /// <summary>
+        /// returns all video hosters with IsFileHoster = true
+        /// </summary>
+        /// <returns></returns>
+        public List<IVideoHoster> GetFileHoster()
+        {
+            return hoster.Where(videoHoster => videoHoster.IsFileHoster).ToList();
+        }
+
+        public void ReorderFileHoster(List<IVideoHoster> fileHoster)
+        {
+            // extract all non file hoster
+            var nonHoster = hoster.Where(videoHoster => !videoHoster.IsFileHoster).ToList();
+            // assert no hoster went missing
+            Debug.Assert(fileHoster.Count == hoster.Count - nonHoster.Count);
+
+            hoster.Clear();
+            hoster.AddRange(fileHoster);
+            hoster.AddRange(nonHoster);
         }
     }
 }

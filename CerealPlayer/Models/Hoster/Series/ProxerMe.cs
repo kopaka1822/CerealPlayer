@@ -135,6 +135,9 @@ namespace CerealPlayer.Models.Hoster.Series
             this.models = models;
         }
 
+        public string Name => "ProxerMe";
+        public bool IsFileHoster => false;
+
         public bool Supports(string website)
         {
             return website.Contains("proxer.me");

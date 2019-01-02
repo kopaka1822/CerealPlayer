@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands;
-using CerealPlayer.Models;
 
-namespace CerealPlayer.ViewModels
+namespace CerealPlayer.ViewModels.Settings
 {
     public class GeneralSettingsViewModel : INotifyPropertyChanged
     {
