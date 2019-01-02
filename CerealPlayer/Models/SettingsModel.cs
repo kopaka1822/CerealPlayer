@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CerealPlayer.Annotations;
 using CerealPlayer.Properties;
+using CerealPlayer.Utility;
 
 namespace CerealPlayer.Models
 {
@@ -96,6 +97,27 @@ namespace CerealPlayer.Models
                 if(Settings.Default.MaxChromiumInstances == value) return;
                 Settings.Default.MaxChromiumInstances = value;
                 OnPropertyChanged(nameof(MaxChromiumInstances));
+            }
+        }
+
+        /// <summary>
+        /// list with the names of the preferred file hoster
+        /// </summary>
+        public string[] PreferredHoster
+        {
+            get
+            {
+                // hoster names are seperated by ,
+                var res = Settings.Default.PreferredHoster;
+                if(res == null) return new string[0];
+                return res.Split(',');
+            }
+            set
+            {
+                // transform into single string
+                var val = StringUtil.Reduce(value, ",");
+                Settings.Default.PreferredHoster = val;
+                OnPropertyChanged(nameof(PreferredHoster));
             }
         }
 

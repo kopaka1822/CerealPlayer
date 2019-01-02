@@ -33,8 +33,8 @@ namespace CerealPlayer.Commands.Settings
             if(models.App.ShowDialog(view) != true) return;
 
             // apply settings
-            var list = viewModel.Items.Select(item => item.Cargo).ToList();
-            models.Web.VideoHoster.ReorderFileHoster(list);
+            models.Settings.PreferredHoster = viewModel.Items.ToArray();
+            models.Settings.Save();
         }
 
         public event EventHandler CanExecuteChanged

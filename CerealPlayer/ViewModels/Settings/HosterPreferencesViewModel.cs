@@ -18,16 +18,6 @@ namespace CerealPlayer.ViewModels.Settings
 {
     public class HosterPreferencesViewModel : INotifyPropertyChanged, IDropTarget
     {
-        public class HosterView
-        {
-            public IVideoHoster Cargo { get; set; }
-
-            public override string ToString()
-            {
-                return Cargo.Name;
-            }
-        }
-
         private readonly Models.Models models;
 
         public HosterPreferencesViewModel(Models.Models models)
@@ -38,18 +28,15 @@ namespace CerealPlayer.ViewModels.Settings
             SaveCommand = new SetDialogResultCommand(models, true);
 
             // init items
-            foreach (var videoHoster in models.Web.VideoHoster.GetFileHoster())
+            foreach (var videoHoster in models.Settings.PreferredHoster)
             {
-                Items.Add(new HosterView
-                {
-                    Cargo = videoHoster
-                });
+                Items.Add(videoHoster);
             }
         }
 
-        public ObservableCollection<HosterView> Items { get; } = new ObservableCollection<HosterView>();
+        public ObservableCollection<string> Items { get; } = new ObservableCollection<string>();
 
-        public HosterView SelectedItem { get; set; } = null;
+        public string SelectedItem { get; set; } = null;
 
         public ICommand SaveCommand { get; }
 
@@ -66,7 +53,7 @@ namespace CerealPlayer.ViewModels.Settings
         public void DragOver(IDropInfo dropInfo)
         {
             // enable if both items are HosterView
-            if (dropInfo.Data is HosterView && dropInfo.TargetItem is HosterView)
+            if (dropInfo.Data is string && dropInfo.TargetItem is string)
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
                 dropInfo.Effects = DragDropEffects.Move;
@@ -75,7 +62,7 @@ namespace CerealPlayer.ViewModels.Settings
 
         public void Drop(IDropInfo dropInfo)
         {
-            var item = (HosterView) dropInfo.Data;
+            var item = (string) dropInfo.Data;
             var insertIndex = dropInfo.InsertIndex;
             var oldIndex = Items.IndexOf(item);
             Items.RemoveAt(oldIndex);
