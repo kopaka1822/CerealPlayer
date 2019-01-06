@@ -63,6 +63,7 @@ namespace CerealPlayer.Models.Task
             if (activeVideo != null && args.OldItems != null && args.OldItems.Contains(activeVideo))
             {
                 UnregisterActiveTask();
+                SetFinished();
                 SetNextTask();
                 return;
             }
