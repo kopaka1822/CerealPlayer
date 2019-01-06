@@ -85,9 +85,9 @@ namespace CerealPlayer.Models.Hoster.Series
                             var hoster = await models.Web.VideoHoster.GetHosterFromSourceAsynch(streamLink, reqSource);
                             compatibleHoster.Add(hoster);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            int a = 3;
+                            //int a = 3;
                         }
                     }
 

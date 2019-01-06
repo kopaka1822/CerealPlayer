@@ -37,8 +37,12 @@ namespace CerealPlayer.ViewModels
         public ICommand GeneralSettingsCommand { get; }
         public ICommand HosterPreferencesCommand { get; }
 
+        private readonly Models.Models models;
+
         public ViewModels(Models.Models models)
         {
+            this.models = models;
+
             // controller
             NextEpisodeTaskCtrl = new NextEpisodeTaskController(models);
             DownloadTaskCtrl = new DownloadTaskController(models);
@@ -62,6 +66,9 @@ namespace CerealPlayer.ViewModels
 
         public void Dispose()
         {
+            models.Playlists.ActivePlaylist = null;   
+
+            DeleteAfterWatchedCtrl.Dispose();
             SaveCtrl.Dispose();
         }
     }

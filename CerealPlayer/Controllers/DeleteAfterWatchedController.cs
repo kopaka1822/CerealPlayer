@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,42 @@ namespace CerealPlayer.Controllers
         {
             this.models = models;
             this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
+        }
+
+        /// <summary>
+        /// deletes all videos with a running delete video task
+        /// </summary>
+        public void Dispose()
+        {
+            if(!models.Settings.DeleteAfterWatching) return;
+
+            // finish started delete tasks
+            foreach (var playlist in models.Playlists.List)
+            {
+                for (int i = 0; i < playlist.Videos.Count; ++i)
+                {
+                    var video = playlist.Videos.ElementAt(i);
+                    if (video.DeleteTask.Status != TaskModel.TaskStatus.Running) continue;
+
+                    var deleted = playlist.DeleteEpisode(video);
+                    Debug.Assert(deleted);
+
+                    // reset index
+                    --i;
+
+                    try
+                    {
+                        if (System.IO.File.Exists(video.FileLocation))
+                        {
+                            System.IO.File.Delete(video.FileLocation);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignore 
+                    }
+                }
+            }
         }
 
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
