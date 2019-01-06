@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands.Player;
 using CerealPlayer.Commands.Playlist;
@@ -20,6 +21,10 @@ namespace CerealPlayer.ViewModels.Playlist
     {
         private readonly Models.Models models;
         private readonly VideoModel video;
+        private readonly DispatcherTimer refreshDownloadTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
 
         public PlaylistItemViewModel(Models.Models models, VideoModel video)
         {
@@ -33,6 +38,13 @@ namespace CerealPlayer.ViewModels.Playlist
             PlayCommand = new SetActiveVideoCommand(models, video);
             DeleteCommand = new DeleteVideoCommand(models, video, true);
             StopDeleteCommand = new StopVideoDeletionCommand(models, video);
+
+            refreshDownloadTimer.Tick += RefreshDownloadTimerOnTick;
+        }
+
+        private void RefreshDownloadTimerOnTick(object sender, EventArgs eventArgs)
+        {
+            OnPropertyChanged(nameof(Status));
         }
 
         private void TaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -45,6 +57,16 @@ namespace CerealPlayer.ViewModels.Playlist
                     OnPropertyChanged(nameof(ProgressVisibility));
                     OnPropertyChanged(nameof(StopDeleteVisibility));
                     OnPropertyChanged(nameof(Status));
+                    if (video.DownloadTask.Status == TaskModel.TaskStatus.Running)
+                    {
+                        if (!refreshDownloadTimer.IsEnabled)
+                            refreshDownloadTimer.Start();
+                    }
+                    else
+                    {
+                        if (refreshDownloadTimer.IsEnabled)
+                            refreshDownloadTimer.Stop();
+                    }
                     break;
                 case nameof(TaskModel.Description):
                     OnPropertyChanged(nameof(Status));
@@ -100,6 +122,10 @@ namespace CerealPlayer.ViewModels.Playlist
                 {
                     return "downloaded";
                 }
+
+                if(video.DownloadTask.Status == TaskModel.TaskStatus.Running)
+                    return video.DownloadTask.Description + video.DownloadTask.GetProgressTimeRemainingString(" ");
+
                 return video.DownloadTask.Description;
             }
         }

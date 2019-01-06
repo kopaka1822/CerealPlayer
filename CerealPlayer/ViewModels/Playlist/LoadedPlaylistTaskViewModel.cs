@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands.Playlist;
 using CerealPlayer.Commands.Playlist.Loaded;
@@ -19,6 +20,10 @@ namespace CerealPlayer.ViewModels.Playlist
     {
         private readonly Models.Models models;
         private readonly PlaylistModel parent;
+        private readonly DispatcherTimer refreshDownloadTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
 
         public LoadedPlaylistTaskViewModel(Models.Models models, PlaylistModel parent)
         {
@@ -32,6 +37,13 @@ namespace CerealPlayer.ViewModels.Playlist
             StopCommand = new StopPlaylistUpdateCommand(models, parent);
             RetryCommand = new RetryPlaylistUpdateCommand(models, parent);
             DeleteCommand = new DeletePlaylistCommand(models, parent);
+
+            refreshDownloadTimer.Tick += RefreshDownloadTimerOnTick;
+        }
+
+        private void RefreshDownloadTimerOnTick(object sender, EventArgs eventArgs)
+        {
+            OnPropertyChanged(nameof(Status));
         }
 
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -59,6 +71,16 @@ namespace CerealPlayer.ViewModels.Playlist
                     OnPropertyChanged(nameof(RetryVisibility));
                     OnPropertyChanged(nameof(StopVisibility));
                     OnPropertyChanged(nameof(Status));
+                    if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running)
+                    {
+                        if(!refreshDownloadTimer.IsEnabled)
+                            refreshDownloadTimer.Start();
+                    }
+                    else
+                    {
+                        if (refreshDownloadTimer.IsEnabled)
+                            refreshDownloadTimer.Stop();
+                    }
                     break;
             }
         }
@@ -74,6 +96,9 @@ namespace CerealPlayer.ViewModels.Playlist
                 {
                     if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.ReadyToStart)
                         return "pausing due to download restrictions";
+
+                    if(parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running)
+                        return parent.DownloadPlaylistTask.Description + parent.DownloadPlaylistTask.GetProgressTimeRemainingString(" ");
 
                     return parent.DownloadPlaylistTask.Description;
                 }

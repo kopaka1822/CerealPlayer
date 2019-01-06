@@ -52,9 +52,82 @@ namespace CerealPlayer.Models.Task
             {
                 var clamped = Math.Min(Math.Max(value, 0), 100);
                 if (progress == clamped) return;
+                // progress: oldValue
+                // clamped: newValue
+                var oldValue = progress;
+                var newValue = clamped;
+                if (newValue < oldValue || oldValue == 0)
+                {
+                    // reset progress timer etc.
+                    lastProgressReceived = DateTime.Now;
+                    timeForOnePercent = 0;
+                    ProgressTimeRemaining = TimeSpan.Zero;
+                }
+                else // newValue > oldValue > 0
+                {
+                    // calculate progress time
+                    var now = DateTime.Now;
+                    var elapsed = now - lastProgressReceived;
+                    lastProgressReceived = now;
+
+                    var newTimeForOnePercent = (long)(elapsed.Ticks / (double)(newValue - oldValue));
+                    if (timeForOnePercent == 0)
+                        timeForOnePercent = newTimeForOnePercent;
+                    else
+                    {
+                        // use some of the previously predicted time
+                        timeForOnePercent = (long)(timeForOnePercent * 0.8 + newTimeForOnePercent * 0.2);
+                    }
+
+                    ProgressTimeRemaining = TimeSpan.FromTicks(timeForOnePercent * (100 - newValue));
+                }
                 progress = clamped;
                 OnPropertyChanged(nameof(Progress));
             }
+        }
+
+        private DateTime lastProgressReceived;
+
+        private long timeForOnePercent = 0;
+
+        private TimeSpan progressTimeRemaining = TimeSpan.Zero;
+        private DateTime progressTimeRemainingSet = DateTime.Now;
+
+        /// <summary>
+        /// a prediction when the progress will reach 100
+        /// this is exluded from the OnPropertyChanged and will
+        /// be changed each second and after Progress was set
+        /// </summary>
+        public TimeSpan ProgressTimeRemaining
+        {
+            get
+            {
+                var now = DateTime.Now;
+                var elapsed = now - progressTimeRemainingSet;
+
+                var remaining = progressTimeRemaining.Subtract(elapsed);
+                if(remaining < TimeSpan.Zero)
+                    return TimeSpan.Zero;
+                return remaining;
+            }
+            private set
+            {
+                progressTimeRemaining = value;
+                progressTimeRemainingSet = DateTime.Now;
+            }
+        }
+
+        /// <summary>
+        /// returns the progress time remaining as string or an emtpy string if the time is zero
+        /// </summary>
+        /// <param name="prefix">prefix that will be added if the time is not zero</param>
+        /// <returns></returns>
+        public string GetProgressTimeRemainingString(string prefix)
+        {
+            var time = ProgressTimeRemaining;
+            if (time == TimeSpan.Zero) return "";
+
+            return prefix + time.ToString(@"hh\:mm\:ss");   
         }
 
         // indicates if this action should stop as soon as possible
