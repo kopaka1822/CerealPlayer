@@ -106,7 +106,6 @@ namespace CerealPlayer.Models.Task
 
         public void Stop()
         {
-            Debug.Assert(Status == TaskStatus.Running || Status == TaskStatus.ReadyToStart);
             if (Status == TaskStatus.Running)
             {
                 stopRequested = true;

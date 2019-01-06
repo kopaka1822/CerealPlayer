@@ -32,16 +32,22 @@ namespace CerealPlayer.Utility
         /// </summary>
         /// <param name="source"></param>
         /// <param name="from">character index within the link</param>
+        /// <param name="readFromStart">indicates if the entire link should be read (true, default)
+        ///  or only the link starting at index 'from' (false)</param>
         /// <returns></returns>
-        public static string ReadLink(string source, int from)
+        public static string ReadLink(string source, int from, bool readFromStart = true)
         {
             string res = "";
 
-            // search for link start
-            while (from > 0 && !Char.IsWhiteSpace(source[from - 1]) && source[from - 1] != '\"')
+            if (readFromStart)
             {
-                from--;
+                // search for link start
+                while (from > 0 && !Char.IsWhiteSpace(source[from - 1]) && source[from - 1] != '\"')
+                {
+                    from--;
+                }
             }
+
             // read until link end
             while (from < source.Length && !Char.IsWhiteSpace(source[from]) && source[from] != '\"')
             {

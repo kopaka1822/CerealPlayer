@@ -70,7 +70,7 @@ namespace CerealPlayer.Models.Hoster.Stream
             // the embed link is given after id
             index = StringUtil.SkipUntil(websiteSource, index, '=');
             // read id string
-            var id = StringUtil.ReadLink(websiteSource, index + 1);
+            var id = StringUtil.ReadLink(websiteSource, index + 1, false);
 
             return "https://www.mp4upload.com/embed-" + id + ".html";
         }
