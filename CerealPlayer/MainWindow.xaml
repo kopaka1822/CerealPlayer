@@ -47,7 +47,9 @@
                     <MenuItem 
                         Header="General"
                         Command="{Binding GeneralSettingsCommand}"/>
-                    <MenuItem Header="Hoster Preferences"/>
+                    <MenuItem 
+                        Header="Hoster Preferences"
+                        Command="{Binding HosterPreferencesCommand}"/>
                 </MenuItem>
             </Menu>
         </Grid>

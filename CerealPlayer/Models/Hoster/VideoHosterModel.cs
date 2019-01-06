@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,10 @@ namespace CerealPlayer.Models.Hoster
 {
     public class VideoHosterModel
     {
+        private readonly Dictionary<string, IVideoHoster> fileHoster = new Dictionary<string, IVideoHoster>();
+        private readonly Dictionary<string, IVideoHoster> seriesHoster = new Dictionary<string, IVideoHoster>();
         private readonly List<IVideoHoster> hoster = new List<IVideoHoster>();
+        private readonly SettingsModel settings;
 
         public class WebsiteHosterPair
         {
@@ -33,25 +37,42 @@ namespace CerealPlayer.Models.Hoster
             }
         }
 
+
         public VideoHosterModel(Models models)
         {
-            // order determines internal ration: The first hoster is the preferred hoster
-            
-            hoster.Add(new Openload(models));
-            hoster.Add(new Oload(models));
-            hoster.Add(new StreamAnGo(models));
-            //hoster.Add(new Streamcloud(models));
-            hoster.Add(new Mp4Upload(models));
-            hoster.Add(new RapidVideo(models));
+            settings = models.Settings;
 
-            hoster.Add(new JustDubs(models));
-            hoster.Add(new GoGoAnimes(models));
-            hoster.Add(new MasterAnime(models));
-            hoster.Add(new ProxerMe(models));
-            //hoster.Add(new BurningSeries(models));
+            RegisterHoster(new Openload(models));
+            RegisterHoster(new Oload(models));
+            RegisterHoster(new StreamAnGo(models));
+            //RegisterHoster(new Streamcloud(models));
+            RegisterHoster(new Mp4Upload(models));
+            RegisterHoster(new RapidVideo(models));
+
+            RegisterHoster(new JustDubs(models));
+            RegisterHoster(new GoGoAnimes(models));
+            RegisterHoster(new MasterAnime(models));
+            RegisterHoster(new ProxerMe(models));
+            //RegisterHoster(new BurningSeries(models));
+
+            LoadHosterFromSettings();
+            SaveHoster();
+
+            settings.PropertyChanged += SettingsOnPropertyChanged;
+        }
+
+        private void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(SettingsModel.PreferredHoster):
+                    LoadHosterFromSettings();
+                    break;
+            }   
         }
 
         /// <summary>
+
         /// returns the preferred hoster according to the priority list
         /// </summary>
         /// <param name="hosterPairs"></param>
@@ -70,6 +91,69 @@ namespace CerealPlayer.Models.Hoster
             }
 
             throw new Exception("GetPreferredHoster - no matching hoster");
+        }
+
+        /// <summary>
+        /// adds hoster to the respective dictionary
+        /// </summary>
+        /// <param name="h"></param>
+        private void RegisterHoster(IVideoHoster h)
+        {
+            if (h.IsFileHoster)
+            {
+                Debug.Assert(!fileHoster.ContainsKey(h.Name));
+                fileHoster.Add(h.Name, h);
+            }
+            else
+            {
+                Debug.Assert(!seriesHoster.ContainsKey(h.Name));
+                seriesHoster.Add(h.Name, h);
+            }
+        }
+
+        private void LoadHosterFromSettings()
+        {
+            hoster.Clear();
+            // add all hoster according to settings list
+            var preferredHoster = settings.PreferredHoster;
+            var usedHoster = new HashSet<string>();
+            foreach (var hosterName in preferredHoster)
+            {
+                if (fileHoster.TryGetValue(hosterName, out var res))
+                {
+                    hoster.Add(res);
+                    usedHoster.Add(hosterName);
+                }
+            }
+
+            if (usedHoster.Count != fileHoster.Count)
+            {
+                // add all hoster that were not listed in settings
+                foreach (var videoHoster in fileHoster)
+                {
+                    if (!usedHoster.Contains(videoHoster.Key))
+                    {
+                        hoster.Add(videoHoster.Value);
+                    }
+                }
+            }      
+
+            // add the remaining series hoster
+            foreach (var videoHoster in seriesHoster)
+            {
+                hoster.Add(videoHoster.Value);
+            }
+        }
+
+        private void SaveHoster()
+        {
+            var names = new List<string>();
+            foreach (var videoHoster in GetFileHoster())
+            {
+                names.Add(videoHoster.Name);  
+            }
+
+            settings.PreferredHoster = names.ToArray();
         }
 
         /// <summary>
@@ -149,6 +233,16 @@ namespace CerealPlayer.Models.Hoster
                 throw new Exception("no compatible hosters found on " + website);
 
             return task;
+        }
+
+        /// <summary>
+        /// returns all video hosters with IsFileHoster = true 
+        /// sorted with their current priority
+        /// </summary>
+        /// <returns></returns>
+        private List<IVideoHoster> GetFileHoster()
+        {
+            return hoster.Where(videoHoster => videoHoster.IsFileHoster).ToList();
         }
     }
 }

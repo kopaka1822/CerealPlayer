@@ -219,6 +219,10 @@ namespace CerealPlayer.Models.Hoster.Series
             this.models = models;
         }
 
+        public string Name => "BurningSeries";
+
+        public bool IsFileHoster => false;
+
         public bool Supports(string website)
         {
             return website.Contains("bs.to/");

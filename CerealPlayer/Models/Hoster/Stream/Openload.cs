@@ -15,6 +15,9 @@ namespace CerealPlayer.Models.Hoster.Stream
             this.models = models;
         }
 
+        public string Name => "Openload";
+        public bool IsFileHoster => true;
+
         public bool Supports(string website)
         {
             return website.Contains("openload.co");

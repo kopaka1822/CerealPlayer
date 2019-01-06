@@ -19,6 +19,9 @@ namespace CerealPlayer.Models.Hoster.Stream
             this.models = models;
         }
 
+        public string Name => "Streamcloud";
+        public bool IsFileHoster => true;
+
         public bool Supports(string website)
         {
             return website.Contains("http://streamcloud.eu");

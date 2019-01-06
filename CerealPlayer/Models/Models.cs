@@ -24,12 +24,12 @@ namespace CerealPlayer.Models
 
         public Models(MainWindow window)
         {
+            Settings = new SettingsModel();
             App = new AppModel(window);
-            Web = new WebModel(this);
             Playlists = new PlaylistsModel();
             Display = new DisplayModel();
             Player = new PlayerModel();
-            Settings = new SettingsModel();
+            Web = new WebModel(this);
         }
 
         public void Dispose()

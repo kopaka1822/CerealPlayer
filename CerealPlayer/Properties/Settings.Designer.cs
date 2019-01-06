@@ -94,5 +94,17 @@ namespace CerealPlayer.Properties {
                 this["MaxChromiumInstances"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PreferredHoster {
+            get {
+                return ((string)(this["PreferredHoster"]));
+            }
+            set {
+                this["PreferredHoster"] = value;
+            }
+        }
     }
 }

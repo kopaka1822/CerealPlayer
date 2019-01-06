@@ -18,6 +18,10 @@ namespace CerealPlayer.Models.Hoster.Series
             this.models = models;
         }
 
+        public string Name => "JustDubs";
+
+        public bool IsFileHoster => false;
+
         public bool Supports(string website)
         {
             return website.Contains("http://justdubsanime.net");

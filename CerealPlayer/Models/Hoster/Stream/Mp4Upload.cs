@@ -15,6 +15,10 @@ namespace CerealPlayer.Models.Hoster.Stream
             this.models = models;
         }
 
+        public string Name => "Mp4Upload";
+
+        public bool IsFileHoster => true;
+
         public bool Supports(string website)
         {
             return website.Contains("mp4upload.com");

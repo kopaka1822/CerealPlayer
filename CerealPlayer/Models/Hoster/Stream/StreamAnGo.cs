@@ -19,6 +19,9 @@ namespace CerealPlayer.Models.Hoster.Stream
             this.models = models;
         }
 
+        public string Name => "StreaMango";
+        public bool IsFileHoster => true;
+
         public bool Supports(string website)
         {
             return website.Contains("streamango.com");

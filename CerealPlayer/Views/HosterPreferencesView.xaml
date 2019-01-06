@@ -1,0 +1,45 @@
+﻿<Window x:Class="CerealPlayer.Views.HosterPreferencesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CerealPlayer.Views"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        mc:Ignorable="d"
+        Title="Hoster Preferences" 
+        Height="300" 
+        Width="200"
+        WindowStyle="ToolWindow">
+    <Grid
+        Margin="{StaticResource DialogBorder}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ListBox
+            Margin="{StaticResource BigBottomBorder}"
+            ItemsSource="{Binding Items}"
+            SelectedItem="{Binding SelectedItem}"
+            dd:DragDrop.IsDragSource="True"
+            dd:DragDrop.IsDropTarget="True"
+            dd:DragDrop.DropHandler="{Binding}">
+            
+        </ListBox>
+
+        <StackPanel
+            Grid.Row="1"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom">
+            <Button
+                Margin="{StaticResource RightBorder}"
+                Command="{Binding SaveCommand}">
+                Save
+            </Button>
+            <Button
+                Command="{Binding CancelCommand}">
+                Cancel
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

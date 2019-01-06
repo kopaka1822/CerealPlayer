@@ -21,6 +21,13 @@ namespace CerealPlayer.Models.Hoster
 
     public interface IVideoHoster
     {
+        string Name { get; }
+
+        /// <summary>
+        /// indicates if this website actually stores the video on its server
+        /// </summary>
+        bool IsFileHoster { get; }
+
         bool Supports(string website);
 
         EpisodeInfo GetInfo(string website);

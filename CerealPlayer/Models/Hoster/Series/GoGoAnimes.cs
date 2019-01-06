@@ -18,6 +18,10 @@ namespace CerealPlayer.Models.Hoster.Series
             this.models = models;
         }
 
+        public string Name => "GoGoAnimes";
+
+        public bool IsFileHoster => false;
+
         public bool Supports(string website)
         {
             return website.Contains(".gogoanimes.tv") || website.Contains(".gogoanimes.in");
