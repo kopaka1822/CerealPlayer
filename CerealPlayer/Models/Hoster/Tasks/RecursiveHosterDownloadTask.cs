@@ -43,6 +43,11 @@ namespace CerealPlayer.Models.Hoster.Tasks
             }
             catch (Exception e)
             {
+                if(useJavascript)
+                    models.Web.Html.RemoveCachedJs(website);
+                else
+                    models.Web.Html.RemoveCached(website);
+                
                 parent.SetError(e.Message);
             }
         }

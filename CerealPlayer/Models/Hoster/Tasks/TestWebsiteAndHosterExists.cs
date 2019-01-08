@@ -23,6 +23,8 @@ namespace CerealPlayer.Models.Hoster.Tasks
             }
             catch (Exception)
             {
+                if(runJavascript)
+                    models.Web.Html.RemoveCachedJs(website);
                 // episode does not exists
                 throw new Exception("");
             }
