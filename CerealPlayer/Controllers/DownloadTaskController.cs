@@ -99,6 +99,9 @@ namespace CerealPlayer.Controllers
                 nextDownloadIndex++;
             }
 
+            if (nextDownloadIndex >= playlist.Videos.Count) return false; // nothing to do
+
+
             var episodesAhead = nextDownloadIndex - playlist.PlayingVideoIndex;
             if (episodesAhead < models.Settings.MaxAdvanceDownloads) return true;
             if (episodesAhead > models.Settings.MaxAdvanceDownloads) return false;
