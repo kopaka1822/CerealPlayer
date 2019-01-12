@@ -47,7 +47,8 @@
             
             <Button 
                 Grid.Column="0"
-                Command="{Binding PlayCommand}">
+                Command="{Binding PlayCommand}"
+                ToolTip="Toggle play/pause">
                 <StackPanel>
                     <Image 
                         Source="../Icons/play.png" 
@@ -65,28 +66,32 @@
                 Orientation="Horizontal">
                 <Button 
                     Margin="{StaticResource RightBorder}"
-                    Command="{Binding PreviousEpisodeCommand}">
+                    Command="{Binding PreviousEpisodeCommand}"
+                    ToolTip="Previous episode">
                     <Image 
                         Source="../Icons/previous.png"
                         Height="{StaticResource IconHeight}"/>
                 </Button>
                 <Button
                     Margin="{StaticResource RightBorder}"
-                    Command="{Binding WindBackCommand}">
+                    Command="{Binding WindBackCommand}"
+                    ToolTip="Rewind 10 seconds">
                     <Image 
                         Source="../Icons/backward.png"
                         Height="{StaticResource IconHeight}"/>
                 </Button>
                 <Button
                     Margin="{StaticResource RightBorder}"
-                    Command="{Binding WindForwardCommand}">
+                    Command="{Binding WindForwardCommand}"
+                    ToolTip="Forward 30 seconds">
                     <Image 
                         Source="../Icons/forward.png"
                         Height="{StaticResource IconHeight}"/>
                 </Button>
                 <Button
                     Margin="{StaticResource RightBorder}"
-                    Command="{Binding NextEpisodeCommand}">
+                    Command="{Binding NextEpisodeCommand}"
+                    ToolTip="Next episode">
                     <Image 
                         Source="../Icons/next.png"
                         Height="{StaticResource IconHeight}"/>

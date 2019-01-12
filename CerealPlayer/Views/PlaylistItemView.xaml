@@ -8,7 +8,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="70"
              Width="{StaticResource PlaylistItemWidth}"
-             Background="White">
+             Background="White"
+             ToolTip="{Binding Name}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="MouseDoubleClick">
             <i:InvokeCommandAction Command="{Binding PlayCommand}"/>
