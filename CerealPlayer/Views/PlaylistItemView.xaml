@@ -14,6 +14,17 @@
             <i:InvokeCommandAction Command="{Binding PlayCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem 
+                Header="Copy Video Link"
+                Command="{Binding CopyVideoLinkCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../Icons/copy.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <StackPanel>
         <Grid Margin="{StaticResource BottomBorder}">
             <Grid.ColumnDefinitions>

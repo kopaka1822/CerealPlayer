@@ -10,7 +10,7 @@ namespace CerealPlayer.Models.Web
     public class HtmlProvider
     {
         private readonly Browser browser = new Browser();
-
+        
         private readonly Dictionary<string, Task<string>> cachedJsWebsites = new Dictionary<string, Task<string>>();
 
         private readonly Dictionary<string, Task<string>> cachedWebsites = new Dictionary<string, Task<string>>();
