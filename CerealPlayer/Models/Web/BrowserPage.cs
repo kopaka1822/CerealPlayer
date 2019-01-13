@@ -48,16 +48,8 @@ namespace CerealPlayer.Models.Web
 
                 page.Load(url);
 
-                // create a 60 sec timeout 
-                bool isSignalled = manualResetEvent.WaitOne(TimeSpan.FromSeconds(60));
+                manualResetEvent.WaitOne(TimeSpan.FromSeconds(60));
                 manualResetEvent.Reset();
-                
-                // As the request may actually get an answer, we'll force stop when the timeout is passed
-                if (!isSignalled)
-                {
-                    page.Stop();
-                }
-
             }
             catch (ObjectDisposedException)
             {
@@ -66,6 +58,7 @@ namespace CerealPlayer.Models.Web
             finally
             {
                 page.LoadingStateChanged -= PageLoadingStateChanged;
+                page.Stop();
             }
         }
 
