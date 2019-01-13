@@ -35,6 +35,7 @@ namespace CerealPlayer.Commands.Settings
             s.HidePlaybarTime = vm.HidePlaybarTime;
             s.DeleteAfterWatching = vm.DeleteAfterWatching;
             s.MaxChromiumInstances = vm.MaxChromium;
+            s.RewindOnPlaylistChangeTime = vm.RewindOnPlaylistChange;
 
             s.Save();
         }

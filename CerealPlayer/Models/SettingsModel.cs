@@ -121,6 +121,18 @@ namespace CerealPlayer.Models
             }
         }
 
+        public int RewindOnPlaylistChangeTime
+        {
+            get => Settings.Default.RewindOnPlaylistChangeTime;
+            set
+            {
+                Debug.Assert(value >= 0);
+                if(value == Settings.Default.RewindOnPlaylistChangeTime) return;
+                Settings.Default.RewindOnPlaylistChangeTime = value;
+                OnPropertyChanged(nameof(RewindOnPlaylistChangeTime));
+            }
+        }
+
         public void Save()
         {
             Settings.Default.Save();

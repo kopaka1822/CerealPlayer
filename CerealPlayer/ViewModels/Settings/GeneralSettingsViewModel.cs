@@ -21,6 +21,7 @@ namespace CerealPlayer.ViewModels.Settings
             downloadSpeed = settings.DownloadSpeed;
             hidePlaybarTime = settings.HidePlaybarTime;
             maxChromiumInstances = settings.MaxChromiumInstances;
+            rewindOnPlaylistChange = settings.RewindOnPlaylistChangeTime;
 
             CancelCommand = new SetDialogResultCommand(models, false);
             SaveCommand = new SetDialogResultCommand(models, true);
@@ -32,6 +33,7 @@ namespace CerealPlayer.ViewModels.Settings
         private int downloadSpeed;
         private int hidePlaybarTime;
         private int maxChromiumInstances;
+        private int rewindOnPlaylistChange;
 
         public int MaxDownloads
         {
@@ -96,6 +98,17 @@ namespace CerealPlayer.ViewModels.Settings
                 if (value == hidePlaybarTime) return;
                 hidePlaybarTime = Math.Max(value, 1);
                 OnPropertyChanged(nameof(HidePlaybarTime));
+            }
+        }
+
+        public int RewindOnPlaylistChange
+        {
+            get => rewindOnPlaylistChange;
+            set
+            {
+                if (value == rewindOnPlaylistChange) return;
+                rewindOnPlaylistChange = Math.Max(0, rewindOnPlaylistChange);
+                OnPropertyChanged(nameof(RewindOnPlaylistChange));
             }
         }
 

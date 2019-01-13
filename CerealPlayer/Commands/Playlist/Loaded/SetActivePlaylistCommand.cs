@@ -30,7 +30,20 @@ namespace CerealPlayer.Commands.Playlist.Loaded
 
         public void Execute(object parameter)
         {
+            // set new playlist
             models.Playlists.ActivePlaylist = model;
+
+            // rewind a little bit
+            if(models.Playlists.ActivePlaylist == null) return;
+
+            var oldPos = models.Playlists.ActivePlaylist.PlayingVideoPosition;
+            models.Playlists.ActivePlaylist.PlayingVideoPosition = oldPos.Subtract(
+                TimeSpan.FromSeconds(models.Settings.RewindOnPlaylistChangeTime
+            ));
+
+            // start playing
+            if(models.Player.IsPausing)
+                models.Player.IsPausing = false;
         }
 
         public event EventHandler CanExecuteChanged;
