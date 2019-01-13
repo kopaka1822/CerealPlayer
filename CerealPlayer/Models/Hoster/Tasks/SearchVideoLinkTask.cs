@@ -53,7 +53,7 @@ namespace CerealPlayer.Models.Hoster.Tasks
 
                 var address = StringUtil.ReadLink(source, subIndex);
 
-                parent.SetNewSubTask(new DefaultVideoDownloader(models, parent, address));
+                parent.SetNewSubTask(GetNewTask(models, parent, address));
             }
             catch (Exception e)
             {
@@ -63,6 +63,11 @@ namespace CerealPlayer.Models.Hoster.Tasks
 
         public void Stop()
         {
+        }
+
+        protected virtual ISubTask GetNewTask(Models mdls, VideoTaskModel video, string site)
+        {
+            return new DefaultVideoDownloader(mdls, parent, site);
         }
     }
 }

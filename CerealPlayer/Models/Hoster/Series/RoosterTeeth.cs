@@ -83,14 +83,16 @@ namespace CerealPlayer.Models.Hoster.Series
             return new EpisodeInfo
             {
                 SeriesTitle = seriesTitle,
-                EpisodeTitle = episodeTitle ?? seriesTitle,
+                EpisodeTitle = episodeTitle ?? seriesTitle + " " + number,
                 EpisodeNumber = number
             };
         }
 
         public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
         {
-            return new YoutubeDlLinkTask(models, parent, website);
+            return new DownloadTask(models, parent, website);
+            //return new YoutubeDlLinkTask(models, parent, website);
+            //return new SearchVideoLinkYtDlTask(models, parent, website, ".m3u8", true);
         }
 
         public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
@@ -102,6 +104,52 @@ namespace CerealPlayer.Models.Hoster.Series
         public string FindCompatibleLink(string websiteSource)
         {
             return null;
+        }
+
+        private class DownloadTask : ISubTask
+        {
+            private readonly Models models;
+            private readonly VideoTaskModel parent;
+            private readonly string website;
+
+            public DownloadTask(Models models, VideoTaskModel parent, string website)
+            {
+                this.models = models;
+                this.parent = parent;
+                this.website = website;
+            }
+
+            public async void Start()
+            {
+                try
+                {
+                    var idx = website.LastIndexOf('/');
+                    var videoId = website.Substring(idx + 1);
+                    var requestAddress = "https://svod-be.roosterteeth.com/api/v1/episodes/" + videoId +
+                                         "/videos";
+                    // use api to extract string
+                    parent.Description = "resolving " + requestAddress;
+                    var info = await models.Web.Html.GetAsynch(requestAddress);
+
+                    // search vor the m3u8 link
+                    idx = info.IndexOf(".m3u8", StringComparison.Ordinal);
+                    if(idx < 0)
+                        throw new Exception(requestAddress + " could not find \".m3u8\"");
+
+                    var link = StringUtil.ReadLink(info, idx);
+
+                    parent.SetNewSubTask(new YoutubeDlDownloader(models, parent, link));
+                }
+                catch (Exception e)
+                {
+                    parent.SetError(e.Message);
+                }
+            }
+
+            public void Stop()
+            {
+                
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ namespace CerealPlayer.Models.Hoster
             RegisterHoster(new GoGoAnimes(models));
             RegisterHoster(new MasterAnime(models));
             RegisterHoster(new ProxerMe(models));
-            //RegisterHoster(new RoosterTeeth(models));
+            RegisterHoster(new RoosterTeeth(models));
             //RegisterHoster(new BurningSeries(models));
 
             LoadHosterFromSettings();
