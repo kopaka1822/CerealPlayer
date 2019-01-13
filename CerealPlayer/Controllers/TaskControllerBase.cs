@@ -14,6 +14,7 @@ namespace CerealPlayer.Controllers
     {
         protected readonly Models.Models models;
         private readonly List<PlaylistModel> priorityQueue = new List<PlaylistModel>();
+        private readonly HashSet<TaskModel> runningTasks = new HashSet<TaskModel>();
 
         protected TaskControllerBase(Models.Models models)
         {
@@ -36,7 +37,7 @@ namespace CerealPlayer.Controllers
             priorityQueue.Insert(0, tmp);
         }
 
-        protected int NumTaskRunning { get; private set; } = 0;
+        protected int NumTaskRunning => runningTasks.Count;
 
         protected abstract TaskModel GetTask(PlaylistModel playlist);
 
@@ -106,14 +107,16 @@ namespace CerealPlayer.Controllers
             switch (task.Status)
             {
                 case TaskModel.TaskStatus.Running:
-                    NumTaskRunning++;
+                    runningTasks.Add(task);
                     break;
                 case TaskModel.TaskStatus.Failed:
                 case TaskModel.TaskStatus.Finished:
-                    NumTaskRunning--;
-                    StartNewTasks();
+                    if(runningTasks.Remove(task))
+                        StartNewTasks();
                     break;
                 case TaskModel.TaskStatus.ReadyToStart:
+                    // tasks can change from running to ready to start
+                    runningTasks.Remove(task);
                     StartNewTasks();
                     break;
             }
