@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
 
@@ -12,12 +8,11 @@ namespace CerealPlayer.Commands.Player
 {
     public class ChangeEpisodeCommand : ICommand
     {
-        private readonly Models.Models models;
         private readonly int direction;
+        private readonly Models.Models models;
         private PlaylistModel prevPlaylist = null;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="models"></param>
         /// <param name="direction">-1 for one episode back, +1 for next episode</param>
@@ -27,6 +22,22 @@ namespace CerealPlayer.Commands.Player
             this.direction = direction;
             this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
         }
+
+
+        public bool CanExecute(object parameter)
+        {
+            var pl = models.Playlists.ActivePlaylist;
+            if (pl == null) return false;
+            var nextIdx = pl.PlayingVideoIndex + direction;
+            return nextIdx >= 0 && nextIdx < pl.Videos.Count;
+        }
+
+        public void Execute(object parameter)
+        {
+            models.Playlists.ActivePlaylist.PlayingVideoIndex += direction;
+        }
+
+        public event EventHandler CanExecuteChanged;
 
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
@@ -48,6 +59,7 @@ namespace CerealPlayer.Commands.Player
                         prevPlaylist.VideosCollectionChanged += VideosOnCollectionChanged;
                         prevPlaylist.PropertyChanged += PlaylistOnPropertyChanged;
                     }
+
                     break;
             }
         }
@@ -66,22 +78,6 @@ namespace CerealPlayer.Commands.Player
         {
             OnCanExecuteChanged();
         }
-
-
-        public bool CanExecute(object parameter)
-        {
-            var pl = models.Playlists.ActivePlaylist;
-            if (pl == null) return false;
-            var nextIdx = pl.PlayingVideoIndex + direction;
-            return nextIdx >= 0 && nextIdx < pl.Videos.Count;
-        }
-
-        public void Execute(object parameter)
-        {
-            models.Playlists.ActivePlaylist.PlayingVideoIndex += direction;
-        }
-
-        public event EventHandler CanExecuteChanged;
 
         protected virtual void OnCanExecuteChanged()
         {

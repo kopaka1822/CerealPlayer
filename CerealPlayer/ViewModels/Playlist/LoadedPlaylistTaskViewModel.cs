@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CerealPlayer.Annotations;
-using CerealPlayer.Commands.Playlist;
 using CerealPlayer.Commands.Playlist.Loaded;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
@@ -20,6 +15,7 @@ namespace CerealPlayer.ViewModels.Playlist
     {
         private readonly Models.Models models;
         private readonly PlaylistModel parent;
+
         private readonly DispatcherTimer refreshDownloadTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(1)
@@ -40,6 +36,63 @@ namespace CerealPlayer.ViewModels.Playlist
 
             refreshDownloadTimer.Tick += RefreshDownloadTimerOnTick;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string Name => parent.Name;
+
+        public string Status
+        {
+            get
+            {
+                // display download task
+                if (parent.DownloadPlaylistTask.Status != TaskModel.TaskStatus.Finished)
+                {
+                    if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.ReadyToStart)
+                        return "pausing due to download restrictions";
+
+                    if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running)
+                        return parent.DownloadPlaylistTask.Description +
+                               parent.DownloadPlaylistTask.GetProgressTimeRemainingString(" ");
+
+                    return parent.DownloadPlaylistTask.Description;
+                }
+
+                // display next episode task
+                if (parent.NextEpisodeTask.Status == TaskModel.TaskStatus.Finished
+                    || parent.NextEpisodeTask.Status == TaskModel.TaskStatus.Failed
+                    && parent.NextEpisodeTask.Description.Length == 0)
+                    return "up-to-date";
+
+                return parent.NextEpisodeTask.Description;
+            }
+        }
+
+        public int Progress
+        {
+            get => parent.DownloadPlaylistTask.Progress;
+            set { }
+        }
+
+        public Visibility ProgressVisibility => parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        public Visibility StopVisibility => DoesAnyTask() ? Visibility.Visible : Visibility.Collapsed;
+
+        public Visibility RetryVisibility => !DoesAnyTask() ? Visibility.Visible : Visibility.Collapsed;
+
+        public Visibility PlayVisibility => ReferenceEquals(models.Playlists.ActivePlaylist, parent)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+
+        public ICommand DeleteCommand { get; }
+
+        public ICommand RetryCommand { get; }
+
+        public ICommand StopCommand { get; }
+
+        public ICommand PlayCommand { get; }
 
         private void RefreshDownloadTimerOnTick(object sender, EventArgs eventArgs)
         {
@@ -73,7 +126,7 @@ namespace CerealPlayer.ViewModels.Playlist
                     OnPropertyChanged(nameof(Status));
                     if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running)
                     {
-                        if(!refreshDownloadTimer.IsEnabled)
+                        if (!refreshDownloadTimer.IsEnabled)
                             refreshDownloadTimer.Start();
                     }
                     else
@@ -81,71 +134,15 @@ namespace CerealPlayer.ViewModels.Playlist
                         if (refreshDownloadTimer.IsEnabled)
                             refreshDownloadTimer.Stop();
                     }
+
                     break;
             }
         }
-
-        public string Name => parent.Name;
-
-        public string Status
-        {
-            get
-            {
-                // display download task
-                if (parent.DownloadPlaylistTask.Status != TaskModel.TaskStatus.Finished)
-                {
-                    if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.ReadyToStart)
-                        return "pausing due to download restrictions";
-
-                    if(parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running)
-                        return parent.DownloadPlaylistTask.Description + parent.DownloadPlaylistTask.GetProgressTimeRemainingString(" ");
-
-                    return parent.DownloadPlaylistTask.Description;
-                }
-
-                // display next episode task
-                if (parent.NextEpisodeTask.Status == TaskModel.TaskStatus.Finished
-                    || (parent.NextEpisodeTask.Status == TaskModel.TaskStatus.Failed 
-                        && parent.NextEpisodeTask.Description.Length == 0))
-                    return "up-to-date";
-
-                return parent.NextEpisodeTask.Description;
-
-            }
-        } 
-
-        public int Progress
-        {
-            get => parent.DownloadPlaylistTask.Progress;
-            set { }
-        }
-
-        public Visibility ProgressVisibility => parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running
-            ? Visibility.Visible
-            : Visibility.Collapsed;
-
-        public Visibility StopVisibility => DoesAnyTask() ? Visibility.Visible : Visibility.Collapsed;
-
-        public Visibility RetryVisibility => (!DoesAnyTask()) ? Visibility.Visible : Visibility.Collapsed;
-
-        public Visibility PlayVisibility => ReferenceEquals(models.Playlists.ActivePlaylist, parent) 
-            ? Visibility.Collapsed 
-            : Visibility.Visible;
-
-        public ICommand DeleteCommand { get; }
-
-        public ICommand RetryCommand { get; }
-        
-        public ICommand StopCommand { get; }
-
-        public ICommand PlayCommand { get; }
 
         private bool DoesAnyTask()
         {
             return parent.DownloadPlaylistTask.ReadyOrRunning || parent.NextEpisodeTask.ReadyOrRunning;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

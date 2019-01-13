@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace CerealPlayer.Commands
 {
     /// <summary>
-    /// sets the result of the topmost window/dialog
+    ///     sets the result of the topmost window/dialog
     /// </summary>
     public class SetDialogResultCommand : ICommand
     {

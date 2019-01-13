@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Net;
 using CerealPlayer.Models.Task;
-using CerealPlayer.Models.Task.Hoster;
 
 namespace CerealPlayer.Models.Hoster.Tasks
 {
     public class DefaultVideoDownloader : ISubTask
     {
-        private Models models;
-        private readonly VideoTaskModel parent;
         private readonly string link;
+        private readonly VideoTaskModel parent;
+        private Models models;
         private WebClient webClient = null;
 
         public DefaultVideoDownloader(Models models, VideoTaskModel parent, string link)
@@ -27,7 +26,7 @@ namespace CerealPlayer.Models.Hoster.Tasks
                 using (webClient = new WebClient())
                 {
                     webClient.DownloadProgressChanged += DownloadProgressChanged;
-                    
+
                     await webClient.DownloadFileTaskAsync(link, parent.Video.FileLocation);
                 }
 
@@ -40,14 +39,14 @@ namespace CerealPlayer.Models.Hoster.Tasks
             }
         }
 
-        private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            parent.Progress = e.ProgressPercentage;
-        }
-
         public void Stop()
         {
             webClient?.CancelAsync();
+        }
+
+        private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            parent.Progress = e.ProgressPercentage;
         }
     }
 }

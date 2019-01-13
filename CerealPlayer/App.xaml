@@ -7,50 +7,42 @@
     <Application.Resources>
         <Style TargetType="{x:Type Control}" x:Key="BaseStyle">
             <Setter Property="FontSize" Value="20" />
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="Black" />
         </Style>
         <Style TargetType="{x:Type Control}" x:Key="TextStyle">
             <Setter Property="FontSize" Value="16" />
         </Style>
 
         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource BaseStyle}">
-            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderBrush" Value="White" />
         </Style>
 
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseStyle}">
-            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderThickness" Value="2" />
         </Style>
-        
+
         <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource BaseStyle}">
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="Black"/>
-        </Style>
-        
-        <Style TargetType="{x:Type Thumb}" BasedOn="{StaticResource BaseStyle}">
-            
-        </Style>
-        
-        <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource BaseStyle}">
-
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="Black" />
         </Style>
 
-        <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource BaseStyle}">
+        <Style TargetType="{x:Type Thumb}" BasedOn="{StaticResource BaseStyle}" />
 
-        </Style>
+        <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource BaseStyle}" />
+
+        <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource BaseStyle}" />
 
         <Style x:Key="DescriptionStyle" TargetType="{x:Type TextBlock}">
-            <Setter Property="OverridesDefaultStyle" Value="False"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="OverridesDefaultStyle" Value="False" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
-        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextStyle}">
-
-        </Style>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextStyle}" />
 
         <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="16" />
         </Style>
 
         <system:Double x:Key="BigBorder">5</system:Double>
@@ -58,19 +50,19 @@
 
         <system:Double x:Key="PlaylistBarWidth">307</system:Double>
         <system:Double x:Key="PlaylistItemWidth">270</system:Double>
-        
+
         <system:Double x:Key="IconHeight">32</system:Double>
         <system:Double x:Key="SmallIconHeight">16</system:Double>
 
-        <Thickness x:Key="DialogBorder" Bottom="{StaticResource BigBorder}" Left="{StaticResource BigBorder}" Right="{StaticResource BigBorder}" Top="{StaticResource BigBorder}"/>
-        <Thickness x:Key="RightBorder" Right="{StaticResource SmallBorder}"/>
-        <Thickness x:Key="LeftBorder" Left="{StaticResource SmallBorder}"/>
-        <Thickness x:Key="TopBorder" Top="{StaticResource SmallBorder}"/>
-        <Thickness x:Key="BottomBorder" Bottom="{StaticResource SmallBorder}"/>
-        <Thickness x:Key="LeftRightBorder" Left="{StaticResource SmallBorder}" Right="{StaticResource SmallBorder}"/>
-        <Thickness x:Key="RightBottomBorder" Bottom="{StaticResource SmallBorder}" Right="{StaticResource SmallBorder}"/>
-        
-        <Thickness x:Key="BigBottomBorder" Bottom="{StaticResource BigBorder}"/>
+        <Thickness x:Key="DialogBorder" Bottom="{StaticResource BigBorder}" Left="{StaticResource BigBorder}"
+                   Right="{StaticResource BigBorder}" Top="{StaticResource BigBorder}" />
+        <Thickness x:Key="RightBorder" Right="{StaticResource SmallBorder}" />
+        <Thickness x:Key="LeftBorder" Left="{StaticResource SmallBorder}" />
+        <Thickness x:Key="TopBorder" Top="{StaticResource SmallBorder}" />
+        <Thickness x:Key="BottomBorder" Bottom="{StaticResource SmallBorder}" />
+        <Thickness x:Key="LeftRightBorder" Left="{StaticResource SmallBorder}" Right="{StaticResource SmallBorder}" />
+        <Thickness x:Key="RightBottomBorder" Bottom="{StaticResource SmallBorder}" Right="{StaticResource SmallBorder}" />
+
+        <Thickness x:Key="BigBottomBorder" Bottom="{StaticResource BigBorder}" />
     </Application.Resources>
 </Application>
-

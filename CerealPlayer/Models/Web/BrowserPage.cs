@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CefSharp;
@@ -12,10 +9,9 @@ namespace CerealPlayer.Models.Web
 {
     public class BrowserPage
     {
-        private readonly ChromiumWebBrowser page;
-
         // timeout reset for website loading
         private readonly ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+        private readonly ChromiumWebBrowser page;
 
         public BrowserPage()
         {
@@ -35,7 +31,7 @@ namespace CerealPlayer.Models.Web
         }
 
         /// <summary>
-        /// Open the given url
+        ///     Open the given url
         /// </summary>
         /// <param name="url">the url</param>
         /// <returns></returns>
@@ -63,7 +59,7 @@ namespace CerealPlayer.Models.Web
         }
 
         /// <summary>
-        /// Manage the IsLoading parameter
+        ///     Manage the IsLoading parameter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

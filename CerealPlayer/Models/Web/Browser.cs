@@ -1,39 +1,37 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CefSharp;
 using CefSharp.OffScreen;
+using CerealPlayer.Properties;
 
 namespace CerealPlayer.Models.Web
 {
     public class Browser
     {
-        private ConcurrentStack<BrowserPage> pages = new ConcurrentStack<BrowserPage>();
+        private readonly ConcurrentStack<BrowserPage> pages = new ConcurrentStack<BrowserPage>();
 
         public Browser()
         {
             var settings = new CefSettings()
             {
                 //By default CefSharp will use an in-memory cache, you need to     specify a Cache Folder to persist data
-                CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CefSharp\\Cache"),
+                CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "CefSharp\\Cache"),
             };
 
             CefSharpSettings.ShutdownOnExit = false;
 
             //Perform dependency check to make sure all relevant resources are in our output directory.
-            Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
+            Cef.Initialize(settings, true, null);
 
             // add some emtpy pages to the stack. the pages will be created if needed
-            var maxPages = Properties.Settings.Default.MaxChromiumInstances;
+            var maxPages = Settings.Default.MaxChromiumInstances;
             Debug.Assert(maxPages > 0);
-            for (int i = 0; i < maxPages; ++i)
+            for (var i = 0; i < maxPages; ++i)
                 pages.Push(null);
         }
 
@@ -64,6 +62,7 @@ namespace CerealPlayer.Models.Web
             {
                 browserPage?.Dispose();
             }
+
             Cef.Shutdown();
         }
     }

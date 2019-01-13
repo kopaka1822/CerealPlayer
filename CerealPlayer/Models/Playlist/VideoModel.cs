@@ -1,30 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands.Playlist.Video;
 using CerealPlayer.Models.Hoster;
 using CerealPlayer.Models.Task;
-using CerealPlayer.Models.Task.Hoster;
-using Newtonsoft.Json;
 
 namespace CerealPlayer.Models.Playlist
 {
     public class VideoModel
     {
-        public class SaveData
-        {
-            public string Website { get; set; }
-            public string Name { get; set; }
-            public int Number { get; set; }
-            public string Extension { get; set; }
-            public bool IsDownloaded { get; set; }
-        }
-
         public VideoModel(Models models, string initialWebsite, PlaylistModel parent, IVideoHoster hoster)
         {
             InitialWebsite = initialWebsite;
@@ -77,11 +61,10 @@ namespace CerealPlayer.Models.Playlist
 
         public string FileLocation => Parent.Directory + "/" + Name + Extension;
 
-        [NotNull]
-        public VideoTaskModel DownloadTask { get; }
+        [NotNull] public VideoTaskModel DownloadTask { get; }
 
         /// <summary>
-        /// task that will be used for the delayed delete (if delete episode after watching is true)
+        ///     task that will be used for the delayed delete (if delete episode after watching is true)
         /// </summary>
         [NotNull]
         public TaskModel DeleteTask { get; }
@@ -108,5 +91,13 @@ namespace CerealPlayer.Models.Playlist
             return task;
         }
 
+        public class SaveData
+        {
+            public string Website { get; set; }
+            public string Name { get; set; }
+            public int Number { get; set; }
+            public string Extension { get; set; }
+            public bool IsDownloaded { get; set; }
+        }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 
@@ -23,16 +21,16 @@ namespace CerealPlayer.Controllers
         }
 
         /// <summary>
-        /// deletes all videos with a running delete video task
+        ///     deletes all videos with a running delete video task
         /// </summary>
         public void Dispose()
         {
-            if(!models.Settings.DeleteAfterWatching) return;
+            if (!models.Settings.DeleteAfterWatching) return;
 
             // finish started delete tasks
             foreach (var playlist in models.Playlists.List)
             {
-                for (int i = 0; i < playlist.Videos.Count; ++i)
+                for (var i = 0; i < playlist.Videos.Count; ++i)
                 {
                     var video = playlist.Videos.ElementAt(i);
                     if (video.DeleteTask.Status != TaskModel.TaskStatus.Running) continue;
@@ -45,9 +43,9 @@ namespace CerealPlayer.Controllers
 
                     try
                     {
-                        if (System.IO.File.Exists(video.FileLocation))
+                        if (File.Exists(video.FileLocation))
                         {
-                            System.IO.File.Delete(video.FileLocation);
+                            File.Delete(video.FileLocation);
                         }
                     }
                     catch (Exception)
@@ -75,8 +73,8 @@ namespace CerealPlayer.Controllers
                         activePlaylist.PropertyChanged += ActivePlaylistOnPropertyChanged;
                         playingVideo = activePlaylist.PlayingVideo;
                     }
-                    break;
 
+                    break;
             }
         }
 
@@ -104,9 +102,10 @@ namespace CerealPlayer.Controllers
                     // stop deletion from this video
                     if (playingVideo != null)
                     {
-                        if(playingVideo.DeleteTask.ReadyOrRunning)
+                        if (playingVideo.DeleteTask.ReadyOrRunning)
                             playingVideo.DeleteTask.Stop();
                     }
+
                     break;
             }
         }

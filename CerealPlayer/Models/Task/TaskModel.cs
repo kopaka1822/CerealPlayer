@@ -4,10 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading;
 using CerealPlayer.Annotations;
-using CerealPlayer.Models.Playlist;
 
 namespace CerealPlayer.Models.Task
 {
@@ -16,19 +13,46 @@ namespace CerealPlayer.Models.Task
         public enum TaskStatus
         {
             ReadyToStart, // The sub task is not running and ready to be started
-                          // => will be scheduled as soon as possible
-            Running,      // The sub task is currently executing
-                          // => can be stopped by the user
-            Finished,     // The sub task is ready and there are not subtasks left 
-                          // => this wont be scheduled again
-            Failed        // The sub task execution failed or was stopped (and not finished)
-                          // => restart by user required
+
+            // => will be scheduled as soon as possible
+            Running, // The sub task is currently executing
+
+            // => can be stopped by the user
+            Finished, // The sub task is ready and there are not subtasks left 
+
+            // => this wont be scheduled again
+            Failed // The sub task execution failed or was stopped (and not finished)
+            // => restart by user required
         }
 
-        private readonly TimeSpan taskDelay;
-
         private readonly int maxTries;
+
+        private readonly TimeSpan taskDelay;
         private int curRetries = 0;
+
+        private DateTime lastProgressReceived;
+
+        private int progress = 0;
+
+        private TimeSpan progressTimeRemaining = TimeSpan.Zero;
+        private DateTime progressTimeRemainingSet = DateTime.Now;
+
+        private TaskStatus status = TaskStatus.Finished;
+
+        // indicates if this action should stop as soon as possible
+        private bool stopRequested = false;
+
+        private ISubTask subTask;
+
+        private long timeForOnePercent = 0;
+
+        /// <param name="maxTries">maximum number of tries to get a subtask done before the failed flag is set</param>
+        /// <param name="taskDelay">delay between execution of subtasks</param>
+        public TaskModel(int maxTries, TimeSpan taskDelay)
+        {
+            this.maxTries = maxTries;
+            this.taskDelay = taskDelay;
+        }
 
         public ObservableCollection<string> History { get; } = new ObservableCollection<string>();
 
@@ -37,13 +61,11 @@ namespace CerealPlayer.Models.Task
             get => History.Count > 0 ? History.Last() : "";
             set
             {
-                if(Description == value) return;
+                if (Description == value) return;
                 History.Add(value);
                 OnPropertyChanged(nameof(Description));
             }
         }
-
-        private int progress = 0;
 
         public int Progress
         {
@@ -70,33 +92,27 @@ namespace CerealPlayer.Models.Task
                     var elapsed = now - lastProgressReceived;
                     lastProgressReceived = now;
 
-                    var newTimeForOnePercent = (long)(elapsed.Ticks / (double)(newValue - oldValue));
+                    var newTimeForOnePercent = (long) (elapsed.Ticks / (double) (newValue - oldValue));
                     if (timeForOnePercent == 0)
                         timeForOnePercent = newTimeForOnePercent;
                     else
                     {
                         // use some of the previously predicted time
-                        timeForOnePercent = (long)(timeForOnePercent * 0.8 + newTimeForOnePercent * 0.2);
+                        timeForOnePercent = (long) (timeForOnePercent * 0.8 + newTimeForOnePercent * 0.2);
                     }
 
                     ProgressTimeRemaining = TimeSpan.FromTicks(timeForOnePercent * (100 - newValue));
                 }
+
                 progress = clamped;
                 OnPropertyChanged(nameof(Progress));
             }
         }
 
-        private DateTime lastProgressReceived;
-
-        private long timeForOnePercent = 0;
-
-        private TimeSpan progressTimeRemaining = TimeSpan.Zero;
-        private DateTime progressTimeRemainingSet = DateTime.Now;
-
         /// <summary>
-        /// a prediction when the progress will reach 100
-        /// this is exluded from the OnPropertyChanged and will
-        /// be changed each second and after Progress was set
+        ///     a prediction when the progress will reach 100
+        ///     this is exluded from the OnPropertyChanged and will
+        ///     be changed each second and after Progress was set
         /// </summary>
         public TimeSpan ProgressTimeRemaining
         {
@@ -106,7 +122,7 @@ namespace CerealPlayer.Models.Task
                 var elapsed = now - progressTimeRemainingSet;
 
                 var remaining = progressTimeRemaining.Subtract(elapsed);
-                if(remaining < TimeSpan.Zero)
+                if (remaining < TimeSpan.Zero)
                     return TimeSpan.Zero;
                 return remaining;
             }
@@ -118,27 +134,9 @@ namespace CerealPlayer.Models.Task
         }
 
         /// <summary>
-        /// returns the progress time remaining as string or an emtpy string if the time is zero
-        /// </summary>
-        /// <param name="prefix">prefix that will be added if the time is not zero</param>
-        /// <returns></returns>
-        public string GetProgressTimeRemainingString(string prefix)
-        {
-            var time = ProgressTimeRemaining;
-            if (time == TimeSpan.Zero) return "";
-
-            return prefix + time.ToString(@"hh\:mm\:ss");   
-        }
-
-        // indicates if this action should stop as soon as possible
-        private bool stopRequested = false;
-
-        private TaskStatus status = TaskStatus.Finished;
-
-        /// <summary>
-        /// Sets the status of the task.
-        /// Note: should only be set by its subtasks.
-        /// The initial status is Finished (since there are not subtasks)
+        ///     Sets the status of the task.
+        ///     Note: should only be set by its subtasks.
+        ///     The initial status is Finished (since there are not subtasks)
         /// </summary>
         public TaskStatus Status
         {
@@ -153,19 +151,11 @@ namespace CerealPlayer.Models.Task
         }
 
         /// <summary>
-        /// returns true if the status is either ReadyToStart or Running
+        ///     returns true if the status is either ReadyToStart or Running
         /// </summary>
         public bool ReadyOrRunning => Status == TaskStatus.ReadyToStart || Status == TaskStatus.Running;
 
-        private ISubTask subTask;
-
-        /// <param name="maxTries">maximum number of tries to get a subtask done before the failed flag is set</param>
-        /// <param name="taskDelay">delay between execution of subtasks</param>
-        public TaskModel(int maxTries, TimeSpan taskDelay)
-        {
-            this.maxTries = maxTries;
-            this.taskDelay = taskDelay;
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void Start()
         {
@@ -184,7 +174,7 @@ namespace CerealPlayer.Models.Task
                 stopRequested = true;
                 subTask.Stop();
             }
-            else if(Status == TaskStatus.ReadyToStart)
+            else if (Status == TaskStatus.ReadyToStart)
             {
                 // prevent execution by setting the failed flag
                 Description = "Stopped by user";
@@ -193,8 +183,21 @@ namespace CerealPlayer.Models.Task
         }
 
         /// <summary>
-        /// sets the new sub task (and executes it if status == running).
-        /// this should be the last command in a sub task
+        ///     returns the progress time remaining as string or an emtpy string if the time is zero
+        /// </summary>
+        /// <param name="prefix">prefix that will be added if the time is not zero</param>
+        /// <returns></returns>
+        public string GetProgressTimeRemainingString(string prefix)
+        {
+            var time = ProgressTimeRemaining;
+            if (time == TimeSpan.Zero) return "";
+
+            return prefix + time.ToString(@"hh\:mm\:ss");
+        }
+
+        /// <summary>
+        ///     sets the new sub task (and executes it if status == running).
+        ///     this should be the last command in a sub task
         /// </summary>
         /// <param name="newSubTask"></param>
         public async void SetNewSubTask([NotNull] ISubTask newSubTask)
@@ -226,13 +229,13 @@ namespace CerealPlayer.Models.Task
         }
 
         /// <summary>
-        /// Sets the error and schedules a retry if maximum number of tries was not exceeded
+        ///     Sets the error and schedules a retry if maximum number of tries was not exceeded
         /// </summary>
         /// <param name="error">error message (may be null)</param>
         public async void SetError(string error)
         {
             Debug.Assert(Status == TaskStatus.Running || Status == TaskStatus.Failed);
-            if(error != null)
+            if (error != null)
                 Description = error;
             // retry if max retries not reached
             if (++curRetries < maxTries && !stopRequested)
@@ -259,8 +262,6 @@ namespace CerealPlayer.Models.Task
             subTask = null;
             Status = TaskStatus.Finished;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

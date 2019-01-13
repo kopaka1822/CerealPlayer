@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using CerealPlayer.Models.Hoster;
 using CerealPlayer.ViewModels.Settings;
 using CerealPlayer.Views;
 
@@ -30,7 +26,7 @@ namespace CerealPlayer.Commands.Settings
             var viewModel = new HosterPreferencesViewModel(models);
             view.DataContext = viewModel;
 
-            if(models.App.ShowDialog(view) != true) return;
+            if (models.App.ShowDialog(view) != true) return;
 
             // apply settings
             models.Settings.PreferredHoster = viewModel.Items.ToArray();

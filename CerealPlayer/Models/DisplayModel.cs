@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Annotations;
 
 namespace CerealPlayer.Models
@@ -13,18 +8,18 @@ namespace CerealPlayer.Models
     {
         private bool fullscreen = false;
 
+        private bool showPlaylist = true;
+
         public bool Fullscreen
         {
             get => fullscreen;
             set
             {
-                if(value == fullscreen) return;
+                if (value == fullscreen) return;
                 fullscreen = value;
                 OnPropertyChanged(nameof(Fullscreen));
             }
         }
-
-        private bool showPlaylist = true;
 
         public bool ShowPlaylist
         {

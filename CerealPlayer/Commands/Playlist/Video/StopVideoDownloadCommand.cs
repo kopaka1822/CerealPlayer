@@ -15,16 +15,6 @@ namespace CerealPlayer.Commands.Playlist.Video
             task.PropertyChanged += TaskOnPropertyChanged;
         }
 
-        private void TaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            switch (args.PropertyName)
-            {
-                case nameof(TaskModel.Status):
-                    OnCanExecuteChanged();
-                    break;
-            }
-        }
-
         public bool CanExecute(object parameter)
         {
             return task.Status == TaskModel.TaskStatus.Running;
@@ -36,6 +26,16 @@ namespace CerealPlayer.Commands.Playlist.Video
         }
 
         public event EventHandler CanExecuteChanged;
+
+        private void TaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(TaskModel.Status):
+                    OnCanExecuteChanged();
+                    break;
+            }
+        }
 
         protected virtual void OnCanExecuteChanged()
         {

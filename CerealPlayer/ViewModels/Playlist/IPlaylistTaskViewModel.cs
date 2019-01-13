@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace CerealPlayer.ViewModels.Playlist
 {
     /// <summary>
-    /// inteface for PlaylistTaskView compatible view model
+    ///     inteface for PlaylistTaskView compatible view model
     /// </summary>
-    interface IPlaylistTaskViewModel
+    internal interface IPlaylistTaskViewModel
     {
         string Name { get; }
 
@@ -24,7 +19,7 @@ namespace CerealPlayer.ViewModels.Playlist
         ICommand DeleteCommand { get; }
 
         Visibility PlayVisibility { get; }
-        
+
         Visibility RetryVisibility { get; }
 
         Visibility StopVisibility { get; }

@@ -9,24 +9,14 @@ namespace CerealPlayer.Commands.Playlist.NonLoaded
 {
     public class CreatePlaylistCommand : ICommand
     {
-        private readonly PlaylistCreationViewModel viewModel;
         private readonly Models.Models models;
+        private readonly PlaylistCreationViewModel viewModel;
 
         public CreatePlaylistCommand(Models.Models models, PlaylistCreationViewModel viewModel)
         {
             this.viewModel = viewModel;
             this.models = models;
             viewModel.PropertyChanged += ViewModelOnPropertyChanged;
-        }
-
-        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            switch (args.PropertyName)
-            {
-                case nameof(PlaylistCreationViewModel.Address):
-                    OnCanExecuteChanged();
-                    break;
-            }
         }
 
         public bool CanExecute(object parameter)
@@ -48,11 +38,22 @@ namespace CerealPlayer.Commands.Playlist.NonLoaded
             }
             catch (Exception e)
             {
-                MessageBox.Show(models.App.TopmostWindow, e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(models.App.TopmostWindow, e.Message, "Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
         public event EventHandler CanExecuteChanged;
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(PlaylistCreationViewModel.Address):
+                    OnCanExecuteChanged();
+                    break;
+            }
+        }
 
         protected virtual void OnCanExecuteChanged()
         {

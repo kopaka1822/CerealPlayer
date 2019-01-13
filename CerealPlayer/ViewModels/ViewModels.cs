@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using CerealPlayer.Commands;
-using CerealPlayer.Commands.Playlist;
+﻿using System.Windows.Input;
 using CerealPlayer.Commands.Playlist.All;
 using CerealPlayer.Commands.Playlist.NonLoaded;
 using CerealPlayer.Commands.Settings;
@@ -17,26 +10,6 @@ namespace CerealPlayer.ViewModels
 {
     public class ViewModels
     {
-        // view models
-        public ActivePlaylistViewModel ActivePlaylist { get; }
-        public PlaylistsPreviewViewModel PlaylistPreview { get; }
-        public PlayerViewModel Player { get; }
-        public DisplayViewModel Display { get; }
-
-        // controllers
-        public NextEpisodeTaskController NextEpisodeTaskCtrl { get; }
-        public DownloadTaskController DownloadTaskCtrl { get; }
-        public SaveFileController SaveCtrl { get; }
-        public PlayerController PlayerCtrl { get; }
-        public DeleteAfterWatchedController DeleteAfterWatchedCtrl { get; }
-
-        // commands
-        public ICommand NewPlaylistCommand { get; }
-        public ICommand StopAllCommand { get; }
-        public ICommand UpdateAllCommand { get; }
-        public ICommand GeneralSettingsCommand { get; }
-        public ICommand HosterPreferencesCommand { get; }
-
         private readonly Models.Models models;
 
         public ViewModels(Models.Models models)
@@ -64,9 +37,29 @@ namespace CerealPlayer.ViewModels
             HosterPreferencesCommand = new ShowHosterPreferencesCommand(models);
         }
 
+        // view models
+        public ActivePlaylistViewModel ActivePlaylist { get; }
+        public PlaylistsPreviewViewModel PlaylistPreview { get; }
+        public PlayerViewModel Player { get; }
+        public DisplayViewModel Display { get; }
+
+        // controllers
+        public NextEpisodeTaskController NextEpisodeTaskCtrl { get; }
+        public DownloadTaskController DownloadTaskCtrl { get; }
+        public SaveFileController SaveCtrl { get; }
+        public PlayerController PlayerCtrl { get; }
+        public DeleteAfterWatchedController DeleteAfterWatchedCtrl { get; }
+
+        // commands
+        public ICommand NewPlaylistCommand { get; }
+        public ICommand StopAllCommand { get; }
+        public ICommand UpdateAllCommand { get; }
+        public ICommand GeneralSettingsCommand { get; }
+        public ICommand HosterPreferencesCommand { get; }
+
         public void Dispose()
         {
-            models.Playlists.ActivePlaylist = null;   
+            models.Playlists.ActivePlaylist = null;
 
             DeleteAfterWatchedCtrl.Dispose();
             SaveCtrl.Dispose();

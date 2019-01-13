@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Annotations;
-using CerealPlayer.Commands.Playlist;
-using CerealPlayer.Commands.Playlist.Video;
-using CerealPlayer.Controllers;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Views;
 
@@ -22,14 +14,31 @@ namespace CerealPlayer.ViewModels.Playlist
         private readonly Models.Models models;
         private PlaylistModel activePlaylist = null;
 
+        private PlaylistItemView selectedVideo = null;
+
         public ActivePlaylistViewModel(Models.Models models)
         {
             this.models = models;
             this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
-            
-            if(models.Playlists.ActivePlaylist != null)
+
+            if (models.Playlists.ActivePlaylist != null)
                 HandleNewPlaylist();
         }
+
+        public ObservableCollection<PlaylistItemView> Videos { get; } = new ObservableCollection<PlaylistItemView>();
+
+        public PlaylistItemView SelectedVideo
+        {
+            get => selectedVideo;
+            set
+            {
+                if (ReferenceEquals(value, selectedVideo)) return;
+                selectedVideo = value;
+                OnPropertyChanged(nameof(SelectedVideo));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
@@ -81,7 +90,7 @@ namespace CerealPlayer.ViewModels.Playlist
             if (args.OldItems != null)
             {
                 var numRemoved = args.OldItems.Count;
-                for (int i = 0; i < numRemoved; ++i)
+                for (var i = 0; i < numRemoved; ++i)
                 {
                     Videos.RemoveAt(args.OldStartingIndex);
                 }
@@ -95,27 +104,11 @@ namespace CerealPlayer.ViewModels.Playlist
             {
                 activePlaylist.VideosCollectionChanged -= VideosOnCollectionChanged;
             }
+
             Videos.Clear();
             SelectedVideo = null;
             activePlaylist = null;
         }
-
-        public ObservableCollection<PlaylistItemView> Videos { get; } = new ObservableCollection<PlaylistItemView>();
-
-        private PlaylistItemView selectedVideo = null;
-
-        public PlaylistItemView SelectedVideo
-        {
-            get => selectedVideo;
-            set
-            {
-                if (ReferenceEquals(value, selectedVideo)) return;
-                selectedVideo = value;
-                OnPropertyChanged(nameof(SelectedVideo));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

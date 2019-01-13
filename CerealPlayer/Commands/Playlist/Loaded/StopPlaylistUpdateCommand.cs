@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
@@ -23,11 +19,6 @@ namespace CerealPlayer.Commands.Playlist.Loaded
             this.playlist.NextEpisodeTask.PropertyChanged += PlaylistTaskOnPropertyChanged;
         }
 
-        private void PlaylistTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            if(args.PropertyName == nameof(TaskModel.Status)) OnCanExecuteChanged();
-        }
-
         public bool CanExecute(object parameter)
         {
             return playlist.DownloadPlaylistTask.ReadyOrRunning || playlist.NextEpisodeTask.ReadyOrRunning;
@@ -36,14 +27,19 @@ namespace CerealPlayer.Commands.Playlist.Loaded
         public void Execute(object parameter)
         {
             // stop tasks that are running
-            if(playlist.DownloadPlaylistTask.ReadyOrRunning)
+            if (playlist.DownloadPlaylistTask.ReadyOrRunning)
                 playlist.DownloadPlaylistTask.Stop();
 
-            if(playlist.NextEpisodeTask.ReadyOrRunning)
+            if (playlist.NextEpisodeTask.ReadyOrRunning)
                 playlist.NextEpisodeTask.Stop();
         }
 
         public event EventHandler CanExecuteChanged;
+
+        private void PlaylistTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(TaskModel.Status)) OnCanExecuteChanged();
+        }
 
         protected virtual void OnCanExecuteChanged()
         {

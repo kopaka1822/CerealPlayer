@@ -6,9 +6,9 @@ namespace CerealPlayer.Models.Hoster.Tasks
 {
     public class TestWebsiteExistsTask : ISubTask
     {
+        protected readonly IVideoHoster hoster;
         protected readonly Models models;
         protected readonly NextEpisodeTaskModel parent;
-        protected readonly IVideoHoster hoster;
         protected readonly string website;
 
         public TestWebsiteExistsTask(Models models, NextEpisodeTaskModel parent, string website, IVideoHoster hoster)
@@ -18,14 +18,6 @@ namespace CerealPlayer.Models.Hoster.Tasks
             this.website = website;
             this.hoster = hoster;
         }
-
-        /// <summary>
-        /// this method will be called if the website exists.
-        /// An error should be thrown if the next episode does not exist nevertheless
-        /// </summary>
-#pragma warning disable 1998
-        protected virtual async System.Threading.Tasks.Task OnWebsiteExists() { }
-#pragma warning restore 1998
 
         public async void Start()
         {
@@ -55,7 +47,16 @@ namespace CerealPlayer.Models.Hoster.Tasks
 
         public void Stop()
         {
-
         }
+
+        /// <summary>
+        ///     this method will be called if the website exists.
+        ///     An error should be thrown if the next episode does not exist nevertheless
+        /// </summary>
+#pragma warning disable 1998
+        protected virtual async System.Threading.Tasks.Task OnWebsiteExists()
+        {
+        }
+#pragma warning restore 1998
     }
 }

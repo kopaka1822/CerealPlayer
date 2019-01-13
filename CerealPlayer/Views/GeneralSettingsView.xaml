@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CerealPlayer.Views"
         mc:Ignorable="d"
-        Title="Settings" 
-        Height="520" 
+        Title="Settings"
+        Height="520"
         Width="350"
         WindowStyle="ToolWindow">
     <DockPanel
@@ -14,53 +14,52 @@
         <Grid
             DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="220" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!-- Max Downloads -->
             <StackPanel
                 Grid.Row="0"
                 Grid.Column="0">
-                <TextBlock 
+                <TextBlock
                     Text="Max Downloads"
                     Margin="{StaticResource RightBottomBorder}"
                     VerticalAlignment="Top"
-                    x:Name="MaxDownloadsLabel"/>
+                    x:Name="MaxDownloadsLabel" />
                 <TextBlock
                     Margin="{StaticResource BigBottomBorder}"
                     Style="{StaticResource DescriptionStyle}">
                     Maximum number of concurrent video downloads.
                 </TextBlock>
             </StackPanel>
-            
-            <TextBox 
+
+            <TextBox
                 Grid.Row="0"
                 Grid.Column="1"
                 VerticalAlignment="Top"
                 Height="{Binding ActualHeight, ElementName=MaxDownloadsLabel}"
                 Margin="{StaticResource BottomBorder}"
-                Text="{Binding MaxDownloads}"/>
-            
-            
+                Text="{Binding MaxDownloads}" />
+
 
             <!-- Max Advance Downloads -->
             <StackPanel
                 Grid.Row="1"
                 Grid.Column="0">
-                <TextBlock 
+                <TextBlock
                     Text="Max Advance Downloads"
                     Margin="{StaticResource RightBottomBorder}"
-                    VerticalAlignment="Top"/>
+                    VerticalAlignment="Top" />
                 <TextBlock
                     Margin="{StaticResource BigBottomBorder}"
                     Style="{StaticResource DescriptionStyle}">
@@ -74,16 +73,16 @@
                 VerticalAlignment="Top"
                 Height="{Binding ActualHeight, ElementName=MaxDownloadsLabel}"
                 Margin="{StaticResource BottomBorder}"
-                Text="{Binding MaxAdvanceDownloads}"/>
+                Text="{Binding MaxAdvanceDownloads}" />
 
             <!-- Download Speed -->
             <StackPanel
                 Grid.Row="2"
                 Grid.Column="0">
-                <TextBlock 
+                <TextBlock
                     Text="Limit Download Speed"
                     Margin="{StaticResource RightBottomBorder}"
-                    VerticalAlignment="Top"/>
+                    VerticalAlignment="Top" />
                 <TextBlock
                     Margin="{StaticResource BigBottomBorder}"
                     Style="{StaticResource DescriptionStyle}">
@@ -98,16 +97,16 @@
                 Height="{Binding ActualHeight, ElementName=MaxDownloadsLabel}"
                 Margin="{StaticResource BottomBorder}"
                 Text="{Binding DownloadSpeed}"
-                IsEnabled="False"/>
+                IsEnabled="False" />
 
             <!-- Chromium Instances -->
             <StackPanel
                 Grid.Row="3"
                 Grid.Column="0">
-                <TextBlock 
+                <TextBlock
                     Text="Max Chromium Instances"
                     Margin="{StaticResource RightBottomBorder}"
-                    VerticalAlignment="Top"/>
+                    VerticalAlignment="Top" />
                 <TextBlock
                     Margin="{StaticResource BigBottomBorder}"
                     Style="{StaticResource DescriptionStyle}">
@@ -121,21 +120,21 @@
                 VerticalAlignment="Top"
                 Height="{Binding ActualHeight, ElementName=MaxDownloadsLabel}"
                 Margin="{StaticResource BottomBorder}"
-                Text="{Binding MaxChromium}"/>
+                Text="{Binding MaxChromium}" />
 
             <!-- Delete after watching -->
             <StackPanel
                 Grid.Row="4"
                 Grid.Column="0">
-                <TextBlock 
+                <TextBlock
                     Text="Delete After Watching"
                     Margin="{StaticResource RightBottomBorder}"
-                    VerticalAlignment="Top"/>
+                    VerticalAlignment="Top" />
                 <TextBlock
                     Margin="{StaticResource BigBottomBorder}"
                     Style="{StaticResource DescriptionStyle}">
                     Episodes will be deleted after watching.
-                    </TextBlock>
+                </TextBlock>
             </StackPanel>
 
             <CheckBox
@@ -143,16 +142,16 @@
                 Grid.Column="1"
                 VerticalAlignment="Top"
                 Margin="0 5 0 0"
-                IsChecked="{Binding DeleteAfterWatching}"/>
+                IsChecked="{Binding DeleteAfterWatching}" />
 
             <!-- Hide Playbar -->
             <StackPanel
                 Grid.Row="5"
                 Grid.Column="0">
-                <TextBlock 
+                <TextBlock
                     Text="Hide Playbar Time"
                     Margin="{StaticResource RightBottomBorder}"
-                    VerticalAlignment="Top"/>
+                    VerticalAlignment="Top" />
                 <TextBlock
                     Margin="{StaticResource BigBottomBorder}"
                     Style="{StaticResource DescriptionStyle}">
@@ -166,16 +165,16 @@
                 VerticalAlignment="Top"
                 Height="{Binding ActualHeight, ElementName=MaxDownloadsLabel}"
                 Margin="{StaticResource BottomBorder}"
-                Text="{Binding HidePlaybarTime}"/>
+                Text="{Binding HidePlaybarTime}" />
 
             <!-- Rewind Time -->
             <StackPanel
                 Grid.Row="6"
                 Grid.Column="0">
-                <TextBlock 
+                <TextBlock
                     Text="Rewind on Playlist Change"
                     Margin="{StaticResource RightBottomBorder}"
-                    VerticalAlignment="Top"/>
+                    VerticalAlignment="Top" />
                 <TextBlock
                     Margin="{StaticResource BigBottomBorder}"
                     Style="{StaticResource DescriptionStyle}">
@@ -189,7 +188,7 @@
                 VerticalAlignment="Top"
                 Height="{Binding ActualHeight, ElementName=MaxDownloadsLabel}"
                 Margin="{StaticResource BottomBorder}"
-                Text="{Binding RewindOnPlaylistChange}"/>
+                Text="{Binding RewindOnPlaylistChange}" />
         </Grid>
         <StackPanel
             DockPanel.Dock="Bottom"

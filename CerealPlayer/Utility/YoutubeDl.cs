@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CerealPlayer.Utility
@@ -32,7 +29,7 @@ namespace CerealPlayer.Utility
             var cerr = p.StandardError.ReadToEnd();
 
             p.WaitForExit();
-            if (!String.IsNullOrEmpty(cerr))
+            if (!string.IsNullOrEmpty(cerr))
                 throw new Exception(cerr.Trim());
 
             return cout.Trim();
@@ -40,7 +37,7 @@ namespace CerealPlayer.Utility
 
         public static async Task<string> GetDownloadUrlAsynch(string website)
         {
-            return await System.Threading.Tasks.Task.Run(() => GetDownloadUrl(website));
+            return await Task.Run(() => GetDownloadUrl(website));
         }
     }
 }

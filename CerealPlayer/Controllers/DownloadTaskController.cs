@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Models;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
@@ -13,8 +9,8 @@ namespace CerealPlayer.Controllers
 {
     public class DownloadTaskController : TaskControllerBase
     {
-        private int prevMaxDownloads;
         private int prevMaxAdvanceDownloads;
+        private int prevMaxDownloads;
 
         public DownloadTaskController(Models.Models models) : base(models)
         {
@@ -27,16 +23,16 @@ namespace CerealPlayer.Controllers
 
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            if(args.PropertyName != nameof(PlaylistsModel.ActivePlaylist)) return;
-            if(models.Playlists.ActivePlaylist == null) return;
+            if (args.PropertyName != nameof(PlaylistsModel.ActivePlaylist)) return;
+            if (models.Playlists.ActivePlaylist == null) return;
             // download restruction of active playlist lifted?
-            if(CanExecuteTask(models.Playlists.ActivePlaylist))
+            if (CanExecuteTask(models.Playlists.ActivePlaylist))
                 StartNewTasks();
         }
 
         private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
-            if(args.NewItems == null) return;
+            if (args.NewItems == null) return;
             foreach (var item in args.NewItems)
             {
                 var playlist = (PlaylistModel) item;
@@ -106,8 +102,8 @@ namespace CerealPlayer.Controllers
             if (episodesAhead < models.Settings.MaxAdvanceDownloads) return true;
             if (episodesAhead > models.Settings.MaxAdvanceDownloads) return false;
             // equal => is the video being played?
-            return ReferenceEquals(models.Playlists.ActivePlaylist, playlist) || 
-                playlist.PlayingVideoPosition > TimeSpan.Zero;
+            return ReferenceEquals(models.Playlists.ActivePlaylist, playlist) ||
+                   playlist.PlayingVideoPosition > TimeSpan.Zero;
         }
     }
 }

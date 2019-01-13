@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CerealPlayer.Annotations;
-using CerealPlayer.Commands.Player;
-using CerealPlayer.Commands.Playlist;
 using CerealPlayer.Commands.Playlist.Video;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
@@ -20,11 +14,13 @@ namespace CerealPlayer.ViewModels.Playlist
     public class PlaylistItemViewModel : INotifyPropertyChanged
     {
         private readonly Models.Models models;
-        private readonly VideoModel video;
+
         private readonly DispatcherTimer refreshDownloadTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(1)
         };
+
+        private readonly VideoModel video;
 
         public PlaylistItemViewModel(Models.Models models, VideoModel video)
         {
@@ -41,41 +37,6 @@ namespace CerealPlayer.ViewModels.Playlist
             CopyVideoLinkCommand = new CopyVideoLinkCommand(video);
 
             refreshDownloadTimer.Tick += RefreshDownloadTimerOnTick;
-        }
-
-        private void RefreshDownloadTimerOnTick(object sender, EventArgs eventArgs)
-        {
-            OnPropertyChanged(nameof(Status));
-        }
-
-        private void TaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            switch (args.PropertyName)
-            {
-                case nameof(TaskModel.Status):
-                    OnPropertyChanged(nameof(RetryVisibility));
-                    OnPropertyChanged(nameof(StopVisibility));
-                    OnPropertyChanged(nameof(ProgressVisibility));
-                    OnPropertyChanged(nameof(StopDeleteVisibility));
-                    OnPropertyChanged(nameof(Status));
-                    if (video.DownloadTask.Status == TaskModel.TaskStatus.Running)
-                    {
-                        if (!refreshDownloadTimer.IsEnabled)
-                            refreshDownloadTimer.Start();
-                    }
-                    else
-                    {
-                        if (refreshDownloadTimer.IsEnabled)
-                            refreshDownloadTimer.Stop();
-                    }
-                    break;
-                case nameof(TaskModel.Description):
-                    OnPropertyChanged(nameof(Status));
-                    break;
-                case nameof(TaskModel.Progress):
-                    OnPropertyChanged(nameof(Progress));
-                    break;
-            }
         }
 
         public string Name => video.Name;
@@ -126,16 +87,51 @@ namespace CerealPlayer.ViewModels.Playlist
                     return "downloaded";
                 }
 
-                if(video.DownloadTask.Status == TaskModel.TaskStatus.Running)
+                if (video.DownloadTask.Status == TaskModel.TaskStatus.Running)
                     return video.DownloadTask.Description + video.DownloadTask.GetProgressTimeRemainingString(" ");
 
                 return video.DownloadTask.Description;
             }
         }
 
-        
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RefreshDownloadTimerOnTick(object sender, EventArgs eventArgs)
+        {
+            OnPropertyChanged(nameof(Status));
+        }
+
+        private void TaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(TaskModel.Status):
+                    OnPropertyChanged(nameof(RetryVisibility));
+                    OnPropertyChanged(nameof(StopVisibility));
+                    OnPropertyChanged(nameof(ProgressVisibility));
+                    OnPropertyChanged(nameof(StopDeleteVisibility));
+                    OnPropertyChanged(nameof(Status));
+                    if (video.DownloadTask.Status == TaskModel.TaskStatus.Running)
+                    {
+                        if (!refreshDownloadTimer.IsEnabled)
+                            refreshDownloadTimer.Start();
+                    }
+                    else
+                    {
+                        if (refreshDownloadTimer.IsEnabled)
+                            refreshDownloadTimer.Stop();
+                    }
+
+                    break;
+                case nameof(TaskModel.Description):
+                    OnPropertyChanged(nameof(Status));
+                    break;
+                case nameof(TaskModel.Progress):
+                    OnPropertyChanged(nameof(Progress));
+                    break;
+            }
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

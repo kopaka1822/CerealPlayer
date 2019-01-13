@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CerealPlayer.Models.Hoster.Tasks;
 using CerealPlayer.Models.Task;
 using CerealPlayer.Models.Task.Hoster;
 using CerealPlayer.Utility;
@@ -13,6 +9,96 @@ namespace CerealPlayer.Models.Hoster.Series
 {
     public class BurningSeries : IVideoHoster
     {
+        private readonly CultureInfo culture = new CultureInfo("en-US");
+        private readonly Models models;
+
+        public BurningSeries(Models models)
+        {
+            this.models = models;
+        }
+
+        public string Name => "BurningSeries";
+
+        public bool IsFileHoster => false;
+
+        public bool Supports(string website)
+        {
+            return website.Contains("bs.to/");
+        }
+
+        public EpisodeInfo GetInfo(string website)
+        {
+            // ...bs.to/serie/series-title/season/number-episode-title/language
+            var parts = website.Split('/');
+            parts = VerifyLinkParts(website, parts);
+
+            var series = parts[parts.Length - 4].Replace('-', ' ') + " S" + parts[parts.Length - 3];
+            // extract number and series title
+            var epParts = parts[parts.Length - 2].Split('-');
+
+            if (!int.TryParse(epParts[0], NumberStyles.Integer, culture, out var episodeNum))
+            {
+                episodeNum = 0;
+            }
+
+            var episodeTitle = StringUtil.Reduce(epParts, " ", 1, epParts.Length);
+
+            return new EpisodeInfo
+            {
+                SeriesTitle = series,
+                EpisodeTitle = episodeTitle,
+                EpisodeNumber = episodeNum
+            };
+        }
+
+        public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
+        {
+            return new RevealHosterTask(models, parent, website);
+        }
+
+        public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
+        {
+            return new NextEpisodeTask(models, parent, website);
+        }
+
+        public string FindCompatibleLink(string websiteSource)
+        {
+            return null;
+        }
+
+        /// <summary>
+        ///     verifies that the link contains the "series" specifier (and removes the hoster)
+        ///     with hoster: ...bs.to/serie/series-title/season/number-episode-title/language/hoster
+        ///     without hoster: ...bs.to/serie/series-title/season/number-episode-title/language
+        /// </summary>
+        /// <param name="website"></param>
+        /// <param name="parts"></param>
+        /// <returns>parts without hoster</returns>
+        internal static string[] VerifyLinkParts(string website, string[] parts)
+        {
+            if (parts.Length < 5)
+                throw new Exception(website + " link too short");
+
+            if (parts[parts.Length - 5].ToLower() != "serie")
+            {
+                // maybe a hoster was selected?
+                // ...bs.to/serie/series-title/season/number-episode-title/language/hoster
+                var newParts = new string[parts.Length - 1];
+                for (var i = 0; i < newParts.Length; ++i)
+                    newParts[i] = parts[i];
+
+                parts = newParts;
+
+                if (parts.Length < 5)
+                    throw new Exception(website + " link too short");
+
+                if (parts[parts.Length - 5].ToLower() != "serie")
+                    throw new Exception(website + " requires link to an episode (and not the series info)");
+            }
+
+            return parts;
+        }
+
         // hosters are hidden within the website
         public class RevealHosterTask : ISubTask
         {
@@ -51,7 +137,7 @@ namespace CerealPlayer.Models.Hoster.Series
                     do
                     {
                         idx = source.IndexOf(linkStart, idx, StringComparison.OrdinalIgnoreCase);
-                        if(idx < 0) continue;
+                        if (idx < 0) continue;
 
                         var link = StringUtil.ReadLink(source, idx);
                         idx++;
@@ -61,7 +147,7 @@ namespace CerealPlayer.Models.Hoster.Series
                         streamLinks.Add("https://bs.to/" + link);
                     } while (idx > 0);
 
-                    if(streamLinks.Count == 0)
+                    if (streamLinks.Count == 0)
                         throw new Exception(website + " no video hoster found");
 
                     // find links on those websites
@@ -76,7 +162,7 @@ namespace CerealPlayer.Models.Hoster.Series
 
                             // the hoster is hidden within this link: https://bs.to/out/id
                             idx = reqSource.IndexOf("https://bs.to/out/", StringComparison.OrdinalIgnoreCase);
-                            if(idx < 0) continue;
+                            if (idx < 0) continue;
 
                             var videoLink = StringUtil.ReadLink(reqSource, idx);
 
@@ -127,7 +213,7 @@ namespace CerealPlayer.Models.Hoster.Series
                         }
                     }*/
 
-                    if(compatibleHoster.Count == 0)
+                    if (compatibleHoster.Count == 0)
                         throw new Exception(website + " no compatible hoster found");
 
                     var finalHoster = models.Web.VideoHoster.GetPreferredHoster(compatibleHoster);
@@ -136,21 +222,20 @@ namespace CerealPlayer.Models.Hoster.Series
                 }
                 catch (Exception e)
                 {
-                    parent.SetError(e.Message);   
+                    parent.SetError(e.Message);
                 }
             }
 
             public void Stop()
             {
-                
             }
         }
 
         public class NextEpisodeTask : ISubTask
         {
             private readonly Models models;
-            private readonly NextEpisodeTaskModel parent;
             private readonly string oldWebsite;
+            private readonly NextEpisodeTaskModel parent;
 
             public NextEpisodeTask(Models models, NextEpisodeTaskModel parent, string oldWebsite)
             {
@@ -170,10 +255,10 @@ namespace CerealPlayer.Models.Hoster.Series
                     linkParts = VerifyLinkParts(oldWebsite, linkParts);
 
                     var epParts = linkParts[linkParts.Length - 2].Split('-');
-                    if(epParts.Length == 0)
+                    if (epParts.Length == 0)
                         throw new Exception(oldWebsite + " empty episode title");
 
-                    var oldNum = Int32.Parse(epParts[0], NumberStyles.Integer);
+                    var oldNum = int.Parse(epParts[0], NumberStyles.Integer);
 
                     parent.Description = "resolving " + oldWebsite;
                     var source = await models.Web.Html.GetAsynch(oldWebsite);
@@ -185,7 +270,7 @@ namespace CerealPlayer.Models.Hoster.Series
                     nextLinkStart += "/" + (oldNum + 1).ToString();
 
                     var idx = source.IndexOf(nextLinkStart, StringComparison.OrdinalIgnoreCase);
-                    if(idx < 0)
+                    if (idx < 0)
                         throw new Exception(""); // episode does not exist
 
                     // read link
@@ -207,98 +292,7 @@ namespace CerealPlayer.Models.Hoster.Series
 
             public void Stop()
             {
-                
             }
-        }
-
-        private readonly CultureInfo culture = new CultureInfo("en-US");
-        private readonly Models models;
-
-        public BurningSeries(Models models)
-        {
-            this.models = models;
-        }
-
-        public string Name => "BurningSeries";
-
-        public bool IsFileHoster => false;
-
-        public bool Supports(string website)
-        {
-            return website.Contains("bs.to/");
-        }
-
-        /// <summary>
-        /// verifies that the link contains the "series" specifier (and removes the hoster)
-        /// with hoster: ...bs.to/serie/series-title/season/number-episode-title/language/hoster
-        /// without hoster: ...bs.to/serie/series-title/season/number-episode-title/language
-        /// </summary>
-        /// <param name="website"></param>
-        /// <param name="parts"></param>
-        /// <returns>parts without hoster</returns>
-        internal static string[] VerifyLinkParts(string website, string[] parts)
-        {
-            if (parts.Length < 5)
-                throw new Exception(website + " link too short");
-
-            if (parts[parts.Length - 5].ToLower() != "serie")
-            {
-                // maybe a hoster was selected?
-                // ...bs.to/serie/series-title/season/number-episode-title/language/hoster
-                var newParts = new string[parts.Length - 1];
-                for (var i = 0; i < newParts.Length; ++i)
-                    newParts[i] = parts[i];
-
-                parts = newParts;
-
-                if (parts.Length < 5)
-                    throw new Exception(website + " link too short");
-
-                if (parts[parts.Length - 5].ToLower() != "serie")
-                    throw new Exception(website + " requires link to an episode (and not the series info)");
-            }
-
-            return parts;
-        }
-
-        public EpisodeInfo GetInfo(string website)
-        {
-            // ...bs.to/serie/series-title/season/number-episode-title/language
-            var parts = website.Split('/');
-            parts = VerifyLinkParts(website, parts);
-
-            var series = parts[parts.Length - 4].Replace('-', ' ') + " S" + parts[parts.Length - 3];
-            // extract number and series title
-            var epParts = parts[parts.Length - 2].Split('-');
-
-            if (!Int32.TryParse(epParts[0], NumberStyles.Integer, culture, out var episodeNum))
-            {
-                episodeNum = 0;
-            }
-
-            var episodeTitle = StringUtil.Reduce(epParts, " ", 1, epParts.Length);
-
-            return new EpisodeInfo
-            {
-                SeriesTitle = series,
-                EpisodeTitle = episodeTitle,
-                EpisodeNumber = episodeNum
-            };
-        }
-
-        public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
-        {
-            return new RevealHosterTask(models, parent, website);
-        }
-
-        public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
-        {
-            return new NextEpisodeTask(models, parent, website);
-        }
-
-        public string FindCompatibleLink(string websiteSource)
-        {
-            return null;
         }
     }
 }

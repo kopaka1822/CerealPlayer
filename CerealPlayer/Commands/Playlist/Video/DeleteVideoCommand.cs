@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,12 +11,11 @@ namespace CerealPlayer.Commands.Playlist.Video
 {
     public class DeleteVideoCommand : ICommand
     {
+        private readonly bool askUser;
         private readonly Models.Models models;
         private readonly VideoModel video;
-        private readonly bool askUser;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="models"></param>
         /// <param name="video"></param>
@@ -37,13 +34,21 @@ namespace CerealPlayer.Commands.Playlist.Video
 
         public void Execute(object parameter)
         {
-            if(askUser && MessageBox.Show(models.App.TopmostWindow, $"Do you want to delete \"{video.Name}\"?", "Delete Video", 
-                   MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+            if (askUser && MessageBox.Show(models.App.TopmostWindow, $"Do you want to delete \"{video.Name}\"?",
+                    "Delete Video",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
 
-            if(video.Parent.DeleteEpisode(video))
+            if (video.Parent.DeleteEpisode(video))
             {
                 DeleteAsynch();
             }
+        }
+
+
+        public event EventHandler CanExecuteChanged
+        {
+            add { }
+            remove { }
         }
 
         private async void DeleteAsynch()
@@ -51,26 +56,19 @@ namespace CerealPlayer.Commands.Playlist.Video
             try
             {
                 // wait until the download task aborted
-                await System.Threading.Tasks.Task.Run(() => 
+                await Task.Run(() =>
                     SpinWait.SpinUntil(() => video.DownloadTask.Status != TaskModel.TaskStatus.Running));
 
                 // delete the file
-                if (System.IO.File.Exists(video.FileLocation))
-                    System.IO.File.Delete(video.FileLocation);
+                if (File.Exists(video.FileLocation))
+                    File.Delete(video.FileLocation);
             }
             catch (Exception e)
             {
-                MessageBox.Show(models.App.TopmostWindow, "Could not delete video. " + e.Message, "Error", MessageBoxButton.OK,
+                MessageBox.Show(models.App.TopmostWindow, "Could not delete video. " + e.Message, "Error",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
-        }
-
-        
-
-        public event EventHandler CanExecuteChanged
-        {
-            add { }
-            remove { }
         }
     }
 }

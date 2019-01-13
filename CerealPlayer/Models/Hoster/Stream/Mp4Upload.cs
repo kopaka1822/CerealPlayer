@@ -63,7 +63,8 @@ namespace CerealPlayer.Models.Hoster.Stream
             }
 
             // the link is probably hidden within player.mp4cloud.net
-            index = websiteSource.IndexOf("player.mp4cloud.net/mp4upload.php?id=", StringComparison.InvariantCultureIgnoreCase);
+            index = websiteSource.IndexOf("player.mp4cloud.net/mp4upload.php?id=",
+                StringComparison.InvariantCultureIgnoreCase);
 
             if (index < 0) return null;
 

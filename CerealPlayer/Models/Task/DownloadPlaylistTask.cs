@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Models.Playlist;
 
 namespace CerealPlayer.Models.Task
@@ -26,18 +22,18 @@ namespace CerealPlayer.Models.Task
         }
 
         /// <summary>
-        /// called if the property of the underlying task model changed
+        ///     called if the property of the underlying task model changed
         /// </summary>
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
             {
-                case nameof(TaskModel.Status):
+                case nameof(Status):
                     switch (Status)
                     {
                         case TaskStatus.ReadyToStart:
                             // reset own subtask to ready (if failed)
-                            if(activeVideo?.DownloadTask.Status == TaskStatus.Failed)
+                            if (activeVideo?.DownloadTask.Status == TaskStatus.Failed)
                                 activeVideo.DownloadTask.ResetStatus();
                             break;
                         case TaskStatus.Running:
@@ -49,10 +45,11 @@ namespace CerealPlayer.Models.Task
                             break;
                         case TaskStatus.Failed:
                             // stop own subtask (if running)
-                            if(activeVideo?.DownloadTask.Status == TaskStatus.Running)
+                            if (activeVideo?.DownloadTask.Status == TaskStatus.Running)
                                 activeVideo.DownloadTask.Stop();
                             break;
                     }
+
                     break;
             }
         }
@@ -96,7 +93,7 @@ namespace CerealPlayer.Models.Task
                         case TaskStatus.ReadyToStart:
                             // subtask was reset from failed to ready
                             // => switch own status to ready to start
-                            if(Status != TaskStatus.ReadyToStart)
+                            if (Status != TaskStatus.ReadyToStart)
                                 ResetStatus();
                             break;
                         case TaskStatus.Running:
@@ -125,7 +122,7 @@ namespace CerealPlayer.Models.Task
 
         private void UnregisterActiveTask()
         {
-            if(activeVideo.DownloadTask.Status == TaskStatus.Running)
+            if (activeVideo.DownloadTask.Status == TaskStatus.Running)
                 activeVideo.DownloadTask.Stop();
 
             activeVideo.DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
@@ -142,6 +139,7 @@ namespace CerealPlayer.Models.Task
                     RegisterTask(video);
                     return;
                 }
+
                 Debug.Assert(video.DownloadTask.Status == TaskStatus.Finished);
             }
         }

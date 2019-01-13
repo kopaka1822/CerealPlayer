@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
 
@@ -24,7 +21,7 @@ namespace CerealPlayer.Commands.Playlist.Video
 
         public void Execute(object parameter)
         {
-            System.Windows.Clipboard.SetText(video.InitialWebsite);
+            Clipboard.SetText(video.InitialWebsite);
         }
 
         public event EventHandler CanExecuteChanged

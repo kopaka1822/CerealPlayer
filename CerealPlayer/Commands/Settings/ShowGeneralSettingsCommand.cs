@@ -25,7 +25,7 @@ namespace CerealPlayer.Commands.Settings
             var vm = new GeneralSettingsViewModel(models);
             view.DataContext = vm;
 
-            if(models.App.ShowDialog(view) != true) return;
+            if (models.App.ShowDialog(view) != true) return;
 
             // save settings
             var s = models.Settings;

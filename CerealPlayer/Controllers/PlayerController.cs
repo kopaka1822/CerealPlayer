@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using CerealPlayer.Commands;
-using CerealPlayer.Commands.Player;
 using CerealPlayer.Models.Player;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
@@ -21,14 +14,18 @@ namespace CerealPlayer.Controllers
     public class PlayerController
     {
         private readonly Models.Models models;
+
+        // indicates when the last mouse movement happened
+        private readonly Stopwatch mouseMoveStopwatch = new Stopwatch();
         private readonly MediaElement player;
         private PlaylistModel activePlaylist = null;
         private VideoModel activeVideo = null;
+        private Point lastMousePosition = new Point(0, 0);
 
         public PlayerController(Models.Models models)
         {
             this.models = models;
-            this.player = models.App.Window.Player;
+            player = models.App.Window.Player;
             this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
             player.MediaEnded += PlayerOnMediaEnded;
             player.MediaFailed += PlayerOnMediaFailed;
@@ -50,6 +47,8 @@ namespace CerealPlayer.Controllers
             models.App.Window.MouseMove += WindowOnMouseMove;
             mouseMoveStopwatch.Start();
         }
+
+        private bool HasMedia => player.Source != null;
 
         private void PlayerOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
@@ -73,16 +72,13 @@ namespace CerealPlayer.Controllers
                             player.Position = activePlaylist.PlayingVideoPosition;
                         }
                     }
+
                     break;
                 case nameof(PlayerModel.Volume):
                     player.Volume = models.Player.Volume;
                     break;
             }
         }
-
-        // indicates when the last mouse movement happened
-        private readonly Stopwatch mouseMoveStopwatch = new Stopwatch();
-        private Point lastMousePosition = new Point(0, 0);
 
         private void WindowOnMouseMove(object sender, MouseEventArgs mouseEventArgs)
         {
@@ -106,7 +102,8 @@ namespace CerealPlayer.Controllers
             // hide play bar?
             if (models.App.Window.PlayerBar.IsMouseOver) mouseMoveStopwatch.Restart();
 
-            if (HasMedia && !models.Player.IsPausing && mouseMoveStopwatch.Elapsed > TimeSpan.FromSeconds(models.Settings.HidePlaybarTime))
+            if (HasMedia && !models.Player.IsPausing &&
+                mouseMoveStopwatch.Elapsed > TimeSpan.FromSeconds(models.Settings.HidePlaybarTime))
             {
                 models.Player.IsPlayerBarVisible = false;
             }
@@ -115,8 +112,6 @@ namespace CerealPlayer.Controllers
                 models.Player.IsPlayerBarVisible = true;
             }
         }
-
-        private bool HasMedia => player.Source != null;
 
         private void PlayerOnBufferingStarted(object sender, RoutedEventArgs routedEventArgs)
         {
@@ -130,13 +125,15 @@ namespace CerealPlayer.Controllers
             {
                 player.Play();
             }
+
             player.Position = activePlaylist.PlayingVideoPosition;
         }
 
         private void PlayerOnMediaFailed(object sender, ExceptionRoutedEventArgs exceptionRoutedEventArgs)
         {
             // cannot find file?
-            MessageBox.Show(models.App.TopmostWindow, exceptionRoutedEventArgs.ErrorException.Message, "Playback Error", MessageBoxButton.OK,
+            MessageBox.Show(models.App.TopmostWindow, exceptionRoutedEventArgs.ErrorException.Message, "Playback Error",
+                MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }
 
@@ -238,12 +235,14 @@ namespace CerealPlayer.Controllers
                             {
                                 player.Source = new Uri(activeVideo.FileLocation);
                             }
+
                             break;
                         case TaskModel.TaskStatus.Failed:
                             MessageBox.Show(models.App.TopmostWindow, "download failed");
                             // oh no :(
                             break;
                     }
+
                     break;
                 case nameof(TaskModel.Progress):
                     /*if (player.Source == null && activeVideo.DownloadTask.Progress > 0)

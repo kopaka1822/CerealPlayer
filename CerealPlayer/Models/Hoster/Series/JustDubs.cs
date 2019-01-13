@@ -39,7 +39,7 @@ namespace CerealPlayer.Models.Hoster.Series
 
             var episodeTitle = StringUtil.Reduce(parts, " ");
 
-            if (!Int32.TryParse(parts.Last(), NumberStyles.Integer, culture, out var episodeNum))
+            if (!int.TryParse(parts.Last(), NumberStyles.Integer, culture, out var episodeNum))
             {
                 // has only one episode
                 return new EpisodeInfo
