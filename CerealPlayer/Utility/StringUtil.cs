@@ -56,6 +56,22 @@ namespace CerealPlayer.Utility
         }
 
         /// <summary>
+        /// skips all whitespaces
+        /// </summary>
+        /// <param name="source">string</param>
+        /// <param name="from">starting index</param>
+        /// <returns></returns>
+        public static int SkipWhitespace(string source, int from)
+        {
+            while (from < source.Length && char.IsWhiteSpace(source[from]))
+            {
+                ++from;
+            }
+
+            return from;
+        }
+
+        /// <summary>
         ///     returns the first index after "from" where the character "to" appears
         /// </summary>
         /// <param name="source"></param>
