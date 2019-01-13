@@ -40,7 +40,10 @@ namespace CerealPlayer.Commands.Playlist.NonLoaded
             {
                 var playlist = new PlaylistModel(models, viewModel.Address);
                 models.Playlists.List.Add(playlist);
-                models.Playlists.ActivePlaylist = playlist;
+
+                if (viewModel.Play)
+                    models.Playlists.ActivePlaylist = playlist;
+
                 models.App.TopmostWindow.DialogResult = true;
             }
             catch (Exception e)

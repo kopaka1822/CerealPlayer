@@ -40,6 +40,19 @@ namespace CerealPlayer.ViewModels.Playlist
             }
         }
 
+        private bool play = true;
+
+        public bool Play
+        {
+            get => play;
+            set
+            {
+                if(value == play) return;
+                play = value;
+                OnPropertyChanged(nameof(Play));
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

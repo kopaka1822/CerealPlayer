@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CerealPlayer.Views"
         mc:Ignorable="d"
         Title="New Playlist" 
-        Height="140" 
+        Height="160" 
         Width="400"
         WindowStyle="ToolWindow">
     <Grid Margin="{StaticResource DialogBorder}">
@@ -20,7 +20,16 @@
             Margin="{StaticResource BottomBorder}">
             <TextBlock Text="Url:"/>
             <TextBox 
-                Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
+                Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
+                Margin="{StaticResource BottomBorder}"/>
+            
+            <StackPanel Orientation="Horizontal">
+                <CheckBox 
+                    VerticalAlignment="Center"
+                    Margin="{StaticResource RightBorder}"
+                    IsChecked="{Binding Play}"/>
+                <TextBlock Text="Play"/>
+            </StackPanel>
         </StackPanel>
         
         <StackPanel
