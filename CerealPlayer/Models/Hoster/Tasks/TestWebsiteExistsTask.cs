@@ -10,13 +10,15 @@ namespace CerealPlayer.Models.Hoster.Tasks
         protected readonly Models models;
         protected readonly NextEpisodeTaskModel parent;
         protected readonly string website;
+        protected readonly bool useJavascript;
 
-        public TestWebsiteExistsTask(Models models, NextEpisodeTaskModel parent, string website, IVideoHoster hoster)
+        public TestWebsiteExistsTask(Models models, NextEpisodeTaskModel parent, string website, IVideoHoster hoster, bool useJavascript = false)
         {
             this.models = models;
             this.parent = parent;
             this.website = website;
             this.hoster = hoster;
+            this.useJavascript = useJavascript;
         }
 
         public async void Start()
@@ -25,7 +27,9 @@ namespace CerealPlayer.Models.Hoster.Tasks
             {
                 // test if the website exists
                 parent.Description = "resolving " + website;
-                var existing = await models.Web.Html.IsAvailable(website);
+                var existing = useJavascript
+                    ? await models.Web.Html.IsAvailableJs(website)
+                    : await models.Web.Html.IsAvailable(website);
                 if (existing)
                 {
                     await OnWebsiteExists();

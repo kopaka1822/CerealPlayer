@@ -63,7 +63,7 @@ namespace CerealPlayer.Models.Hoster.Series
             return new EpisodeInfo
             {
                 SeriesTitle = seriesTitle,
-                EpisodeTitle = episodeTitle,
+                EpisodeTitle = "Episode " + episodeNum,
                 EpisodeNumber = episodeNum
             };
         }

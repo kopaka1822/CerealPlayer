@@ -33,10 +33,17 @@ namespace CerealPlayer.Models.Hoster.Tasks
             {
                 parent.Description = "downloading " + website;
                 await System.Threading.Tasks.Task.Run(() => DownloadThread());
+
+                parent.Description = "finished download";
+                parent.SetFinished();
             }
             catch (Exception e)
             {
                 parent.SetError(e.Message);
+            }
+            finally
+            {
+                process = null;
             }
         }
 
@@ -51,6 +58,7 @@ namespace CerealPlayer.Models.Hoster.Tasks
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
+                    RedirectStandardInput = true,
                     FileName = "deps/youtube-dl.exe",
                     Arguments = "--newline -o \"" + parent.Video.FileLocation + "\" " + website
                 }
@@ -58,6 +66,7 @@ namespace CerealPlayer.Models.Hoster.Tasks
 
             process.OutputDataReceived += OnOutputDataReceived;
             process.ErrorDataReceived += OnErrorDataReceived;
+            process.Exited += ProcessOnExited;
 
             if (!process.Start())
                 throw new Exception("could not start deps/youtube-dl.exe");
@@ -66,11 +75,17 @@ namespace CerealPlayer.Models.Hoster.Tasks
             process.BeginErrorReadLine();
 
             process.WaitForExit();
+        }
+
+        private void ProcessOnExited(object sender, EventArgs args)
+        {
             process = null;
         }
 
         private void OnErrorDataReceived(object sender, DataReceivedEventArgs args)
         {
+            if(args.Data == null) return;
+
             if (args.Data.StartsWith("frame="))
             {
                 var now = DateTime.Now;
@@ -118,11 +133,13 @@ namespace CerealPlayer.Models.Hoster.Tasks
         {
             try
             {
+                // TODO https://stackoverflow.com/questions/5901679/kill-process-tree-programmatically-in-c-sharp
                 process?.Kill();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // ignored
+                parent.Description = e.Message;
             }
         }
     }

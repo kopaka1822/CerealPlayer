@@ -68,6 +68,27 @@ namespace CerealPlayer.Models.Web
         }
 
         /// <summary>
+        ///     tests if a website exists. (removed a previous cache copy if existing)
+        ///     executes javascript to load the page (required by some websites)
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsAvailableJs(string website)
+        {
+            RemoveCachedJs(website);
+            try
+            {
+                var source = await GetJsAsynch(website);
+                if (source.Length == 0) return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         ///     deletes a copy of the given website from the cache (the version that was executed with javascript)
         /// </summary>
         /// <param name="website"></param>

@@ -11,14 +11,16 @@ namespace CerealPlayer.Models.Hoster.Tasks
     {
         private readonly string string404;
 
-        public TestWebsiteNot404(Models models, NextEpisodeTaskModel parent, string website, IVideoHoster hoster, string string404) : base(models, parent, website, hoster)
+        public TestWebsiteNot404(Models models, NextEpisodeTaskModel parent, string website, IVideoHoster hoster, string string404, bool useJavascript = false) : base(models, parent, website, hoster, useJavascript)
         {
             this.string404 = string404;
         }
 
         protected override async System.Threading.Tasks.Task OnWebsiteExists()
         {
-            var source = await models.Web.Html.GetAsynch(website);
+            var source = useJavascript 
+                ? await models.Web.Html.GetJsAsynch(website) 
+                : await models.Web.Html.GetAsynch(website);
             if(source.Contains(string404))
                 throw new Exception("page not found message");
         }

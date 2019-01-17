@@ -149,6 +149,7 @@
     <Compile Include="Models\Hoster\Series\MasterAnime.cs" />
     <Compile Include="Models\Hoster\Series\ProxerMe.cs" />
     <Compile Include="Models\Hoster\Series\RoosterTeeth.cs" />
+    <Compile Include="Models\Hoster\Series\WatchAnime.cs" />
     <Compile Include="Models\Hoster\Stream\Mp4Upload.cs" />
     <Compile Include="Models\Hoster\Stream\Oload.cs" />
     <Compile Include="Models\Hoster\Stream\Openload.cs" />
