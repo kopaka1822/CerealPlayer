@@ -258,7 +258,7 @@ namespace CerealPlayer.Models.Task
 
         public void SetFinished()
         {
-            Debug.Assert(Status == TaskStatus.Running);
+            Debug.Assert(Status == TaskStatus.Running || Status == TaskStatus.Failed);
             subTask = null;
             Status = TaskStatus.Finished;
         }

@@ -41,6 +41,7 @@ namespace CerealPlayer.Models.Task
                             break;
                         case TaskStatus.Finished:
                             // set new task if available
+                            UnregisterActiveTask();
                             SetNextTask();
                             break;
                         case TaskStatus.Failed:
@@ -59,9 +60,8 @@ namespace CerealPlayer.Models.Task
             // active video task was deleted?
             if (activeVideo != null && args.OldItems != null && args.OldItems.Contains(activeVideo))
             {
-                UnregisterActiveTask();
+                // sets active task to finish and searches the next one
                 SetFinished();
-                SetNextTask();
                 return;
             }
 
