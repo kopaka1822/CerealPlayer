@@ -137,6 +137,7 @@
     <Compile Include="Controllers\DownloadTaskController.cs" />
     <Compile Include="Controllers\NextEpisodeTaskController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
+    <Compile Include="Controllers\PlayerTouchController.cs" />
     <Compile Include="Controllers\SaveFileController.cs" />
     <Compile Include="Controllers\TaskControllerBase.cs" />
     <Compile Include="Models\AppModel.cs" />

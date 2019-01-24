@@ -29,6 +29,7 @@ namespace CerealPlayer.ViewModels
         public SaveFileController SaveCtrl { get; }
         public PlayerController PlayerCtrl { get; }
         public DeleteAfterWatchedController DeleteAfterWatchedCtrl { get; }
+        public PlayerTouchController PlayerTouchCtrl { get; }
 
         // commands
         public ICommand NewPlaylistCommand { get; }
@@ -45,6 +46,7 @@ namespace CerealPlayer.ViewModels
             SaveCtrl = new SaveFileController(models);
             PlayerCtrl = new PlayerController(models);
             DeleteAfterWatchedCtrl = new DeleteAfterWatchedController(models);
+            PlayerTouchCtrl = new PlayerTouchController(models);
 
             // view models
             ActivePlaylist = new ActivePlaylistViewModel(models);
