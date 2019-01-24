@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:CerealPlayer"
         xmlns:views="clr-namespace:CerealPlayer.Views"
         mc:Ignorable="d"
-        Title="{Binding Display.WindowTitle, FallbackValue=CerealPlayer}" 
-        Height="450" 
+        Title="{Binding Display.WindowTitle, FallbackValue=CerealPlayer}"
+        Height="450"
         Width="800"
         Background="White"
         Closed="MainWindow_OnClosed"
@@ -15,8 +15,8 @@
         WindowState="{Binding Display.WindowState}"
         Icon="Icons/app.ico">
     <DockPanel Background="Black">
-        <Grid 
-            DockPanel.Dock="Top" 
+        <Grid
+            DockPanel.Dock="Top"
             Background="White"
             Visibility="{Binding Display.FullscreenVisibility}">
             <Menu Grid.Column="0" Background="White">
@@ -25,42 +25,42 @@
                         Header="New Playlist"
                         Command="{Binding NewPlaylistCommand}">
                         <MenuItem.Icon>
-                            <Image Source="Icons/plus.png"/>
-                        </MenuItem.Icon>    
+                            <Image Source="Icons/plus.png" />
+                        </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
                         Header="Update Playlists"
                         Command="{Binding UpdateAllCommand}">
                         <MenuItem.Icon>
-                            <Image Source="Icons/retry.png"/>
+                            <Image Source="Icons/retry.png" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
                         Header="Stop Downloads"
                         Command="{Binding StopAllCommand}">
                         <MenuItem.Icon>
-                            <Image Source="Icons/stop.png"/>
+                            <Image Source="Icons/stop.png" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Settings">
-                    <MenuItem 
+                    <MenuItem
                         Header="General"
-                        Command="{Binding GeneralSettingsCommand}"/>
-                    <MenuItem 
+                        Command="{Binding GeneralSettingsCommand}" />
+                    <MenuItem
                         Header="Hoster Preferences"
-                        Command="{Binding HosterPreferencesCommand}"/>
+                        Command="{Binding HosterPreferencesCommand}" />
                 </MenuItem>
             </Menu>
         </Grid>
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
                 <!--<ColumnDefinition Width="Auto"/>-->
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Border 
+            <Border
                 Background="White"
                 Width="{StaticResource PlaylistBarWidth}"
                 Visibility="{Binding Display.PlaylistVisibility}">
@@ -70,9 +70,9 @@
                         <TabItem Header="Playlists">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="246*"/>
-                                    <RowDefinition Height="67*"/>
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="246*" />
+                                    <RowDefinition Height="67*" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <ListBox
@@ -81,19 +81,19 @@
                                     SelectedItem="{Binding PlaylistPreview.SelectedPlaylist}"
                                     Margin="{StaticResource BottomBorder}"
                                     ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.RowSpan="2"/>
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.RowSpan="2" />
 
-                                <StackPanel 
+                                <StackPanel
                                     Grid.Row="2"
-                                    Orientation="Horizontal" 
+                                    Orientation="Horizontal"
                                     HorizontalAlignment="Left">
-                                    <Button 
+                                    <Button
                                         Margin="{StaticResource RightBorder}"
                                         Command="{Binding NewPlaylistCommand}"
                                         ToolTip="Add new playlist">
                                         <Image
                                             Source="Icons/plus.png"
-                                            Height="{StaticResource IconHeight}"/>
+                                            Height="{StaticResource IconHeight}" />
                                     </Button>
                                     <Button
                                         Margin="{StaticResource RightBorder}"
@@ -101,15 +101,15 @@
                                         ToolTip="Update all playlists">
                                         <Image
                                             Source="Icons/retry.png"
-                                            Height="{StaticResource IconHeight}"/>
+                                            Height="{StaticResource IconHeight}" />
                                     </Button>
                                     <Button
                                         Margin="{StaticResource RightBorder}"
                                         Command="{Binding StopAllCommand}"
                                         ToolTip="Stop all tasks/downloads">
                                         <Image
-                                                Source="Icons/stop.png"
-                                                Height="{StaticResource IconHeight}"/>
+                                            Source="Icons/stop.png"
+                                            Height="{StaticResource IconHeight}" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
@@ -119,18 +119,18 @@
                                 ItemsSource="{Binding ActivePlaylist.Videos}"
                                 SelectedItem="{Binding ActivePlaylist.SelectedVideo}"
                                 ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
                         </TabItem>
                     </TabControl>
 
                     <!-- close button overlay -->
-                    <Button 
-                        HorizontalAlignment="Right" 
-                        VerticalAlignment="Top" 
+                    <Button
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
                         Margin="0 3 3 0"
                         Command="{Binding Player.TogglePlaylistCommand}"
                         ToolTip="Hide playlist tab">
-                        <Image Source="Icons/list.png" Height="{StaticResource SmallIconHeight}"/>
+                        <Image Source="Icons/list.png" Height="{StaticResource SmallIconHeight}" />
                     </Button>
                 </Grid>
             </Border>
@@ -145,18 +145,18 @@
 
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <MediaElement 
+                <MediaElement
                     Grid.Column="0"
-                    x:Name="Player"/>
+                    x:Name="Player" />
 
-                <views:PlayerBar 
+                <views:PlayerBar
                     Grid.Row="1"
                     DataContext="{Binding Player}"
-                    x:Name="PlayerBar"/>
+                    x:Name="PlayerBar" />
             </Grid>
 
         </Grid>

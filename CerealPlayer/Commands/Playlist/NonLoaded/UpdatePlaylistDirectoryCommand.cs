@@ -7,12 +7,12 @@ namespace CerealPlayer.Commands.Playlist.NonLoaded
 {
     public class UpdatePlaylistDirectoryCommand : ICommand
     {
-        private readonly Models.Models models;
         private readonly string directory;
+        private readonly Models.Models models;
         private readonly bool playPlaylist;
 
         /// <summary>
-        /// Updates (and plays) a playlist that is not yet loaded
+        ///     Updates (and plays) a playlist that is not yet loaded
         /// </summary>
         /// <param name="models"></param>
         /// <param name="directory">playlist directory</param>

@@ -121,6 +121,7 @@
     <Compile Include="Commands\Playlist\NonLoaded\CreatePlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\NewPlaylistCommand.cs" />
     <Compile Include="Commands\Playlist\NonLoaded\DeletePlaylistCommand.cs" />
+    <Compile Include="Commands\Playlist\Video\CopyVideoLinkCommand.cs" />
     <Compile Include="Commands\Playlist\Video\DeleteVideoCommand.cs" />
     <Compile Include="Commands\Playlist\Video\RetryVideoDownloadCommand.cs" />
     <Compile Include="Commands\Playlist\Loaded\SetActivePlaylistCommand.cs" />
@@ -142,11 +143,15 @@
     <Compile Include="Controllers\TaskControllerBase.cs" />
     <Compile Include="Models\AppModel.cs" />
     <Compile Include="Models\DisplayModel.cs" />
+    <Compile Include="Models\Hoster\Series\BurningSeries.cs" />
     <Compile Include="Models\Hoster\Series\GoGoAnimes.cs" />
     <Compile Include="Models\Hoster\IVideoHoster.cs" />
     <Compile Include="Models\Hoster\Series\JustDubs.cs" />
     <Compile Include="Models\Hoster\Series\MasterAnime.cs" />
     <Compile Include="Models\Hoster\Series\ProxerMe.cs" />
+    <Compile Include="Models\Hoster\Series\RoosterTeeth.cs" />
+    <Compile Include="Models\Hoster\Series\WatchAnime.cs" />
+    <Compile Include="Models\Hoster\Stream\Fembed.cs" />
     <Compile Include="Models\Hoster\Stream\Mp4Upload.cs" />
     <Compile Include="Models\Hoster\Stream\Oload.cs" />
     <Compile Include="Models\Hoster\Stream\Openload.cs" />
@@ -155,8 +160,11 @@
     <Compile Include="Models\Hoster\Stream\Streamcloud.cs" />
     <Compile Include="Models\Hoster\Tasks\RecursiveHosterDownloadTask.cs" />
     <Compile Include="Models\Hoster\Tasks\SearchVideoLinkTask.cs" />
+    <Compile Include="Models\Hoster\Tasks\SearchVideoLinkYtDlTask.cs" />
     <Compile Include="Models\Hoster\Tasks\TestWebsiteAndHosterExists.cs" />
     <Compile Include="Models\Hoster\Tasks\TestWebsiteExistsTask.cs" />
+    <Compile Include="Models\Hoster\Tasks\TestWebsiteNot404.cs" />
+    <Compile Include="Models\Hoster\Tasks\YoutubeDlDownloader.cs" />
     <Compile Include="Models\Hoster\VideoHosterModel.cs" />
     <Compile Include="Models\Player\PlayerModel.cs" />
     <Compile Include="Models\Playlist\PlaylistModel.cs" />
@@ -265,6 +273,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="deps\ffmpeg-licence.txt" />
+    <Content Include="deps\ffmpeg.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\ffplay.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\ffprobe.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="deps\LICENSE.BSD">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

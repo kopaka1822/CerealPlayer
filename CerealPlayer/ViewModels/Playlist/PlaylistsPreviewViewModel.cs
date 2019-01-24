@@ -5,15 +5,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using CerealPlayer.Annotations;
-using CerealPlayer.Commands;
-using CerealPlayer.Commands.Playlist;
-using CerealPlayer.Commands.Playlist.NonLoaded;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 using CerealPlayer.Views;
@@ -22,15 +15,10 @@ namespace CerealPlayer.ViewModels.Playlist
 {
     public class PlaylistsPreviewViewModel : INotifyPropertyChanged
     {
+        private readonly Dictionary<string, LoadedTaskInfo> loadedViews = new Dictionary<string, LoadedTaskInfo>();
         private readonly Models.Models models;
 
-        private struct LoadedTaskInfo
-        {
-            public PlaylistTaskView View { get; set; }
-            public PlaylistModel Model { get; set; }
-        }
-
-        private readonly Dictionary<string, LoadedTaskInfo> loadedViews = new Dictionary<string, LoadedTaskInfo>();
+        private object selectedPlaylist = null;
 
         public PlaylistsPreviewViewModel(Models.Models models)
         {
@@ -44,13 +32,28 @@ namespace CerealPlayer.ViewModels.Playlist
             this.models.Playlists.DirectoryRefresh += PlaylistsOnDirectoryRefresh;
         }
 
+        public ObservableCollection<object> PlaylistItems { get; } = new ObservableCollection<object>();
+
+        public object SelectedPlaylist
+        {
+            get => selectedPlaylist;
+            set
+            {
+                if (ReferenceEquals(value, selectedPlaylist)) return;
+                selectedPlaylist = value;
+                OnPropertyChanged(nameof(SelectedPlaylist));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void PlaylistsOnDirectoryRefresh(object sender, EventArgs eventArgs)
         {
             RefreshPlaylist();
         }
 
         /// <summary>
-        /// loads all playlists from the playlist folder and updates them
+        ///     loads all playlists from the playlist folder and updates them
         /// </summary>
         public void UpdateAllPlaylists()
         {
@@ -62,14 +65,14 @@ namespace CerealPlayer.ViewModels.Playlist
             foreach (var dir in allDirs)
             {
                 var dirname = Path.GetFileName(dir);
-                if(dirname == null) continue;
+                if (dirname == null) continue;
                 if (loadedViews.TryGetValue(dirname, out var loadedView))
                 {
                     // this was already loaded
                     PlaylistItems.Add(loadedView.View);
-                    if(loadedView.Model.NextEpisodeTask.Status == TaskModel.TaskStatus.Failed)
+                    if (loadedView.Model.NextEpisodeTask.Status == TaskModel.TaskStatus.Failed)
                         loadedView.Model.NextEpisodeTask.ResetStatus();
-                    if(loadedView.Model.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Failed)
+                    if (loadedView.Model.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Failed)
                         loadedView.Model.DownloadPlaylistTask.ResetStatus();
                     continue;
                 }
@@ -117,6 +120,7 @@ namespace CerealPlayer.ViewModels.Playlist
                     CreateView(playlist);
                 }
             }
+
             RefreshPlaylist();
         }
 
@@ -135,14 +139,14 @@ namespace CerealPlayer.ViewModels.Playlist
         }
 
         private void RefreshPlaylist()
-        {      
+        {
             var allDirs = Directory.GetDirectories(models.App.PlaylistDirectory);
             PlaylistItems.Clear();
 
             foreach (var dir in allDirs)
             {
                 var dirname = Path.GetFileName(dir);
-                if(dirname == null) continue;
+                if (dirname == null) continue;
                 if (loadedViews.TryGetValue(dirname, out var loadedView))
                 {
                     PlaylistItems.Add(loadedView.View);
@@ -151,7 +155,7 @@ namespace CerealPlayer.ViewModels.Playlist
 
                 // test if this is a valid folder
                 var saveFileLocation = PlaylistModel.GetSettingsLocation(dir);
-                if(!File.Exists(saveFileLocation)) continue;
+                if (!File.Exists(saveFileLocation)) continue;
 
                 // add file that is not open
                 var view = new PlaylistTaskView
@@ -160,31 +164,21 @@ namespace CerealPlayer.ViewModels.Playlist
                 };
                 PlaylistItems.Add(view);
             }
+
             OnPropertyChanged(nameof(PlaylistItems));
             OnPropertyChanged(nameof(SelectedPlaylist));
         }
-
-        public ObservableCollection<object> PlaylistItems { get; } = new ObservableCollection<object>();
-
-        private object selectedPlaylist = null;
-
-        public object SelectedPlaylist
-        {
-            get => selectedPlaylist;
-            set
-            {
-                if (ReferenceEquals(value, selectedPlaylist)) return;
-                selectedPlaylist = value;
-                OnPropertyChanged(nameof(SelectedPlaylist));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private struct LoadedTaskInfo
+        {
+            public PlaylistTaskView View { get; set; }
+            public PlaylistModel Model { get; set; }
         }
     }
 }

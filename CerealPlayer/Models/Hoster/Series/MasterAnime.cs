@@ -30,17 +30,17 @@ namespace CerealPlayer.Models.Hoster.Series
         {
             // www..../watch/id-series-title/number
             var parts = website.Split('/');
-            if(parts.Length < 3)
+            if (parts.Length < 3)
                 throw new Exception(website + " link too short");
 
-            if(parts[parts.Length - 3] != "watch")
+            if (parts[parts.Length - 3] != "watch")
                 throw new Exception(website + " requires link to an episode (and not the series info)");
 
             // id-series-title (cut out id)
             var seriesParts = parts[parts.Length - 2].Split('-');
             var seriesTitle = StringUtil.Reduce(seriesParts, " ", 1, seriesParts.Length);
 
-            if (!Int32.TryParse(parts.Last(), NumberStyles.Integer, culture, out var episodeNum))
+            if (!int.TryParse(parts.Last(), NumberStyles.Integer, culture, out var episodeNum))
             {
                 episodeNum = 0;
             }
@@ -50,7 +50,7 @@ namespace CerealPlayer.Models.Hoster.Series
                 SeriesTitle = seriesTitle,
                 // todo episode title is listed on the overview page of the series
                 EpisodeTitle = seriesTitle + " " + episodeNum,
-                EpisodeNumber = episodeNum 
+                EpisodeNumber = episodeNum
             };
         }
 

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,8 +27,10 @@ namespace CerealPlayer.Commands.Playlist.Loaded
 
         public void Execute(object parameter)
         {
-            if (MessageBox.Show(models.App.TopmostWindow, $"Do you want to delete \"{playlist.Name}\"?", "Delete Playlist",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
+            if (MessageBox.Show(models.App.TopmostWindow, $"Do you want to delete \"{playlist.Name}\"?",
+                    "Delete Playlist",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) !=
+                MessageBoxResult.Yes) return;
 
             // remove from active playlist if playing
             if (ReferenceEquals(models.Playlists.ActivePlaylist, playlist))
@@ -42,30 +41,31 @@ namespace CerealPlayer.Commands.Playlist.Loaded
             DeletePlaylistAsynch();
         }
 
+        public event EventHandler CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
+
         private async void DeletePlaylistAsynch()
         {
             try
             {
                 // wait until the download task aborted
-                await System.Threading.Tasks.Task.Run(() =>
+                await Task.Run(() =>
                     SpinWait.SpinUntil(() => playlist.DownloadPlaylistTask.Status != TaskModel.TaskStatus.Running));
 
                 // delete the folder
-                System.IO.Directory.Delete(playlist.Directory, true);
+                Directory.Delete(playlist.Directory, true);
             }
             catch (Exception e)
             {
-                MessageBox.Show(models.App.TopmostWindow, "Could not delete all files. " + e.Message, "Error", MessageBoxButton.OK,
+                MessageBox.Show(models.App.TopmostWindow, "Could not delete all files. " + e.Message, "Error",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
 
             models.Playlists.OnDirectoryRefresh();
-        }
-
-        public event EventHandler CanExecuteChanged
-        {
-            add { }
-            remove { }
         }
     }
 }

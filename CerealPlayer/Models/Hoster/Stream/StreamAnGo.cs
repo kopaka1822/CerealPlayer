@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Models.Hoster.Tasks;
 using CerealPlayer.Models.Task;
 using CerealPlayer.Models.Task.Hoster;
@@ -45,7 +41,11 @@ namespace CerealPlayer.Models.Hoster.Stream
 
         public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
         {
-            return new YoutubeDlLinkTask(models, parent, website);
+            if(website.Contains("/embed/"))
+                return new YoutubeDlLinkTask(models, parent, website);
+            
+            // this is not the embed link, but the embed link should be on this website
+            return new RecursiveHosterDownloadTask(models, parent, website, true);
         }
 
         public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
@@ -55,10 +55,15 @@ namespace CerealPlayer.Models.Hoster.Stream
 
         public string FindCompatibleLink(string websiteSource)
         {
+            // embed link
             var idx = websiteSource.IndexOf("streamango.com/embed/", StringComparison.OrdinalIgnoreCase);
-            if (idx < 0) return null;
+            if (idx >= 0) return StringUtil.ReadLink(websiteSource, idx);
 
-            return StringUtil.ReadLink(websiteSource, idx);
+            // link without embed
+            idx = websiteSource.IndexOf("streamango.comicsonline.to/getLinkSimple?file=", StringComparison.OrdinalIgnoreCase);
+            if (idx >= 0) return StringUtil.ReadLink(websiteSource, idx);
+
+            return null;
         }
     }
 }

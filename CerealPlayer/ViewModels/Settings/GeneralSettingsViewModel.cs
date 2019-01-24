@@ -10,6 +10,14 @@ namespace CerealPlayer.ViewModels.Settings
     public class GeneralSettingsViewModel : INotifyPropertyChanged
     {
         private readonly Models.Models models;
+        private bool deleteAfterWatching;
+        private int downloadSpeed;
+        private int hidePlaybarTime;
+        private int maxAdvanceDownloads;
+        private int maxChromiumInstances;
+
+        private int maxDownloads;
+        private int rewindOnPlaylistChange;
 
         public GeneralSettingsViewModel(Models.Models models)
         {
@@ -21,24 +29,18 @@ namespace CerealPlayer.ViewModels.Settings
             downloadSpeed = settings.DownloadSpeed;
             hidePlaybarTime = settings.HidePlaybarTime;
             maxChromiumInstances = settings.MaxChromiumInstances;
+            rewindOnPlaylistChange = settings.RewindOnPlaylistChangeTime;
 
             CancelCommand = new SetDialogResultCommand(models, false);
             SaveCommand = new SetDialogResultCommand(models, true);
         }
-
-        private int maxDownloads;
-        private int maxAdvanceDownloads;
-        private bool deleteAfterWatching;
-        private int downloadSpeed;
-        private int hidePlaybarTime;
-        private int maxChromiumInstances;
 
         public int MaxDownloads
         {
             get => maxDownloads;
             set
             {
-                if(value == maxDownloads) return;
+                if (value == maxDownloads) return;
                 maxDownloads = Math.Max(value, 1);
                 OnPropertyChanged(nameof(MaxDownloads));
             }
@@ -96,6 +98,17 @@ namespace CerealPlayer.ViewModels.Settings
                 if (value == hidePlaybarTime) return;
                 hidePlaybarTime = Math.Max(value, 1);
                 OnPropertyChanged(nameof(HidePlaybarTime));
+            }
+        }
+
+        public int RewindOnPlaylistChange
+        {
+            get => rewindOnPlaylistChange;
+            set
+            {
+                if (value == rewindOnPlaylistChange) return;
+                rewindOnPlaylistChange = Math.Max(0, rewindOnPlaylistChange);
+                OnPropertyChanged(nameof(RewindOnPlaylistChange));
             }
         }
 

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 
@@ -19,6 +18,42 @@ namespace CerealPlayer.Controllers
         {
             this.models = models;
             this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
+        }
+
+        /// <summary>
+        ///     deletes all videos with a running delete video task
+        /// </summary>
+        public void Dispose()
+        {
+            if (!models.Settings.DeleteAfterWatching) return;
+
+            // finish started delete tasks
+            foreach (var playlist in models.Playlists.List)
+            {
+                for (var i = 0; i < playlist.Videos.Count; ++i)
+                {
+                    var video = playlist.Videos.ElementAt(i);
+                    if (video.DeleteTask.Status != TaskModel.TaskStatus.Running) continue;
+
+                    var deleted = playlist.DeleteEpisode(video);
+                    Debug.Assert(deleted);
+
+                    // reset index
+                    --i;
+
+                    try
+                    {
+                        if (File.Exists(video.FileLocation))
+                        {
+                            File.Delete(video.FileLocation);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignore 
+                    }
+                }
+            }
         }
 
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -38,8 +73,8 @@ namespace CerealPlayer.Controllers
                         activePlaylist.PropertyChanged += ActivePlaylistOnPropertyChanged;
                         playingVideo = activePlaylist.PlayingVideo;
                     }
-                    break;
 
+                    break;
             }
         }
 
@@ -67,9 +102,10 @@ namespace CerealPlayer.Controllers
                     // stop deletion from this video
                     if (playingVideo != null)
                     {
-                        if(playingVideo.DeleteTask.ReadyOrRunning)
+                        if (playingVideo.DeleteTask.ReadyOrRunning)
                             playingVideo.DeleteTask.Stop();
                     }
+
                     break;
             }
         }

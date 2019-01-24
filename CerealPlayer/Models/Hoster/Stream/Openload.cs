@@ -6,7 +6,7 @@ using CerealPlayer.Utility;
 
 namespace CerealPlayer.Models.Hoster.Stream
 {
-    class Openload : IVideoHoster
+    internal class Openload : IVideoHoster
     {
         private readonly Models models;
 

@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands;
-using CerealPlayer.Commands.Playlist;
 using CerealPlayer.Commands.Playlist.NonLoaded;
-using CerealPlayer.Views;
 
 namespace CerealPlayer.ViewModels.Playlist
 {
     public class PlaylistCreationViewModel : INotifyPropertyChanged
     {
         private readonly Models.Models models;
+
+        private string address = "";
+
+        private bool play = true;
 
         public PlaylistCreationViewModel(Models.Models models)
         {
@@ -28,7 +25,6 @@ namespace CerealPlayer.ViewModels.Playlist
         public ICommand CancelCommand { get; }
         public ICommand CreatePlaylistCommand { get; }
 
-        private string address = "";
         public string Address
         {
             get => address;
@@ -37,6 +33,17 @@ namespace CerealPlayer.ViewModels.Playlist
                 if (value == null || address == value) return;
                 address = value;
                 OnPropertyChanged(nameof(Address));
+            }
+        }
+
+        public bool Play
+        {
+            get => play;
+            set
+            {
+                if (value == play) return;
+                play = value;
+                OnPropertyChanged(nameof(Play));
             }
         }
 

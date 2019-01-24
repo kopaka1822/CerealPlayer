@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using CerealPlayer.Commands.Playlist;
 using CerealPlayer.Commands.Playlist.NonLoaded;
 
 namespace CerealPlayer.ViewModels.Playlist
@@ -42,6 +36,6 @@ namespace CerealPlayer.ViewModels.Playlist
 
         public Visibility ProgressVisibility => Visibility.Collapsed;
 
-        public int Progress { get ; set; }
+        public int Progress { get; set; }
     }
 }

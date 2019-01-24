@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CerealPlayer.Utility
 {
     public static class StringUtil
     {
         /// <summary>
-        /// returns a substring from source[from] until the first occurence of "to" ("to" is not included)
+        ///     returns a substring from source[from] until the first occurence of "to" ("to" is not included)
         /// </summary>
         /// <param name="source"></param>
         /// <param name="from"></param>
@@ -17,7 +13,7 @@ namespace CerealPlayer.Utility
         /// <returns></returns>
         public static string SubstringUntil(string source, int from, char to)
         {
-            string res = "";
+            var res = "";
             while (source[from] != to)
             {
                 res += source[from++];
@@ -27,23 +23,31 @@ namespace CerealPlayer.Utility
         }
 
         /// <summary>
-        /// returns a substring from 'source' from the first whitespace 
-        /// or " character before 'from' until the first whitespace or " character after 'from'
+        ///     returns a substring from 'source' from the first whitespace
+        ///     or " character before 'from' until the first whitespace or " character after 'from'
         /// </summary>
         /// <param name="source"></param>
         /// <param name="from">character index within the link</param>
+        /// <param name="readFromStart">
+        ///     indicates if the entire link should be read (true, default)
+        ///     or only the link starting at index 'from' (false)
+        /// </param>
         /// <returns></returns>
-        public static string ReadLink(string source, int from)
+        public static string ReadLink(string source, int from, bool readFromStart = true)
         {
-            string res = "";
+            var res = "";
 
-            // search for link start
-            while (from > 0 && !Char.IsWhiteSpace(source[from - 1]) && source[from - 1] != '\"')
+            if (readFromStart)
             {
-                from--;
+                // search for link start
+                while (from > 0 && !char.IsWhiteSpace(source[from - 1]) && source[from - 1] != '\"')
+                {
+                    from--;
+                }
             }
+
             // read until link end
-            while (from < source.Length && !Char.IsWhiteSpace(source[from]) && source[from] != '\"')
+            while (from < source.Length && !char.IsWhiteSpace(source[from]) && source[from] != '\"')
             {
                 res += source[from++];
             }
@@ -52,7 +56,23 @@ namespace CerealPlayer.Utility
         }
 
         /// <summary>
-        /// returns the first index after "from" where the character "to" appears
+        /// skips all whitespaces
+        /// </summary>
+        /// <param name="source">string</param>
+        /// <param name="from">starting index</param>
+        /// <returns></returns>
+        public static int SkipWhitespace(string source, int from)
+        {
+            while (from < source.Length && char.IsWhiteSpace(source[from]))
+            {
+                ++from;
+            }
+
+            return from;
+        }
+
+        /// <summary>
+        ///     returns the first index after "from" where the character "to" appears
         /// </summary>
         /// <param name="source"></param>
         /// <param name="from">start index</param>
@@ -69,7 +89,8 @@ namespace CerealPlayer.Utility
         }
 
         /// <summary>
-        /// returns a substring from source that ends at index "lastIndex" and start after the first occurence of "to" ("to" not included)
+        ///     returns a substring from source that ends at index "lastIndex" and start after the first occurence of "to" ("to"
+        ///     not included)
         /// </summary>
         /// <param name="source"></param>
         /// <param name="lastIndex"></param>
@@ -77,7 +98,7 @@ namespace CerealPlayer.Utility
         /// <returns></returns>
         public static string BackwardSubstringUntil(string source, int lastIndex, char to)
         {
-            string res = "";
+            var res = "";
             while (source[lastIndex] != to)
             {
                 res = source[lastIndex--] + res;
@@ -87,7 +108,7 @@ namespace CerealPlayer.Utility
         }
 
         /// <summary>
-        /// combines all strings into on string using the seperator in between elements
+        ///     combines all strings into on string using the seperator in between elements
         /// </summary>
         /// <param name="parts"></param>
         /// <param name="seperator"></param>
@@ -98,7 +119,7 @@ namespace CerealPlayer.Utility
         }
 
         /// <summary>
-        /// combines all strings into on string using the seperator in between elements
+        ///     combines all strings into on string using the seperator in between elements
         /// </summary>
         /// <param name="parts"></param>
         /// <param name="seperator"></param>
@@ -111,7 +132,7 @@ namespace CerealPlayer.Utility
             if (first >= last) return "";
 
             var res = "";
-            for (int i = first; i < last - 1; ++i)
+            for (var i = first; i < last - 1; ++i)
                 res += parts[i] + seperator;
 
             return res + parts[last - 1];

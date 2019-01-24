@@ -7,14 +7,15 @@ namespace CerealPlayer.Models.Hoster.Tasks
     {
         private readonly bool runJavascript;
 
-        public TestWebsiteAndHosterExists(Models models, NextEpisodeTaskModel parent, string website, IVideoHoster hoster, bool runJavascript) : base(models, parent, website, hoster)
+        public TestWebsiteAndHosterExists(Models models, NextEpisodeTaskModel parent, string website,
+            IVideoHoster hoster, bool runJavascript) : base(models, parent, website, hoster)
         {
             this.runJavascript = runJavascript;
         }
 
         protected override async System.Threading.Tasks.Task OnWebsiteExists()
         {
-            var source = runJavascript 
+            var source = runJavascript
                 ? await models.Web.Html.GetJsAsynch(website)
                 : await models.Web.Html.GetAsynch(website);
             try
@@ -23,9 +24,12 @@ namespace CerealPlayer.Models.Hoster.Tasks
             }
             catch (Exception)
             {
+                if (runJavascript)
+                    models.Web.Html.RemoveCachedJs(website);
                 // episode does not exists
                 throw new Exception("");
             }
+
             // hosters do exist! continue
         }
     }

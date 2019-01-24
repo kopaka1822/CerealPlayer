@@ -1,12 +1,11 @@
 ﻿using System;
 using CerealPlayer.Models.Task;
-using CerealPlayer.Models.Task.Hoster;
 using CerealPlayer.Utility;
 
 namespace CerealPlayer.Models.Hoster.Tasks
 {
     /// <summary>
-    /// uses youtube-dl to resolve the link
+    ///     uses youtube-dl to resolve the link
     /// </summary>
     public class YoutubeDlLinkTask : ISubTask
     {
@@ -38,7 +37,6 @@ namespace CerealPlayer.Models.Hoster.Tasks
 
         public void Stop()
         {
-
         }
     }
 }

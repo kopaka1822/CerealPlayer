@@ -63,14 +63,15 @@ namespace CerealPlayer.Models.Hoster.Stream
             }
 
             // the link is probably hidden within player.mp4cloud.net
-            index = websiteSource.IndexOf("player.mp4cloud.net/mp4upload.php?id=", StringComparison.InvariantCultureIgnoreCase);
+            index = websiteSource.IndexOf("player.mp4cloud.net/mp4upload.php?id=",
+                StringComparison.InvariantCultureIgnoreCase);
 
             if (index < 0) return null;
 
             // the embed link is given after id
             index = StringUtil.SkipUntil(websiteSource, index, '=');
             // read id string
-            var id = StringUtil.ReadLink(websiteSource, index + 1);
+            var id = StringUtil.ReadLink(websiteSource, index + 1, false);
 
             return "https://www.mp4upload.com/embed-" + id + ".html";
         }

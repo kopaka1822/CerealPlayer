@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CerealPlayer.Commands.Playlist.All
@@ -25,10 +21,10 @@ namespace CerealPlayer.Commands.Playlist.All
         {
             foreach (var playlist in models.Playlists.List)
             {
-                if(playlist.DownloadPlaylistTask.ReadyOrRunning)
+                if (playlist.DownloadPlaylistTask.ReadyOrRunning)
                     playlist.DownloadPlaylistTask.Stop();
 
-                if(playlist.NextEpisodeTask.ReadyOrRunning)
+                if (playlist.NextEpisodeTask.ReadyOrRunning)
                     playlist.NextEpisodeTask.Stop();
             }
         }

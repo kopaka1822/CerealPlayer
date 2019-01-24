@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
@@ -23,11 +19,6 @@ namespace CerealPlayer.Commands.Playlist.Loaded
             this.playlist.NextEpisodeTask.PropertyChanged += PlaylistTaskOnPropertyChanged;
         }
 
-        private void PlaylistTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            if(args.PropertyName == nameof(TaskModel.Status)) OnCanExecuteChanged();
-        }
-
         public bool CanExecute(object parameter)
         {
             return playlist.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Failed ||
@@ -37,14 +28,19 @@ namespace CerealPlayer.Commands.Playlist.Loaded
         public void Execute(object parameter)
         {
             // resume tasks that failed
-            if(playlist.NextEpisodeTask.Status == TaskModel.TaskStatus.Failed)
+            if (playlist.NextEpisodeTask.Status == TaskModel.TaskStatus.Failed)
                 playlist.NextEpisodeTask.ResetStatus();
 
-            if(playlist.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Failed)
+            if (playlist.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Failed)
                 playlist.DownloadPlaylistTask.ResetStatus();
         }
 
         public event EventHandler CanExecuteChanged;
+
+        private void PlaylistTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(TaskModel.Status)) OnCanExecuteChanged();
+        }
 
         protected virtual void OnCanExecuteChanged()
         {

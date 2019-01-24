@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Annotations;
 
 namespace CerealPlayer.Models.Player
@@ -13,38 +8,38 @@ namespace CerealPlayer.Models.Player
     {
         private bool isPausing = false;
 
+        private bool isPlayerBarVisible = true;
+
+        private double volume = 1.0;
+
         public bool IsPausing
         {
             get => isPausing;
             set
             {
-                if(value == isPausing) return;
+                if (value == isPausing) return;
                 isPausing = value;
                 OnPropertyChanged(nameof(IsPausing));
             }
         }
-
-        private double volume = 1.0;
 
         public double Volume
         {
             get => volume;
             set
             {
-                if(Equals(value, volume)) return;
+                if (Equals(value, volume)) return;
                 volume = value;
                 OnPropertyChanged(nameof(Volume));
             }
         }
-
-        private bool isPlayerBarVisible = true;
 
         public bool IsPlayerBarVisible
         {
             get => isPlayerBarVisible;
             set
             {
-                if(value == isPlayerBarVisible) return;
+                if (value == isPlayerBarVisible) return;
                 isPlayerBarVisible = value;
                 OnPropertyChanged(nameof(IsPlayerBarVisible));
             }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 using Newtonsoft.Json;
@@ -21,7 +16,7 @@ namespace CerealPlayer.Controllers
         {
             this.models = models;
             this.models.Playlists.List.CollectionChanged += PlaylistOnCollectionChanged;
-            this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged; 
+            this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
         }
 
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -41,6 +36,7 @@ namespace CerealPlayer.Controllers
                     {
                         activePlaylist.PropertyChanged += ActivePlaylistOnPropertyChanged;
                     }
+
                     break;
             }
         }
@@ -57,7 +53,7 @@ namespace CerealPlayer.Controllers
         }
 
         /// <summary>
-        /// will be called after a playlist was added
+        ///     will be called after a playlist was added
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
@@ -80,27 +76,27 @@ namespace CerealPlayer.Controllers
         }
 
         /// <summary>
-        /// will be called after the vide collection of any playlist is updated
+        ///     will be called after the vide collection of any playlist is updated
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
         private void PlaylistOnVideosCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
-            if(args.NewItems == null) return;
+            if (args.NewItems == null) return;
             foreach (var item in args.NewItems)
             {
                 var video = (VideoModel) item;
-                AddVideoDownloadFinishedHandler(video);    
+                AddVideoDownloadFinishedHandler(video);
             }
         }
 
         /// <summary>
-        /// adds a handler that will save the playlist after the video was sucesfully downloaded
+        ///     adds a handler that will save the playlist after the video was sucesfully downloaded
         /// </summary>
         /// <param name="video"></param>
         private void AddVideoDownloadFinishedHandler(VideoModel video)
         {
-            if(video.DownloadTask.Status == TaskModel.TaskStatus.Finished) return;
+            if (video.DownloadTask.Status == TaskModel.TaskStatus.Finished) return;
             video.DownloadTask.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName != nameof(TaskModel.Status)) return;
@@ -119,7 +115,7 @@ namespace CerealPlayer.Controllers
         }
 
         /// <summary>
-        /// saves all playlist files
+        ///     saves all playlist files
         /// </summary>
         public void Dispose()
         {

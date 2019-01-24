@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using CerealPlayer.Commands;
-using CerealPlayer.Commands.Playlist;
+﻿using System.Windows.Input;
 using CerealPlayer.Commands.Playlist.All;
 using CerealPlayer.Commands.Playlist.NonLoaded;
 using CerealPlayer.Commands.Settings;
@@ -17,11 +10,7 @@ namespace CerealPlayer.ViewModels
 {
     public class ViewModels
     {
-        // view models
-        public ActivePlaylistViewModel ActivePlaylist { get; }
-        public PlaylistsPreviewViewModel PlaylistPreview { get; }
-        public PlayerViewModel Player { get; }
-        public DisplayViewModel Display { get; }
+        private readonly Models.Models models;
 
         // controllers
         public NextEpisodeTaskController NextEpisodeTaskCtrl { get; }
@@ -40,6 +29,8 @@ namespace CerealPlayer.ViewModels
 
         public ViewModels(Models.Models models)
         {
+            this.models = models;
+
             // controller
             NextEpisodeTaskCtrl = new NextEpisodeTaskController(models);
             DownloadTaskCtrl = new DownloadTaskController(models);
@@ -62,8 +53,17 @@ namespace CerealPlayer.ViewModels
             HosterPreferencesCommand = new ShowHosterPreferencesCommand(models);
         }
 
+        // view models
+        public ActivePlaylistViewModel ActivePlaylist { get; }
+        public PlaylistsPreviewViewModel PlaylistPreview { get; }
+        public PlayerViewModel Player { get; }
+        public DisplayViewModel Display { get; }
+
         public void Dispose()
         {
+            models.Playlists.ActivePlaylist = null;
+
+            DeleteAfterWatchedCtrl.Dispose();
             SaveCtrl.Dispose();
         }
     }

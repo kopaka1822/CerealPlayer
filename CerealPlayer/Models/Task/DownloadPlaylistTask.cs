@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Models.Playlist;
 
 namespace CerealPlayer.Models.Task
@@ -22,6 +18,41 @@ namespace CerealPlayer.Models.Task
 
             this.playlist = playlist;
             playlist.VideosCollectionChanged += VideosOnCollectionChanged;
+            PropertyChanged += OnPropertyChanged;
+        }
+
+        /// <summary>
+        ///     called if the property of the underlying task model changed
+        /// </summary>
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(Status):
+                    switch (Status)
+                    {
+                        case TaskStatus.ReadyToStart:
+                            // reset own subtask to ready (if failed)
+                            if (activeVideo?.DownloadTask.Status == TaskStatus.Failed)
+                                activeVideo.DownloadTask.ResetStatus();
+                            break;
+                        case TaskStatus.Running:
+                            Debug.Assert(activeVideo != null);
+                            break;
+                        case TaskStatus.Finished:
+                            // set new task if available
+                            UnregisterActiveTask();
+                            SetNextTask();
+                            break;
+                        case TaskStatus.Failed:
+                            // stop own subtask (if running)
+                            if (activeVideo?.DownloadTask.Status == TaskStatus.Running)
+                                activeVideo.DownloadTask.Stop();
+                            break;
+                    }
+
+                    break;
+            }
         }
 
         private void VideosOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
@@ -29,8 +60,8 @@ namespace CerealPlayer.Models.Task
             // active video task was deleted?
             if (activeVideo != null && args.OldItems != null && args.OldItems.Contains(activeVideo))
             {
-                UnregisterActiveTask();
-                StartNextTask();
+                // sets active task to finish and searches the next one
+                SetFinished();
                 return;
             }
 
@@ -38,7 +69,7 @@ namespace CerealPlayer.Models.Task
             if (Status == TaskStatus.Finished && args.NewItems != null)
             {
                 Debug.Assert(activeVideo == null);
-                StartNextTask();
+                SetNextTask();
             }
         }
 
@@ -47,18 +78,29 @@ namespace CerealPlayer.Models.Task
             switch (args.PropertyName)
             {
                 case nameof(Status):
-                    if (activeVideo.DownloadTask.Status == TaskStatus.Failed)
+                    switch (activeVideo.DownloadTask.Status)
                     {
-                        // use error message from the property changed event
-                        SetError(null);
+                        case TaskStatus.Failed:
+                            // use error message from the property changed event
+                            SetError(null);
+                            break;
+                        case TaskStatus.Finished:
+                            UnregisterActiveTask();
+                            // set finished flag to set next subtask (if any) but dont execute yet (this will be handled by the download task controller)
+                            SetFinished();
+                            // new sub task will be set in OnPropertyChanged
+                            break;
+                        case TaskStatus.ReadyToStart:
+                            // subtask was reset from failed to ready
+                            // => switch own status to ready to start
+                            if (Status != TaskStatus.ReadyToStart)
+                                ResetStatus();
+                            break;
+                        case TaskStatus.Running:
+                            Debug.Assert(Status == TaskStatus.Running);
+                            break;
                     }
-                    if (activeVideo.DownloadTask.Status == TaskStatus.Finished)
-                    {
-                        UnregisterActiveTask();
-                        // set next subtask (if any) but dont execute yet (this will be handled by the download task controller)
-                        SetFinished();
-                        StartNextTask();
-                    }
+
                     break;
                 case nameof(Description):
                     Description = $"{activeVideo.Number} - {activeVideo.DownloadTask.Description}";
@@ -80,14 +122,16 @@ namespace CerealPlayer.Models.Task
 
         private void UnregisterActiveTask()
         {
-            if(activeVideo.DownloadTask.Status == TaskStatus.Running)
+            if (activeVideo == null) return;
+
+            if (activeVideo.DownloadTask.Status == TaskStatus.Running)
                 activeVideo.DownloadTask.Stop();
 
             activeVideo.DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
             activeVideo = null;
         }
 
-        private void StartNextTask()
+        private void SetNextTask()
         {
             Debug.Assert(activeVideo == null);
             foreach (var video in playlist.Videos)
@@ -97,6 +141,7 @@ namespace CerealPlayer.Models.Task
                     RegisterTask(video);
                     return;
                 }
+
                 Debug.Assert(video.DownloadTask.Status == TaskStatus.Finished);
             }
         }

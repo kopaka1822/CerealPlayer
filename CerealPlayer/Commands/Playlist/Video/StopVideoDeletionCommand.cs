@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CerealPlayer.Models.Playlist;
 
@@ -26,7 +22,7 @@ namespace CerealPlayer.Commands.Playlist.Video
 
         public void Execute(object parameter)
         {
-            if(video.DeleteTask.ReadyOrRunning)
+            if (video.DeleteTask.ReadyOrRunning)
                 video.DeleteTask.Stop();
         }
 

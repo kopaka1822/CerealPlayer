@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 
@@ -14,6 +10,7 @@ namespace CerealPlayer.Controllers
     {
         protected readonly Models.Models models;
         private readonly List<PlaylistModel> priorityQueue = new List<PlaylistModel>();
+        private readonly HashSet<TaskModel> runningTasks = new HashSet<TaskModel>();
 
         protected TaskControllerBase(Models.Models models)
         {
@@ -22,6 +19,8 @@ namespace CerealPlayer.Controllers
             this.models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
         }
 
+        protected int NumTaskRunning => runningTasks.Count;
+
         private void PlaylistsOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             if (args.PropertyName != nameof(PlaylistsModel.ActivePlaylist)) return;
@@ -29,14 +28,12 @@ namespace CerealPlayer.Controllers
 
             // raise priority of active playlist
             var idx = priorityQueue.IndexOf(models.Playlists.ActivePlaylist);
-            if(idx <= 0) return; // already on top
+            if (idx <= 0) return; // already on top
 
             var tmp = priorityQueue[idx];
             priorityQueue.RemoveAt(idx);
             priorityQueue.Insert(0, tmp);
         }
-
-        protected int NumTaskRunning { get; private set; } = 0;
 
         protected abstract TaskModel GetTask(PlaylistModel playlist);
 
@@ -55,7 +52,7 @@ namespace CerealPlayer.Controllers
                 {
                     var task = GetTask(oldItem as PlaylistModel);
                     // stop tasks if they are still running
-                    if(task.Status == TaskModel.TaskStatus.Running)
+                    if (task.Status == TaskModel.TaskStatus.Running)
                         task.Stop();
 
                     priorityQueue.Remove(oldItem as PlaylistModel);
@@ -77,11 +74,11 @@ namespace CerealPlayer.Controllers
         }
 
         /// <summary>
-        /// tests if new tasks can be executed
+        ///     tests if new tasks can be executed
         /// </summary>
         protected void StartNewTasks()
         {
-            if(!CanExecuteTasks()) return;
+            if (!CanExecuteTasks()) return;
 
             // start tasks as long as tasks may be executed
             foreach (var playlistModel in priorityQueue)
@@ -89,10 +86,10 @@ namespace CerealPlayer.Controllers
                 var task = GetTask(playlistModel);
                 if (task.Status != TaskModel.TaskStatus.ReadyToStart) continue;
 
-                if(!CanExecuteTask(playlistModel)) continue;
+                if (!CanExecuteTask(playlistModel)) continue;
 
                 task.Start();
-                if(!CanExecuteTasks()) return;
+                if (!CanExecuteTasks()) return;
             }
         }
 
@@ -106,14 +103,16 @@ namespace CerealPlayer.Controllers
             switch (task.Status)
             {
                 case TaskModel.TaskStatus.Running:
-                    NumTaskRunning++;
+                    runningTasks.Add(task);
                     break;
                 case TaskModel.TaskStatus.Failed:
                 case TaskModel.TaskStatus.Finished:
-                    NumTaskRunning--;
-                    StartNewTasks();
+                    if (runningTasks.Remove(task))
+                        StartNewTasks();
                     break;
                 case TaskModel.TaskStatus.ReadyToStart:
+                    // tasks can change from running to ready to start
+                    runningTasks.Remove(task);
                     StartNewTasks();
                     break;
             }
