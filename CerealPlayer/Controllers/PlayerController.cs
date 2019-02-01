@@ -21,6 +21,7 @@ namespace CerealPlayer.Controllers
         private PlaylistModel activePlaylist = null;
         private VideoModel activeVideo = null;
         private Point lastMousePosition = new Point(0, 0);
+        private bool mediaLoaded = false;
 
         public PlayerController(Models.Models models)
         {
@@ -34,6 +35,7 @@ namespace CerealPlayer.Controllers
             player.LoadedBehavior = MediaState.Manual;
             player.UnloadedBehavior = MediaState.Manual;
             player.Volume = models.Player.Volume;
+            player.ScrubbingEnabled = true;
 
             models.Player.PropertyChanged += PlayerOnPropertyChanged;
 
@@ -65,7 +67,7 @@ namespace CerealPlayer.Controllers
                     }
                     else
                     {
-                        if (HasMedia)
+                        if (HasMedia && mediaLoaded)
                         {
                             player.Play();
                             // set play position after pressing play (because play would reset it..)
@@ -120,6 +122,7 @@ namespace CerealPlayer.Controllers
 
         private void PlayerOnMediaOpened(object sender, RoutedEventArgs routedEventArgs)
         {
+            mediaLoaded = true;
             activePlaylist.PlayingVideoDuration = player.NaturalDuration.TimeSpan;
             if (!models.Player.IsPausing)
             {
@@ -166,7 +169,7 @@ namespace CerealPlayer.Controllers
             }
 
             player.Stop();
-            player.Source = null;
+            LoadVideo(null);
             activePlaylist = models.Playlists.ActivePlaylist;
             if (activePlaylist == null) return;
 
@@ -197,7 +200,7 @@ namespace CerealPlayer.Controllers
             if (activeVideo != null) activeVideo.DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
 
             activeVideo = video;
-            player.Source = null;
+            LoadVideo(null);
             if (activeVideo == null) return;
 
             // subscribe to new event
@@ -217,9 +220,19 @@ namespace CerealPlayer.Controllers
                     break;
                 case TaskModel.TaskStatus.Finished:
                     // start immediately
-                    player.Source = new Uri(video.FileLocation);
+                    LoadVideo(video.FileLocation);
                     break;
             }
+        }
+
+        /// <summary>
+        /// loads a new video (and resets media loaded state)
+        /// </summary>
+        /// <param name="path">path or null</param>
+        private void LoadVideo(string path)
+        {
+            mediaLoaded = false;
+            player.Source = path == null ? null : new Uri(path);
         }
 
         private void DownloadTaskOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -233,7 +246,7 @@ namespace CerealPlayer.Controllers
                         case TaskModel.TaskStatus.Finished:
                             if (player.Source == null)
                             {
-                                player.Source = new Uri(activeVideo.FileLocation);
+                                LoadVideo(activeVideo.FileLocation);
                             }
 
                             break;
