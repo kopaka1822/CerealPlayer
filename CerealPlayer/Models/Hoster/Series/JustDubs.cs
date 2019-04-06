@@ -70,13 +70,13 @@ namespace CerealPlayer.Models.Hoster.Series
 
         public ISubTask GetDownloadTask(VideoTaskModel parent, string website)
         {
-            return new RecursiveHosterDownloadTask(models, parent, website, false);
+            return new RecursiveHosterDownloadTask(models, parent, website, true);
         }
 
         public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
         {
             var nextWebsite = HosterUtil.IncrementLastNumber(website);
-            return new TestWebsiteExistsTask(models, parent, nextWebsite, this);
+            return new TestWebsiteExistsTask(models, parent, nextWebsite, this, true);
         }
 
         public string FindCompatibleLink(string websiteSource)
