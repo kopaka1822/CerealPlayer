@@ -76,7 +76,8 @@ namespace CerealPlayer.Models.Hoster.Series
         public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent, string website)
         {
             var nextWebsite = HosterUtil.IncrementLastNumber(website);
-            return new TestWebsiteExistsTask(models, parent, nextWebsite, this, true);
+            return new TestWebsiteNot404(models, parent, nextWebsite, this, "<h1 class=\"page-header\">Page not found</h1>", true);
+            //return new TestWebsiteExistsTask(models, parent, nextWebsite, this, true);
         }
 
         public string FindCompatibleLink(string websiteSource)
