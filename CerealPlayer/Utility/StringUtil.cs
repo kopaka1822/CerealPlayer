@@ -137,5 +137,14 @@ namespace CerealPlayer.Utility
 
             return res + parts[last - 1];
         }
+
+        /// <summary>
+        /// appends "s" to singular if count is not equal to one
+        /// </summary>
+        /// <returns>"count singular[s]"</returns>
+        public static string PluralS(int count, string singular)
+        {
+            return count + " " + singular + (count == 1 ? "" : "s");
+        }
     }
 }

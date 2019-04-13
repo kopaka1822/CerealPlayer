@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 
 namespace CerealPlayer.Models.Playlist
 {
-    public class PlaylistModel : INotifyPropertyChanged
+    public sealed class PlaylistModel : INotifyPropertyChanged
     {
         private readonly IVideoHoster hoster;
         private readonly Models models;
@@ -45,7 +45,7 @@ namespace CerealPlayer.Models.Playlist
             NextEpisodeTask = task;
         }
 
-        public PlaylistModel(Models models, SaveData data)
+        private PlaylistModel(Models models, SaveData data)
         {
             this.models = models;
             LastWebsite = data.LastWebsite;
@@ -112,6 +112,7 @@ namespace CerealPlayer.Models.Playlist
             {
                 PlayingVideo = videos.Last();
             }
+            OnPropertyChanged(nameof(NumEpisodesLeft));
         }
 
         /// <summary>
@@ -204,12 +205,18 @@ namespace CerealPlayer.Models.Playlist
         }
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            switch (propertyName)
+            {
+                case nameof(PlayingVideoIndex):
+                    OnPropertyChanged(nameof(NumEpisodesLeft));
+                    break;
+            }
         }
 
-        protected virtual void OnPlayingVideoPositionChanged()
+        private void OnPlayingVideoPositionChanged()
         {
             PlayingVideoPositionChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -306,6 +313,11 @@ namespace CerealPlayer.Models.Playlist
                 OnPropertyChanged(nameof(PlayingVideoIndex));
             }
         }
+
+        /// <summary>
+        /// numbers of episodes that have not been finished (according to playing video index)
+        /// </summary>
+        public int NumEpisodesLeft => Videos.Count - PlayingVideoIndex;
 
         #endregion
 

@@ -25,6 +25,7 @@ namespace CerealPlayer.ViewModels.Playlist
         {
             this.models = models;
             this.parent = parent;
+            parent.PropertyChanged += ParentOnPropertyChanged;
             parent.DownloadPlaylistTask.PropertyChanged += PlaylistTaskOnPropertyChanged;
             parent.NextEpisodeTask.PropertyChanged += PlaylistTaskOnPropertyChanged;
             models.Playlists.PropertyChanged += PlaylistsOnPropertyChanged;
@@ -37,6 +38,16 @@ namespace CerealPlayer.ViewModels.Playlist
             refreshDownloadTimer.Tick += RefreshDownloadTimerOnTick;
         }
 
+        private void ParentOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(PlaylistModel.NumEpisodesLeft):
+                    OnPropertyChanged(nameof(Status));
+                    break;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string Name => parent.Name;
@@ -45,11 +56,13 @@ namespace CerealPlayer.ViewModels.Playlist
         {
             get
             {
+                string epLeft = Utility.StringUtil.PluralS(parent.NumEpisodesLeft, "episode") + " left";
+
                 // display download task
                 if (parent.DownloadPlaylistTask.Status != TaskModel.TaskStatus.Finished)
                 {
                     if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.ReadyToStart)
-                        return "pausing due to download restrictions";
+                        return epLeft + " (pausing)";
 
                     if (parent.DownloadPlaylistTask.Status == TaskModel.TaskStatus.Running)
                         return parent.DownloadPlaylistTask.Description +
@@ -62,7 +75,7 @@ namespace CerealPlayer.ViewModels.Playlist
                 if (parent.NextEpisodeTask.Status == TaskModel.TaskStatus.Finished
                     || parent.NextEpisodeTask.Status == TaskModel.TaskStatus.Failed
                     && parent.NextEpisodeTask.Description.Length == 0)
-                    return "up-to-date";
+                    return epLeft;
 
                 return parent.NextEpisodeTask.Description;
             }
