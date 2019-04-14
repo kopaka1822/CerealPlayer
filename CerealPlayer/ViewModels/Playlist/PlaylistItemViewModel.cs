@@ -94,7 +94,6 @@ namespace CerealPlayer.ViewModels.Playlist
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RefreshDownloadTimerOnTick(object sender, EventArgs eventArgs)

@@ -15,6 +15,7 @@ namespace CerealPlayer.ViewModels.Playlist
     {
         private readonly Models.Models models;
         private readonly PlaylistModel parent;
+        private bool lastHasEpisodesLeft = false;
 
         private readonly DispatcherTimer refreshDownloadTimer = new DispatcherTimer
         {
@@ -25,6 +26,7 @@ namespace CerealPlayer.ViewModels.Playlist
         {
             this.models = models;
             this.parent = parent;
+            this.lastHasEpisodesLeft = HasEpisodesLeft;
             parent.PropertyChanged += ParentOnPropertyChanged;
             parent.DownloadPlaylistTask.PropertyChanged += PlaylistTaskOnPropertyChanged;
             parent.NextEpisodeTask.PropertyChanged += PlaylistTaskOnPropertyChanged;
@@ -44,6 +46,11 @@ namespace CerealPlayer.ViewModels.Playlist
             {
                 case nameof(PlaylistModel.NumEpisodesLeft):
                     OnPropertyChanged(nameof(Status));
+                    if (lastHasEpisodesLeft != HasEpisodesLeft)
+                    {
+                        lastHasEpisodesLeft = HasEpisodesLeft;
+                        OnPropertyChanged(nameof(HasEpisodesLeft));
+                    }
                     break;
             }
         }
@@ -80,6 +87,8 @@ namespace CerealPlayer.ViewModels.Playlist
                 return parent.NextEpisodeTask.Description;
             }
         }
+
+        public bool HasEpisodesLeft => parent.NumEpisodesLeft > 0;
 
         public int Progress
         {

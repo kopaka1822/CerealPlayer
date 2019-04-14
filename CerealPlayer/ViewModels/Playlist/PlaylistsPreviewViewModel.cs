@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models.Playlist;
@@ -32,7 +33,7 @@ namespace CerealPlayer.ViewModels.Playlist
             this.models.Playlists.DirectoryRefresh += PlaylistsOnDirectoryRefresh;
         }
 
-        public ObservableCollection<object> PlaylistItems { get; } = new ObservableCollection<object>();
+        public ObservableCollection<PlaylistTaskView> PlaylistItems { get; } = new ObservableCollection<PlaylistTaskView>();
 
         public object SelectedPlaylist
         {
@@ -50,6 +51,25 @@ namespace CerealPlayer.ViewModels.Playlist
         private void PlaylistsOnDirectoryRefresh(object sender, EventArgs eventArgs)
         {
             RefreshPlaylist();
+        }
+
+        private void SortPlaylists()
+        {
+            // sort by loaded first
+            var tmp = PlaylistItems.OrderByDescending(o => o.DataContext is LoadedPlaylistTaskViewModel);
+            // sort by is 
+            tmp = tmp.ToArray().OrderByDescending(o =>
+            {
+                if (!(o.DataContext is LoadedPlaylistTaskViewModel)) return false;
+                return ((LoadedPlaylistTaskViewModel) o.DataContext).HasEpisodesLeft;
+            });
+
+            // refresh playlist items
+            PlaylistItems.Clear();
+            foreach (var i in tmp)
+            {
+                PlaylistItems.Add(i);
+            }
         }
 
         /// <summary>
@@ -89,6 +109,7 @@ namespace CerealPlayer.ViewModels.Playlist
 
                     var view = CreateView(model);
                     PlaylistItems.Add(view);
+                    
                 }
                 catch (Exception e)
                 {
@@ -96,6 +117,8 @@ namespace CerealPlayer.ViewModels.Playlist
                     Console.WriteLine(e.Message);
                 }
             }
+
+            SortPlaylists();
 
             // resubscribe to change events
             models.Playlists.List.CollectionChanged += PlaylistOnCollectionChanged;
@@ -126,16 +149,28 @@ namespace CerealPlayer.ViewModels.Playlist
 
         private PlaylistTaskView CreateView(PlaylistModel playlist)
         {
+            var dc = new LoadedPlaylistTaskViewModel(models, playlist);
             var view = new PlaylistTaskView
             {
-                DataContext = new LoadedPlaylistTaskViewModel(models, playlist)
+                DataContext = dc
             };
             loadedViews.Add(playlist.Name, new LoadedTaskInfo
             {
                 View = view,
                 Model = playlist
             });
+            dc.PropertyChanged += LoadedPlaylistOnPropertyChanged;
             return view;
+        }
+
+        private void LoadedPlaylistOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(LoadedPlaylistTaskViewModel.HasEpisodesLeft):
+                    SortPlaylists();
+                    break;
+            }
         }
 
         private void RefreshPlaylist()
@@ -165,6 +200,7 @@ namespace CerealPlayer.ViewModels.Playlist
                 PlaylistItems.Add(view);
             }
 
+            SortPlaylists();
             OnPropertyChanged(nameof(PlaylistItems));
             OnPropertyChanged(nameof(SelectedPlaylist));
         }
