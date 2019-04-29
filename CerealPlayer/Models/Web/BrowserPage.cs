@@ -12,6 +12,7 @@ namespace CerealPlayer.Models.Web
         // timeout reset for website loading
         private readonly ManualResetEvent manualResetEvent = new ManualResetEvent(false);
         private readonly ChromiumWebBrowser page;
+        private string loadError = null;
 
         public BrowserPage()
         {
@@ -40,12 +41,36 @@ namespace CerealPlayer.Models.Web
             try
             {
                 page.LoadingStateChanged += PageLoadingStateChanged;
+                page.LoadError += PageOnLoadError;
+                loadError = null;
                 Debug.Assert(page.IsBrowserInitialized);
 
                 page.Load(url);
 
                 manualResetEvent.WaitOne(TimeSpan.FromSeconds(60));
                 manualResetEvent.Reset();
+                if(loadError != null)
+                    throw new Exception(loadError);
+
+                // wait for ddos protection checks to be over
+                bool isCloudflare = false;
+                int numIterations = 0;
+                do
+                {
+                    if (isCloudflare)
+                    {
+                        manualResetEvent.WaitOne(TimeSpan.FromSeconds(5));
+                        manualResetEvent.Reset();
+                    }
+
+                    // take a look at the source
+                    var sourceTask = page.GetSourceAsync();
+                    sourceTask.Wait();
+                    var source = sourceTask.Result;
+
+                    // check for cloudflare ddos protection
+                    isCloudflare = source.Contains(">DDoS protection by Cloudflare</a>");
+                } while (isCloudflare && ++numIterations < 10);
             }
             catch (ObjectDisposedException)
             {
@@ -54,8 +79,15 @@ namespace CerealPlayer.Models.Web
             finally
             {
                 page.LoadingStateChanged -= PageLoadingStateChanged;
+                page.LoadError -= PageOnLoadError;
                 page.Stop();
             }
+        }
+
+        private void PageOnLoadError(object sender, LoadErrorEventArgs e)
+        {
+            loadError = e.ErrorText;
+            manualResetEvent.Set();
         }
 
         /// <summary>
