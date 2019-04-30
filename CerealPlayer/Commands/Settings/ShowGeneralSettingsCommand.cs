@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using CerealPlayer.ViewModels.Settings;
-using CerealPlayer.Views;
+using CerealPlayer.Views.Settings;
 
 namespace CerealPlayer.Commands.Settings
 {

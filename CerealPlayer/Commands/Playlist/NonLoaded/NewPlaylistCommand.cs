@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using CerealPlayer.ViewModels.Playlist;
 using CerealPlayer.Views;
+using CerealPlayer.Views.Playlist;
 
 namespace CerealPlayer.Commands.Playlist.NonLoaded
 {

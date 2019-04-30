@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace CerealPlayer.Views
+namespace CerealPlayer.Views.Settings
 {
     /// <summary>
     ///     Interaction logic for HosterPreferencesView.xaml

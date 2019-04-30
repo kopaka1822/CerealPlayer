@@ -11,6 +11,7 @@ using CerealPlayer.Annotations;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 using CerealPlayer.Views;
+using CerealPlayer.Views.Playlist;
 
 namespace CerealPlayer.ViewModels.Playlist
 {

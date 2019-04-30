@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace CerealPlayer.Views
+namespace CerealPlayer.Views.Playlist
 {
     /// <summary>
     ///     Interaction logic for PlaylistCreationView.xaml

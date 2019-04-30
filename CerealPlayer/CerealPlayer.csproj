@@ -198,22 +198,25 @@
     <Compile Include="ViewModels\Playlist\LoadedPlaylistTaskViewModel.cs" />
     <Compile Include="ViewModels\Settings\HosterPreferencesViewModel.cs" />
     <Compile Include="ViewModels\ViewModels.cs" />
-    <Compile Include="Views\GeneralSettingsView.xaml.cs">
+    <Compile Include="Views\Settings\GeneralSettingsView.xaml.cs">
       <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HosterPreferencesView.xaml.cs">
+    <Compile Include="Views\Settings\HosterItemView.xaml.cs">
+      <DependentUpon>HosterItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\HosterPreferencesView.xaml.cs">
       <DependentUpon>HosterPreferencesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlayerBar.xaml.cs">
       <DependentUpon>PlayerBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PlaylistCreationView.xaml.cs">
+    <Compile Include="Views\Playlist\PlaylistCreationView.xaml.cs">
       <DependentUpon>PlaylistCreationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PlaylistItemView.xaml.cs">
+    <Compile Include="Views\Playlist\PlaylistItemView.xaml.cs">
       <DependentUpon>PlaylistItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PlaylistTaskView.xaml.cs">
+    <Compile Include="Views\Playlist\PlaylistTaskView.xaml.cs">
       <DependentUpon>PlaylistTaskView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
@@ -228,11 +231,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\GeneralSettingsView.xaml">
+    <Page Include="Views\Settings\GeneralSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HosterPreferencesView.xaml">
+    <Page Include="Views\Settings\HosterItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\HosterPreferencesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -240,15 +247,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PlaylistCreationView.xaml">
+    <Page Include="Views\Playlist\PlaylistCreationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PlaylistItemView.xaml">
+    <Page Include="Views\Playlist\PlaylistItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PlaylistTaskView.xaml">
+    <Page Include="Views\Playlist\PlaylistTaskView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Views;
+using CerealPlayer.Views.Playlist;
 
 namespace CerealPlayer.ViewModels.Playlist
 {
