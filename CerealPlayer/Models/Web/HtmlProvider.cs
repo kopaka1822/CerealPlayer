@@ -7,11 +7,16 @@ namespace CerealPlayer.Models.Web
 {
     public class HtmlProvider
     {
-        private readonly Browser browser = new Browser();
+        private readonly Browser browser;
 
         private readonly Dictionary<string, Task<string>> cachedJsWebsites = new Dictionary<string, Task<string>>();
 
         private readonly Dictionary<string, Task<string>> cachedWebsites = new Dictionary<string, Task<string>>();
+
+        public HtmlProvider(int maxChromiumInstances)
+        {
+            browser= new Browser(maxChromiumInstances);
+        }
 
         /// <summary>
         ///     gets the website from the cache or loads the website if it is not in the cache.

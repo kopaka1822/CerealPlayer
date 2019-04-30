@@ -9,7 +9,7 @@
              Width="160"
              Background="White">
     <UserControl.Resources>
-        <Style x:Key="ThisStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource DefaultTextBlock}">
+        <Style x:Key="ThisStyle" TargetType="{x:Type TextBlock}">
             <Style.Triggers>
                 <DataTrigger
                     Binding="{Binding UseHoster}"
@@ -26,6 +26,7 @@
                         Value="Strikethrough"/>
                 </DataTrigger>
             </Style.Triggers>
+            <Setter Property="FontSize" Value="16" />
         </Style>
     </UserControl.Resources>
     <Grid>

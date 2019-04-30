@@ -1,29 +1,34 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using CerealPlayer.Annotations;
 using CerealPlayer.Properties;
 using CerealPlayer.Utility;
+using Newtonsoft.Json;
 
 namespace CerealPlayer.Models
 {
     public class SettingsModel : INotifyPropertyChanged
     {
+        private int maxDownloads = 3;
         /// <summary>
         ///     maximum number of concurrent downloads
         /// </summary>
         public int MaxDownloads
         {
-            get => Settings.Default.MaxDownloads;
+            get => maxDownloads;
             set
             {
                 Debug.Assert(value > 0);
-                if (Settings.Default.MaxDownloads == value) return;
-                Settings.Default.MaxDownloads = value;
+                if (maxDownloads == value) return;
+                maxDownloads = value;
                 OnPropertyChanged(nameof(MaxDownloads));
             }
         }
 
+        private int maxAdvanceDownloads = 24;
         /// <summary>
         ///     maximum number of episodes that should be downloaded in advance.
         ///     0 = only download when watching
@@ -31,99 +36,98 @@ namespace CerealPlayer.Models
         /// </summary>
         public int MaxAdvanceDownloads
         {
-            get => Settings.Default.MaxAdvanceDownloads;
+            get => maxAdvanceDownloads;
             set
             {
                 Debug.Assert(value >= 0);
-                if (Settings.Default.MaxAdvanceDownloads == value) return;
-                Settings.Default.MaxAdvanceDownloads = value;
+                if (maxAdvanceDownloads == value) return;
+                maxAdvanceDownloads = value;
                 OnPropertyChanged(nameof(MaxAdvanceDownloads));
             }
         }
 
+        private bool deleteAfterWatching = false;
         /// <summary>
         ///     indicates if the episode should be deleted after watching
         /// </summary>
         public bool DeleteAfterWatching
         {
-            get => Settings.Default.DeleteAfterWatch;
+            get => deleteAfterWatching;
             set
             {
-                if (Settings.Default.DeleteAfterWatch == value) return;
-                Settings.Default.DeleteAfterWatch = value;
+                if (deleteAfterWatching == value) return;
+                deleteAfterWatching = value;
                 OnPropertyChanged(nameof(DeleteAfterWatching));
             }
         }
 
+        private int downloadSpeed = 0;
         // TODO see: https://www.codeproject.com/Articles/18243/Bandwidth-throttling
         /// <summary>
         ///     maximum download speed of all downloads
         /// </summary>
         public int DownloadSpeed
         {
-            get => Settings.Default.DownloadSpeed;
+            get => downloadSpeed;
             set
             {
                 Debug.Assert(value >= 0);
-                if (Settings.Default.DownloadSpeed == value) return;
-                Settings.Default.DownloadSpeed = value;
+                if (downloadSpeed == value) return;
+                downloadSpeed = value;
                 OnPropertyChanged(nameof(DownloadSpeed));
             }
         }
 
+        private int hidePlaybarTime = 5;
         public int HidePlaybarTime
         {
-            get => Settings.Default.HidePlaybarTime;
+            get => hidePlaybarTime;
             set
             {
                 Debug.Assert(value >= 1);
-                if (Settings.Default.HidePlaybarTime == value) return;
-                Settings.Default.HidePlaybarTime = value;
+                if (hidePlaybarTime == value) return;
+                hidePlaybarTime = value;
                 OnPropertyChanged(nameof(HidePlaybarTime));
             }
         }
 
+        private int maxChromiumInstances = 6;
         public int MaxChromiumInstances
         {
-            get => Settings.Default.MaxChromiumInstances;
+            get => maxChromiumInstances;
             set
             {
                 Debug.Assert(value >= 1);
-                if (Settings.Default.MaxChromiumInstances == value) return;
-                Settings.Default.MaxChromiumInstances = value;
+                if (maxChromiumInstances == value) return;
+                maxChromiumInstances = value;
                 OnPropertyChanged(nameof(MaxChromiumInstances));
             }
         }
 
+        private string[] prefferedHoster = new string[0];
         /// <summary>
         ///     list with the names of the preferred file hoster
         /// </summary>
         public string[] PreferredHoster
         {
-            get
-            {
-                // hoster names are seperated by ,
-                var res = Settings.Default.PreferredHoster;
-                if (res == null) return new string[0];
-                return res.Split(',');
-            }
+            get => prefferedHoster;
             set
             {
-                // transform into single string
-                var val = StringUtil.Reduce(value, ",");
-                Settings.Default.PreferredHoster = val;
+                Debug.Assert(value != null);
+                prefferedHoster = value;
                 OnPropertyChanged(nameof(PreferredHoster));
             }
         }
 
+        private int rewindOnPlaylistChangeTime = 0;
         public int RewindOnPlaylistChangeTime
         {
-            get => Settings.Default.RewindOnPlaylistChangeTime;
+            get => rewindOnPlaylistChangeTime;
             set
             {
                 Debug.Assert(value >= 0);
-                if (value == Settings.Default.RewindOnPlaylistChangeTime) return;
-                Settings.Default.RewindOnPlaylistChangeTime = value;
+                if (value == rewindOnPlaylistChangeTime) return;
+                rewindOnPlaylistChangeTime = value;
                 OnPropertyChanged(nameof(RewindOnPlaylistChangeTime));
             }
         }
@@ -132,7 +136,23 @@ namespace CerealPlayer.Models
 
         public void Save()
         {
-            Settings.Default.Save();
+            var json = JsonConvert.SerializeObject(this);
+            File.WriteAllText("settings.json", json);
+        }
+
+        public static SettingsModel Load()
+        {
+            try
+            {
+                var json = File.ReadAllText("settings.json");
+                var res = JsonConvert.DeserializeObject<SettingsModel>(json);
+                return res;
+            }
+            catch (Exception)
+            {
+                // keep default settings
+                return new SettingsModel();
+            }
         }
 
         [NotifyPropertyChangedInvocator]

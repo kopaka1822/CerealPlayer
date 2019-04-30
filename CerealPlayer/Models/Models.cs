@@ -8,7 +8,7 @@ namespace CerealPlayer.Models
     {
         public Models(MainWindow window)
         {
-            Settings = new SettingsModel();
+            Settings = SettingsModel.Load();
             App = new AppModel(window);
             Playlists = new PlaylistsModel();
             Display = new DisplayModel();

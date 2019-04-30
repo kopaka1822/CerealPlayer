@@ -12,7 +12,7 @@ namespace CerealPlayer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -20,102 +20,6 @@ namespace CerealPlayer.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public int MaxDownloads {
-            get {
-                return ((int)(this["MaxDownloads"]));
-            }
-            set {
-                this["MaxDownloads"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int MaxAdvanceDownloads {
-            get {
-                return ((int)(this["MaxAdvanceDownloads"]));
-            }
-            set {
-                this["MaxAdvanceDownloads"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DeleteAfterWatch {
-            get {
-                return ((bool)(this["DeleteAfterWatch"]));
-            }
-            set {
-                this["DeleteAfterWatch"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int DownloadSpeed {
-            get {
-                return ((int)(this["DownloadSpeed"]));
-            }
-            set {
-                this["DownloadSpeed"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int HidePlaybarTime {
-            get {
-                return ((int)(this["HidePlaybarTime"]));
-            }
-            set {
-                this["HidePlaybarTime"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6")]
-        public int MaxChromiumInstances {
-            get {
-                return ((int)(this["MaxChromiumInstances"]));
-            }
-            set {
-                this["MaxChromiumInstances"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string PreferredHoster {
-            get {
-                return ((string)(this["PreferredHoster"]));
-            }
-            set {
-                this["PreferredHoster"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int RewindOnPlaylistChangeTime {
-            get {
-                return ((int)(this["RewindOnPlaylistChangeTime"]));
-            }
-            set {
-                this["RewindOnPlaylistChangeTime"] = value;
             }
         }
     }

@@ -14,7 +14,7 @@ namespace CerealPlayer.Models.Web
     {
         private readonly ConcurrentStack<BrowserPage> pages = new ConcurrentStack<BrowserPage>();
 
-        public Browser()
+        public Browser(int maxChromiumInstances)
         {
             var settings = new CefSettings()
             {
@@ -29,7 +29,7 @@ namespace CerealPlayer.Models.Web
             Cef.Initialize(settings, true, null);
 
             // add some emtpy pages to the stack. the pages will be created if needed
-            var maxPages = Settings.Default.MaxChromiumInstances;
+            var maxPages = maxChromiumInstances;
             Debug.Assert(maxPages > 0);
             for (var i = 0; i < maxPages; ++i)
                 pages.Push(null);
