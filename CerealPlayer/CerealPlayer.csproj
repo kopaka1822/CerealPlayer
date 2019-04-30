@@ -141,6 +141,7 @@
     <Compile Include="Controllers\PlayerTouchController.cs" />
     <Compile Include="Controllers\SaveFileController.cs" />
     <Compile Include="Controllers\TaskControllerBase.cs" />
+    <Compile Include="Models\Settings\HosterSettingsModel.cs" />
     <Compile Include="Models\AppModel.cs" />
     <Compile Include="Models\DisplayModel.cs" />
     <Compile Include="Models\Hoster\Series\BurningSeries.cs" />
@@ -170,7 +171,7 @@
     <Compile Include="Models\Playlist\PlaylistModel.cs" />
     <Compile Include="Models\Playlist\PlaylistsModel.cs" />
     <Compile Include="Models\Playlist\VideoModel.cs" />
-    <Compile Include="Models\SettingsModel.cs" />
+    <Compile Include="Models\Settings\SettingsModel.cs" />
     <Compile Include="Models\Hoster\Tasks\DefaultVideoDownloader.cs" />
     <Compile Include="Models\Task\DelayedCommandTask.cs" />
     <Compile Include="Models\Task\DownloadPlaylistTask.cs" />

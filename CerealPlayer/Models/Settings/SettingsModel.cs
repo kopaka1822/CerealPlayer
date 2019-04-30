@@ -4,11 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using CerealPlayer.Annotations;
-using CerealPlayer.Properties;
-using CerealPlayer.Utility;
 using Newtonsoft.Json;
 
-namespace CerealPlayer.Models
+namespace CerealPlayer.Models.Settings
 {
     public class SettingsModel : INotifyPropertyChanged
     {
@@ -104,17 +102,17 @@ namespace CerealPlayer.Models
             }
         }
 
-        private string[] prefferedHoster = new string[0];
+        private HosterSettingsModel[] preferredHoster = new HosterSettingsModel[0];
         /// <summary>
         ///     list with the names of the preferred file hoster
         /// </summary>
-        public string[] PreferredHoster
+        public HosterSettingsModel[] PreferredHoster
         {
-            get => prefferedHoster;
+            get => preferredHoster;
             set
             {
                 Debug.Assert(value != null);
-                prefferedHoster = value;
+                preferredHoster = value;
                 OnPropertyChanged(nameof(PreferredHoster));
             }
         }

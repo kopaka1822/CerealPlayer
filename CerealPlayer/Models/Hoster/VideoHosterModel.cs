@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models.Hoster.Series;
 using CerealPlayer.Models.Hoster.Stream;
+using CerealPlayer.Models.Settings;
 using CerealPlayer.Models.Task;
 using CerealPlayer.Models.Task.Hoster;
 using CerealPlayer.Utility;
@@ -15,8 +16,14 @@ namespace CerealPlayer.Models.Hoster
 {
     public class VideoHosterModel
     {
+        private struct HosterInfo
+        {
+            public IVideoHoster Hoster { get; set; }
+            public bool UseHoster { get; set; }
+        }
+
         private readonly Dictionary<string, IVideoHoster> fileHoster = new Dictionary<string, IVideoHoster>();
-        private readonly List<IVideoHoster> hoster = new List<IVideoHoster>();
+        private readonly List<HosterInfo> hoster = new List<HosterInfo>();
         private readonly Dictionary<string, IVideoHoster> seriesHoster = new Dictionary<string, IVideoHoster>();
         private readonly SettingsModel settings;
 
@@ -67,6 +74,7 @@ namespace CerealPlayer.Models.Hoster
 
             foreach (var videoHoster in hoster)
             {
+                if(!videoHoster.UseHoster) continue;
                 foreach (var pair in hosterPairs)
                 {
                     if (ReferenceEquals(pair.Hoster, videoHoster))
@@ -81,7 +89,7 @@ namespace CerealPlayer.Models.Hoster
         ///     adds hoster to the respective dictionary
         /// </summary>
         /// <param name="h"></param>
-        private void RegisterHoster(IVideoHoster h)
+        private void RegisterHoster([NotNull] IVideoHoster h)
         {
             if (h.IsFileHoster)
             {
@@ -101,13 +109,16 @@ namespace CerealPlayer.Models.Hoster
             // add all hoster according to settings list
             var preferredHoster = settings.PreferredHoster;
             var usedHoster = new HashSet<string>();
-            foreach (var hosterName in preferredHoster)
+            foreach (var h in preferredHoster)
             {
-                if (fileHoster.TryGetValue(hosterName, out var res))
+                if (!fileHoster.TryGetValue(h.Name, out var res)) continue;
+
+                hoster.Add(new HosterInfo
                 {
-                    hoster.Add(res);
-                    usedHoster.Add(hosterName);
-                }
+                    Hoster = res,
+                    UseHoster = h.UseHoster,
+                });
+                usedHoster.Add(h.Name);
             }
 
             if (usedHoster.Count != fileHoster.Count)
@@ -117,7 +128,11 @@ namespace CerealPlayer.Models.Hoster
                 {
                     if (!usedHoster.Contains(videoHoster.Key))
                     {
-                        hoster.Add(videoHoster.Value);
+                        hoster.Add(new HosterInfo
+                        {
+                            Hoster = videoHoster.Value,
+                            UseHoster = true,
+                        });
                     }
                 }
             }
@@ -125,16 +140,24 @@ namespace CerealPlayer.Models.Hoster
             // add the remaining series hoster
             foreach (var videoHoster in seriesHoster)
             {
-                hoster.Add(videoHoster.Value);
+                hoster.Add(new HosterInfo
+                {
+                    Hoster = videoHoster.Value,
+                    UseHoster = true,
+                });
             }
         }
 
         private void SaveHoster()
         {
-            var names = new List<string>();
+            var names = new List<HosterSettingsModel>();
             foreach (var videoHoster in GetFileHoster())
             {
-                names.Add(videoHoster.Name);
+                names.Add(new HosterSettingsModel
+                {
+                    Name = videoHoster.Hoster.Name,
+                    UseHoster = videoHoster.UseHoster
+                });
             }
 
             settings.PreferredHoster = names.ToArray();
@@ -150,7 +173,8 @@ namespace CerealPlayer.Models.Hoster
         {
             foreach (var videoHoster in hoster)
             {
-                if (videoHoster.Supports(website)) return videoHoster;
+                if (!videoHoster.UseHoster) continue;
+                if (videoHoster.Hoster.Supports(website)) return videoHoster.Hoster;
             }
 
             throw new Exception("no compatible hoster for " + website);
@@ -169,12 +193,13 @@ namespace CerealPlayer.Models.Hoster
             {
                 foreach (var videoHoster in hoster)
                 {
+                    if (!videoHoster.UseHoster) continue;
                     foreach (var site in websites)
                     {
-                        if (videoHoster.Supports(site))
+                        if (videoHoster.Hoster.Supports(site))
                             return new WebsiteHosterPair
                             {
-                                Hoster = videoHoster,
+                                Hoster = videoHoster.Hoster,
                                 Website = site
                             };
                     }
@@ -203,11 +228,12 @@ namespace CerealPlayer.Models.Hoster
             {
                 foreach (var videoHoster in hoster)
                 {
-                    var link = videoHoster.FindCompatibleLink(source);
+                    if (!videoHoster.UseHoster) continue;
+                    var link = videoHoster.Hoster.FindCompatibleLink(source);
                     if (link != null)
                         return new WebsiteHosterPair
                         {
-                            Hoster = videoHoster,
+                            Hoster = videoHoster.Hoster,
                             Website = link
                         };
                 }
@@ -226,9 +252,9 @@ namespace CerealPlayer.Models.Hoster
         ///     sorted with their current priority
         /// </summary>
         /// <returns></returns>
-        private List<IVideoHoster> GetFileHoster()
+        private List<HosterInfo> GetFileHoster()
         {
-            return hoster.Where(videoHoster => videoHoster.IsFileHoster).ToList();
+            return hoster.Where(videoHoster => videoHoster.Hoster.IsFileHoster).ToList();
         }
 
         public class WebsiteHosterPair

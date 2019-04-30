@@ -1,5 +1,6 @@
 ﻿using CerealPlayer.Models.Player;
 using CerealPlayer.Models.Playlist;
+using CerealPlayer.Models.Settings;
 using CerealPlayer.Models.Web;
 
 namespace CerealPlayer.Models

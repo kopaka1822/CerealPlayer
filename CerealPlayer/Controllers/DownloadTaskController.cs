@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using CerealPlayer.Models;
 using CerealPlayer.Models.Playlist;
+using CerealPlayer.Models.Settings;
 using CerealPlayer.Models.Task;
 
 namespace CerealPlayer.Controllers

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands;
+using CerealPlayer.Models.Settings;
 using GongSolutions.Wpf.DragDrop;
 
 namespace CerealPlayer.ViewModels.Settings
@@ -12,12 +13,6 @@ namespace CerealPlayer.ViewModels.Settings
     public class HosterPreferencesViewModel : INotifyPropertyChanged, IDropTarget
     {
         private readonly Models.Models models;
-
-        public class HosterInfo
-        {
-            public string Name { get; set; }
-            public bool UseHoster { get; set; }
-        }
 
         public HosterPreferencesViewModel(Models.Models models)
         {
@@ -29,15 +24,11 @@ namespace CerealPlayer.ViewModels.Settings
             // init items
             foreach (var videoHoster in models.Settings.PreferredHoster)
             {
-                Items.Add(new HosterInfo
-                {
-                    Name = videoHoster,
-                    UseHoster = true
-                });
+                Items.Add(videoHoster);
             }
         }
 
-        public ObservableCollection<HosterInfo> Items { get; } = new ObservableCollection<HosterInfo>();
+        public ObservableCollection<HosterSettingsModel> Items { get; } = new ObservableCollection<HosterSettingsModel>();
 
         public string SelectedItem { get; set; } = null;
 
@@ -48,7 +39,7 @@ namespace CerealPlayer.ViewModels.Settings
         public void DragOver(IDropInfo dropInfo)
         {
             // enable if both items are HosterView
-            if (dropInfo.Data is HosterInfo && dropInfo.TargetItem is HosterInfo)
+            if (dropInfo.Data is HosterSettingsModel && dropInfo.TargetItem is HosterSettingsModel)
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
                 dropInfo.Effects = DragDropEffects.Move;
@@ -57,7 +48,7 @@ namespace CerealPlayer.ViewModels.Settings
 
         public void Drop(IDropInfo dropInfo)
         {
-            var item = (HosterInfo)dropInfo.Data;
+            var item = (HosterSettingsModel)dropInfo.Data;
             var insertIndex = dropInfo.InsertIndex;
             var oldIndex = Items.IndexOf(item);
             Items.RemoveAt(oldIndex);
