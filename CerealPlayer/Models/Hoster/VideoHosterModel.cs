@@ -60,6 +60,10 @@ namespace CerealPlayer.Models.Hoster
 
         public HosterPreferences ToHosterPreferences([CanBeNull] HosterSettingsModel[] preferred)
         {
+            // if a new playlist is initialized => initialize it with the global preference
+            if (preferred == null && GlobalPreferences != null)
+                return GlobalPreferences;
+
             var res = new List<HosterPreferences.HosterInfo>(fileHoster.Count + seriesHoster.Count);
             var usedHoster = new HashSet<string>();
             // add all hosters that are in settings

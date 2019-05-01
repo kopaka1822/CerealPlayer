@@ -16,6 +16,8 @@ namespace CerealPlayer.ViewModels.Playlist
             DeleteCommand = new DeletePlaylistCommand(models, directory);
         }
 
+        public bool IsLoaded => false;
+
         public string Name { get; }
 
         public ICommand PlayCommand { get; }

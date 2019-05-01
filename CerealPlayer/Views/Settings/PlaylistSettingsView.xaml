@@ -10,7 +10,7 @@
         Height="300" 
         Width="200"
         WindowStyle="ToolWindow">
-    <Grid>
+    <Grid Margin="{StaticResource DialogBorder}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -31,7 +31,7 @@
         <local:HosterListView
             Grid.Row="1"
             DataContext="{Binding HosterList}"
-            IsEnabled="{Binding UseCustomHoster}"/>
+            IsEnabled="{Binding Path=DataContext.UseCustomHoster, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
         <general:SaveCancelView
             Grid.Row="2"

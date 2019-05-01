@@ -15,12 +15,22 @@ namespace CerealPlayer.ViewModels.Settings
     {
         public PlaylistSettingsViewModel(Models.Models models, PlaylistModel playlist)
         {
-            UseCustomHoster = playlist.Settings.UseCustomHosterPreferences;
+            useCustomHoster = playlist.Settings.UseCustomHosterPreferences;
             SaveCancel = new SaveCancelViewModel(models);
             HosterList = new HosterListViewModel(playlist.Settings.CustomHosterPreferences);
         }
 
-        public bool UseCustomHoster { get; set; }
+        private bool useCustomHoster;
+        public bool UseCustomHoster
+        {
+            get => useCustomHoster;
+            set
+            {
+                if (useCustomHoster == value) return;
+                useCustomHoster = value;
+                OnPropertyChanged(nameof(UseCustomHoster));
+            }
+        }
 
         public SaveCancelViewModel SaveCancel { get; }
 

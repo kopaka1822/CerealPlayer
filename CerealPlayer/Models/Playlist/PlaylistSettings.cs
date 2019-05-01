@@ -20,9 +20,13 @@ namespace CerealPlayer.Models.Playlist
             this.models = models;
             if (data != null)
             {
-                CustomHosterPreferences = data.CustomHosterPreferences;
-                UseCustomHosterPreferences = data.UseCustomHosterPreferences;
+                customHosterPreferences = data.CustomHosterPreferences;
+                useCustomHosterPreferences = data.UseCustomHosterPreferences;
             }
+            // properly initialize custom hoster preferences with new hosters etc.
+            var tmp = models.Web.VideoHoster.ToHosterPreferences(customHosterPreferences);
+            customHosterPreferences = tmp.ToSettingsModels();
+
             RefreshHosterPreferences();
 
             models.Web.VideoHoster.PropertyChanged += VideoHosterOnPropertyChanged;
@@ -56,8 +60,7 @@ namespace CerealPlayer.Models.Playlist
             }
         }
 
-        private HosterSettingsModel[] customHosterPreferences = null;
-        [CanBeNull]
+        private HosterSettingsModel[] customHosterPreferences = null;       
         public HosterSettingsModel[] CustomHosterPreferences
         {
             get => customHosterPreferences;

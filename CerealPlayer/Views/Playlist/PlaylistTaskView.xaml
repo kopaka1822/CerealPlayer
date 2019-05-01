@@ -15,6 +15,18 @@
             <i:InvokeCommandAction Command="{Binding PlayCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem
+                IsEnabled="{Binding IsLoaded}"
+                Header="Playlist Settings"
+                Command="{Binding ShowPlaylistSettingsCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Icons/settings.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <StackPanel>
         <Grid Margin="{StaticResource BottomBorder}">
             <Grid.ColumnDefinitions>

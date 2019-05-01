@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands.Playlist.Loaded;
+using CerealPlayer.Commands.Settings;
 using CerealPlayer.Models.Playlist;
 using CerealPlayer.Models.Task;
 
@@ -36,6 +37,7 @@ namespace CerealPlayer.ViewModels.Playlist
             StopCommand = new StopPlaylistUpdateCommand(models, parent);
             RetryCommand = new RetryPlaylistUpdateCommand(models, parent);
             DeleteCommand = new DeletePlaylistCommand(models, parent);
+            ShowPlaylistSettingsCommand = new ShowPlaylistSettingsCommand(models, parent);
 
             refreshDownloadTimer.Tick += RefreshDownloadTimerOnTick;
         }
@@ -56,6 +58,8 @@ namespace CerealPlayer.ViewModels.Playlist
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool IsLoaded => true;
 
         public string Name => parent.Name;
 
@@ -115,6 +119,8 @@ namespace CerealPlayer.ViewModels.Playlist
         public ICommand StopCommand { get; }
 
         public ICommand PlayCommand { get; }
+
+        public ICommand ShowPlaylistSettingsCommand { get; }
 
         private void RefreshDownloadTimerOnTick(object sender, EventArgs eventArgs)
         {
