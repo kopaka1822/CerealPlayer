@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands;
+using CerealPlayer.ViewModels.General;
 
 namespace CerealPlayer.ViewModels.Settings
 {
@@ -31,8 +32,7 @@ namespace CerealPlayer.ViewModels.Settings
             maxChromiumInstances = settings.MaxChromiumInstances;
             rewindOnPlaylistChange = settings.RewindOnPlaylistChangeTime;
 
-            CancelCommand = new SetDialogResultCommand(models, false);
-            SaveCommand = new SetDialogResultCommand(models, true);
+            SaveCancel = new SaveCancelViewModel(models);
         }
 
         public int MaxDownloads
@@ -112,8 +112,7 @@ namespace CerealPlayer.ViewModels.Settings
             }
         }
 
-        public ICommand SaveCommand { get; }
-        public ICommand CancelCommand { get; }
+        public SaveCancelViewModel SaveCancel { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

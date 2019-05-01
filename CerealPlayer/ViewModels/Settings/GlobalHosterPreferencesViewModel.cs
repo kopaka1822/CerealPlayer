@@ -6,6 +6,7 @@ using System.Windows.Input;
 using CerealPlayer.Annotations;
 using CerealPlayer.Commands;
 using CerealPlayer.Models.Settings;
+using CerealPlayer.ViewModels.General;
 using GongSolutions.Wpf.DragDrop;
 
 namespace CerealPlayer.ViewModels.Settings
@@ -17,14 +18,17 @@ namespace CerealPlayer.ViewModels.Settings
         public GlobalHosterPreferencesViewModel(Models.Models models)
         {
             this.models = models;
-
-            CancelCommand = new SetDialogResultCommand(models, false);
-            SaveCommand = new SetDialogResultCommand(models, true);
+            SaveCancel = new SaveCancelViewModel(models);
 
             // init items
             foreach (var videoHoster in models.Settings.PreferredHoster)
             {
-                Items.Add(videoHoster);
+                // add copy
+                Items.Add(new HosterSettingsModel
+                {
+                    UseHoster = videoHoster.UseHoster,
+                    Name = videoHoster.Name
+                });
             }
         }
 
@@ -61,6 +65,8 @@ namespace CerealPlayer.ViewModels.Settings
                 Items.Insert(insertIndex - 1, item);
             }
         }
+
+        public SaveCancelViewModel SaveCancel { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

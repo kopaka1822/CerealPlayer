@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CerealPlayer.Views"
+        xmlns:general="clr-namespace:CerealPlayer.Views.General"
         mc:Ignorable="d"
         Title="Settings"
         Height="520"
@@ -190,20 +191,7 @@
                 Margin="{StaticResource BottomBorder}"
                 Text="{Binding RewindOnPlaylistChange}" />
         </Grid>
-        <StackPanel
-            DockPanel.Dock="Bottom"
-            Orientation="Horizontal"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom">
-            <Button
-                Margin="{StaticResource RightBorder}"
-                Command="{Binding SaveCommand}">
-                Save
-            </Button>
-            <Button
-                Command="{Binding CancelCommand}">
-                Cancel
-            </Button>
-        </StackPanel>
+        <general:SaveCancelView
+            DataContext="{Binding SaveCancel}"/>
     </DockPanel>
 </Window>

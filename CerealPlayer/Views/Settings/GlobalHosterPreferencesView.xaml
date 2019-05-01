@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:CerealPlayer.Views"
         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         xmlns:settings="clr-namespace:CerealPlayer.Views.Settings"
+        xmlns:general="clr-namespace:CerealPlayer.Views.General"
         mc:Ignorable="d"
         Title="Hoster Preferences"
         Height="300"
@@ -13,22 +14,7 @@
         WindowStyle="ToolWindow">
     <Window.Resources>
         <DataTemplate x:Key="HostItemTemplate">
-            <!--<Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Text="{Binding Path=Name, FallbackValue=Hoster Name}"
-                    VerticalAlignment="Center"/>
-                <CheckBox
-                    Grid.Column="1"
-                    IsChecked="{Binding Path=UseHoster, FallbackValue=True}"
-                    VerticalAlignment="Center"/>
-            </Grid>-->
-            <settings:HosterItemView
-                DataContext="{Binding}"
-                />
+            <settings:HosterItemView DataContext="{Binding}"/>
         </DataTemplate>
     </Window.Resources>
     <Grid
@@ -47,20 +33,8 @@
             dd:DragDrop.DropHandler="{Binding}"
             ScrollViewer.PanningMode="None"/>
 
-        <StackPanel
-            Grid.Row="1"
-            Orientation="Horizontal"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom">
-            <Button
-                Margin="{StaticResource RightBorder}"
-                Command="{Binding SaveCommand}">
-                Save
-            </Button>
-            <Button
-                Command="{Binding CancelCommand}">
-                Cancel
-            </Button>
-        </StackPanel>
+        <general:SaveCancelView
+            DataContext="{Binding SaveCancel}"
+            Grid.Row="1"/>
     </Grid>
 </Window>
