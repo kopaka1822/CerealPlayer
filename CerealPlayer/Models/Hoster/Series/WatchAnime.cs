@@ -178,7 +178,7 @@ namespace CerealPlayer.Models.Hoster.Series
                         throw new Exception(website + " no video hoster found");
 
                     // find links on those websites
-                    var compatibleHoster = new List<VideoHosterModel.WebsiteHosterPair>();
+                    var compatibleHoster = new List<HosterPreferences.WebsiteHosterPair>();
                     foreach (var name in names)
                     {
                         try
@@ -187,7 +187,7 @@ namespace CerealPlayer.Models.Hoster.Series
                             parent.Description = "resolving " + reqLink;
                             var reqSource = await models.Web.Html.GetJsAsynch(reqLink);
 
-                            var hoster = await models.Web.VideoHoster.GetHosterFromSourceAsynch(reqLink, reqSource);
+                            var hoster = await parent.Hoster.GetHosterFromSourceAsynch(reqLink, reqSource);
                             compatibleHoster.Add(hoster);
                         }
                         catch (Exception)
@@ -199,7 +199,7 @@ namespace CerealPlayer.Models.Hoster.Series
                     if (compatibleHoster.Count == 0)
                         throw new Exception(website + " no compatible hoster found");
 
-                    var finalHoster = models.Web.VideoHoster.GetPreferredHoster(compatibleHoster);
+                    var finalHoster = parent.Hoster.GetPreferredHoster(compatibleHoster);
 
                     parent.SetNewSubTask(finalHoster.GetDownloadTask(parent));
                 }

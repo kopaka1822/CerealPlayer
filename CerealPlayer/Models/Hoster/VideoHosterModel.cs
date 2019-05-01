@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using CerealPlayer.Annotations;
 using CerealPlayer.Models.Hoster.Series;
@@ -14,19 +15,13 @@ using CerealPlayer.Utility;
 
 namespace CerealPlayer.Models.Hoster
 {
-    public class VideoHosterModel
+    public class VideoHosterModel : INotifyPropertyChanged
     {
-        private struct HosterInfo
-        {
-            public IVideoHoster Hoster { get; set; }
-            public bool UseHoster { get; set; }
-        }
+        public HosterPreferences GlobalPreferences { get; set; }
 
         private readonly Dictionary<string, IVideoHoster> fileHoster = new Dictionary<string, IVideoHoster>();
-        private readonly List<HosterInfo> hoster = new List<HosterInfo>();
         private readonly Dictionary<string, IVideoHoster> seriesHoster = new Dictionary<string, IVideoHoster>();
         private readonly SettingsModel settings;
-
 
         public VideoHosterModel(Models models)
         {
@@ -63,26 +58,52 @@ namespace CerealPlayer.Models.Hoster
             }
         }
 
-        /// <summary>
-        ///     returns the preferred hoster according to the priority list
-        /// </summary>
-        /// <param name="hosterPairs"></param>
-        /// <returns></returns>
-        public WebsiteHosterPair GetPreferredHoster(List<WebsiteHosterPair> hosterPairs)
+        public HosterPreferences ToHosterPreferences([CanBeNull] HosterSettingsModel[] preferred)
         {
-            Debug.Assert(hosterPairs.Count > 0);
-
-            foreach (var videoHoster in hoster)
-            {
-                if(!videoHoster.UseHoster) continue;
-                foreach (var pair in hosterPairs)
+            var res = new List<HosterPreferences.HosterInfo>(fileHoster.Count + seriesHoster.Count);
+            var usedHoster = new HashSet<string>();
+            // add all hosters that are in settings
+            if (preferred != null)
+                foreach (var prefHost in preferred)
                 {
-                    if (ReferenceEquals(pair.Hoster, videoHoster))
-                        return pair;
+                    if (!fileHoster.TryGetValue(prefHost.Name, out var videoHoster)) continue;
+
+                    res.Add(new HosterPreferences.HosterInfo
+                    {
+                        Hoster = videoHoster,
+                        UseHoster = prefHost.UseHoster,
+                    });
+                    usedHoster.Add(prefHost.Name);
+                }
+
+            // test if all hoster were used
+            if (usedHoster.Count != fileHoster.Count)
+            {
+                // add all hoster that were not listed in settings
+                foreach (var videoHoster in fileHoster)
+                {
+                    if (!usedHoster.Contains(videoHoster.Key))
+                    {
+                        res.Add(new HosterPreferences.HosterInfo
+                        {
+                            Hoster = videoHoster.Value,
+                            UseHoster = true,
+                        });
+                    }
                 }
             }
 
-            throw new Exception("GetPreferredHoster - no matching hoster");
+            // add the remaining series hoster
+            foreach (var videoHoster in seriesHoster)
+            {
+                res.Add(new HosterPreferences.HosterInfo
+                {
+                    Hoster = videoHoster.Value,
+                    UseHoster = true,
+                });
+            }
+
+            return new HosterPreferences(res);
         }
 
         /// <summary>
@@ -105,172 +126,21 @@ namespace CerealPlayer.Models.Hoster
 
         private void LoadHosterFromSettings()
         {
-            hoster.Clear();
-            // add all hoster according to settings list
-            var preferredHoster = settings.PreferredHoster;
-            var usedHoster = new HashSet<string>();
-            foreach (var h in preferredHoster)
-            {
-                if (!fileHoster.TryGetValue(h.Name, out var res)) continue;
-
-                hoster.Add(new HosterInfo
-                {
-                    Hoster = res,
-                    UseHoster = h.UseHoster,
-                });
-                usedHoster.Add(h.Name);
-            }
-
-            if (usedHoster.Count != fileHoster.Count)
-            {
-                // add all hoster that were not listed in settings
-                foreach (var videoHoster in fileHoster)
-                {
-                    if (!usedHoster.Contains(videoHoster.Key))
-                    {
-                        hoster.Add(new HosterInfo
-                        {
-                            Hoster = videoHoster.Value,
-                            UseHoster = true,
-                        });
-                    }
-                }
-            }
-
-            // add the remaining series hoster
-            foreach (var videoHoster in seriesHoster)
-            {
-                hoster.Add(new HosterInfo
-                {
-                    Hoster = videoHoster.Value,
-                    UseHoster = true,
-                });
-            }
+            GlobalPreferences = ToHosterPreferences(settings.PreferredHoster);
+            OnPropertyChanged(nameof(GlobalPreferences));
         }
 
         private void SaveHoster()
         {
-            var names = new List<HosterSettingsModel>();
-            foreach (var videoHoster in GetFileHoster())
-            {
-                names.Add(new HosterSettingsModel
-                {
-                    Name = videoHoster.Hoster.Name,
-                    UseHoster = videoHoster.UseHoster
-                });
-            }
-
-            settings.PreferredHoster = names.ToArray();
+            settings.PreferredHoster = GlobalPreferences.ToSettingsModels();
         }
 
-        /// <summary>
-        ///     tries to find a compatible video hoster
-        /// </summary>
-        /// <param name="website"></param>
-        /// <exception cref="Exception">thrown if no hoster was found</exception>
-        /// <returns></returns>
-        public IVideoHoster GetCompatibleHoster([NotNull] string website)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            foreach (var videoHoster in hoster)
-            {
-                if (!videoHoster.UseHoster) continue;
-                if (videoHoster.Hoster.Supports(website)) return videoHoster.Hoster;
-            }
-
-            throw new Exception("no compatible hoster for " + website);
-        }
-
-        /// <summary>
-        ///     tries to find a compatible hoster for the given website
-        /// </summary>
-        /// <param name="website">parent website (for exception message)</param>
-        /// <param name="websites">potential video hoster websites</param>
-        /// <returns></returns>
-        public async Task<WebsiteHosterPair> GetHosterFromWebsitesAsynch([NotNull] string website,
-            [NotNull] List<string> websites)
-        {
-            var task = await System.Threading.Tasks.Task.Run(() =>
-            {
-                foreach (var videoHoster in hoster)
-                {
-                    if (!videoHoster.UseHoster) continue;
-                    foreach (var site in websites)
-                    {
-                        if (videoHoster.Hoster.Supports(site))
-                            return new WebsiteHosterPair
-                            {
-                                Hoster = videoHoster.Hoster,
-                                Website = site
-                            };
-                    }
-                }
-
-                return null;
-            });
-
-            if (task == null)
-                throw new Exception("no compatible hosters found on " + website + " [" +
-                                    StringUtil.Reduce(websites.ToArray(), ", ") + "]");
-
-            return task;
-        }
-
-        /// <summary>
-        ///     tries to find a compatible hoster on given website
-        /// </summary>
-        /// <param name="website">website address</param>
-        /// <param name="source">source of the website</param>
-        /// <returns></returns>
-        public async Task<WebsiteHosterPair> GetHosterFromSourceAsynch([NotNull] string website,
-            [NotNull] string source)
-        {
-            var task = await System.Threading.Tasks.Task.Run(() =>
-            {
-                foreach (var videoHoster in hoster)
-                {
-                    if (!videoHoster.UseHoster) continue;
-                    var link = videoHoster.Hoster.FindCompatibleLink(source);
-                    if (link != null)
-                        return new WebsiteHosterPair
-                        {
-                            Hoster = videoHoster.Hoster,
-                            Website = link
-                        };
-                }
-
-                return null;
-            });
-
-            if (task == null)
-                throw new Exception("no compatible hosters found on " + website);
-
-            return task;
-        }
-
-        /// <summary>
-        ///     returns all video hosters with IsFileHoster = true
-        ///     sorted with their current priority
-        /// </summary>
-        /// <returns></returns>
-        private List<HosterInfo> GetFileHoster()
-        {
-            return hoster.Where(videoHoster => videoHoster.Hoster.IsFileHoster).ToList();
-        }
-
-        public class WebsiteHosterPair
-        {
-            public string Website { set; get; }
-            public IVideoHoster Hoster { set; get; }
-
-            public ISubTask GetDownloadTask(VideoTaskModel parent)
-            {
-                return Hoster.GetDownloadTask(parent, Website);
-            }
-
-            public ISubTask GetNextEpisodeTask(NextEpisodeTaskModel parent)
-            {
-                return Hoster.GetNextEpisodeTask(parent, Website);
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

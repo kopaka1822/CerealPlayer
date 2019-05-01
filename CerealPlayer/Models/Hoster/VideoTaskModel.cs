@@ -9,8 +9,11 @@ namespace CerealPlayer.Models.Hoster
         public VideoTaskModel(VideoModel parent) : base(5, TimeSpan.Zero)
         {
             Video = parent;
+            Playlist = parent.Parent;
         }
 
         public VideoModel Video { get; }
+        public PlaylistModel Playlist { get; }
+        public HosterPreferences Hoster => Playlist.Settings.HosterPreferences;
     }
 }

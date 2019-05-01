@@ -20,7 +20,7 @@ namespace CerealPlayer.Models.Hoster.Tasks
                 : await models.Web.Html.GetAsynch(website);
             try
             {
-                await models.Web.VideoHoster.GetHosterFromSourceAsynch(website, source);
+                await parent.Hoster.GetHosterFromSourceAsynch(website, source);
             }
             catch (Exception)
             {

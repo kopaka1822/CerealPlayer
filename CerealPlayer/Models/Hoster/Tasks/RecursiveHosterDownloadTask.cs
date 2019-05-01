@@ -35,7 +35,7 @@ namespace CerealPlayer.Models.Hoster.Tasks
                 var source = useJavascript
                     ? await models.Web.Html.GetJsAsynch(website)
                     : await models.Web.Html.GetAsynch(website);
-                var newTask = await models.Web.VideoHoster.GetHosterFromSourceAsynch(website, source);
+                var newTask = await parent.Hoster.GetHosterFromSourceAsynch(website, source);
 
                 parent.SetNewSubTask(newTask.GetDownloadTask(parent));
             }

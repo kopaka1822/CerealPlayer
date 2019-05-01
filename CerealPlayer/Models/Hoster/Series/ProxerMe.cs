@@ -172,7 +172,7 @@ namespace CerealPlayer.Models.Hoster.Series
 
             protected override async System.Threading.Tasks.Task OnLinksFound(List<string> links)
             {
-                var task = await models.Web.VideoHoster.GetHosterFromWebsitesAsynch(website, links);
+                var task = await parent.Hoster.GetHosterFromWebsitesAsynch(website, links);
                 parent.SetNewSubTask(task.GetDownloadTask(parent));
             }
         }

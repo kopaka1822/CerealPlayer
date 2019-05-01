@@ -1,4 +1,5 @@
 ﻿using System;
+using CerealPlayer.Models.Hoster;
 using CerealPlayer.Models.Playlist;
 
 namespace CerealPlayer.Models.Task.Hoster
@@ -11,5 +12,6 @@ namespace CerealPlayer.Models.Task.Hoster
         }
 
         public PlaylistModel Playlist { get; }
+        public HosterPreferences Hoster => Playlist.Settings.HosterPreferences;
     }
 }

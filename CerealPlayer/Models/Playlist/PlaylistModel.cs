@@ -25,9 +25,10 @@ namespace CerealPlayer.Models.Playlist
             this.models = models;
             LastWebsite = initialWebsite;
             DownloadPlaylistTask = new DownloadPlaylistTask(this);
+            Settings = new PlaylistSettings(models, null);
 
             // get series info
-            hoster = models.Web.VideoHoster.GetCompatibleHoster(initialWebsite);
+            hoster = Settings.HosterPreferences.GetCompatibleHoster(initialWebsite);
             Name = hoster.GetInfo(initialWebsite).SeriesTitle.Trim();
             System.IO.Directory.CreateDirectory(Directory);
 
@@ -50,9 +51,10 @@ namespace CerealPlayer.Models.Playlist
             this.models = models;
             LastWebsite = data.LastWebsite;
             DownloadPlaylistTask = new DownloadPlaylistTask(this);
+            Settings = new PlaylistSettings(models, data.Settings);
 
             // get series info
-            hoster = models.Web.VideoHoster.GetCompatibleHoster(LastWebsite);
+            hoster = Settings.HosterPreferences.GetCompatibleHoster(LastWebsite);
             Name = data.Name;
 
             // restore video tasks
@@ -95,6 +97,8 @@ namespace CerealPlayer.Models.Playlist
         [NotNull] public NextEpisodeTaskModel NextEpisodeTask { get; }
 
         public string SettingsLocation => GetSettingsLocation(Directory);
+
+        public PlaylistSettings Settings { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -185,7 +189,8 @@ namespace CerealPlayer.Models.Playlist
                 LastWebsite = LastWebsite,
                 Name = Name,
                 PlayingVideo = PlayingVideoIndex,
-                PlayingPosition = PlayingVideoPosition.Ticks
+                PlayingPosition = PlayingVideoPosition.Ticks,
+                Settings = Settings.GetSaveData()
             };
         }
 
@@ -228,6 +233,7 @@ namespace CerealPlayer.Models.Playlist
             public string Name { get; set; }
             public int PlayingVideo { get; set; }
             public long PlayingPosition { get; set; }
+            public PlaylistSettings.SaveData Settings { get; set; }
         }
 
         #region Active Video

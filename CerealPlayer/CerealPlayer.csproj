@@ -141,6 +141,8 @@
     <Compile Include="Controllers\PlayerTouchController.cs" />
     <Compile Include="Controllers\SaveFileController.cs" />
     <Compile Include="Controllers\TaskControllerBase.cs" />
+    <Compile Include="Models\Hoster\HosterPreferences.cs" />
+    <Compile Include="Models\Playlist\PlaylistSettings.cs" />
     <Compile Include="Models\Settings\HosterSettingsModel.cs" />
     <Compile Include="Models\AppModel.cs" />
     <Compile Include="Models\DisplayModel.cs" />

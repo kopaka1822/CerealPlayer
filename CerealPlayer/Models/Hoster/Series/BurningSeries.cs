@@ -152,7 +152,7 @@ namespace CerealPlayer.Models.Hoster.Series
 
                     // find links on those websites
                     parent.Description = "resolving hoster " + website;
-                    var compatibleHoster = new List<VideoHosterModel.WebsiteHosterPair>();
+                    var compatibleHoster = new List<HosterPreferences.WebsiteHosterPair>();
 
                     foreach (var streamLink in streamLinks)
                     {
@@ -168,7 +168,7 @@ namespace CerealPlayer.Models.Hoster.Series
 
                             // TODO solve videoLink which is protected by "im not a robot" captcha
 
-                            var hoster = await models.Web.VideoHoster.GetHosterFromSourceAsynch(streamLink, reqSource);
+                            var hoster = await parent.Hoster.GetHosterFromSourceAsynch(streamLink, reqSource);
                             compatibleHoster.Add(hoster);
                         }
                         catch (Exception)
@@ -216,7 +216,7 @@ namespace CerealPlayer.Models.Hoster.Series
                     if (compatibleHoster.Count == 0)
                         throw new Exception(website + " no compatible hoster found");
 
-                    var finalHoster = models.Web.VideoHoster.GetPreferredHoster(compatibleHoster);
+                    var finalHoster = parent.Hoster.GetPreferredHoster(compatibleHoster);
 
                     parent.SetNewSubTask(finalHoster.GetDownloadTask(parent));
                 }
