@@ -35,6 +35,7 @@ namespace CerealPlayer.ViewModels.Playlist
             DeleteCommand = new DeleteVideoCommand(models, video, true);
             StopDeleteCommand = new StopVideoDeletionCommand(models, video);
             CopyVideoLinkCommand = new CopyVideoLinkCommand(video);
+            OpenVideoLinkCommand = new OpenVideoLinkCommand(video);
 
             refreshDownloadTimer.Tick += RefreshDownloadTimerOnTick;
         }
@@ -52,6 +53,8 @@ namespace CerealPlayer.ViewModels.Playlist
         public ICommand StopDeleteCommand { get; }
 
         public ICommand CopyVideoLinkCommand { get; }
+
+        public ICommand OpenVideoLinkCommand { get; }
 
         public Visibility RetryVisibility =>
             video.DownloadTask.Status == TaskModel.TaskStatus.Failed

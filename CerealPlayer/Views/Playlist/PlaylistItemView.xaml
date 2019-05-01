@@ -24,6 +24,13 @@
                     <Image Source="../../Icons/copy.png" />
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem
+                Header="Open Video Link"
+                Command="{Binding OpenVideoLinkCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Icons/resize.png" />
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
     </UserControl.ContextMenu>
     <StackPanel>
