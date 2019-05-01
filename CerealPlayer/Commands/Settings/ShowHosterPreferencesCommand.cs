@@ -23,8 +23,8 @@ namespace CerealPlayer.Commands.Settings
 
         public void Execute(object parameter)
         {
-            var view = new HosterPreferencesView();
-            var viewModel = new HosterPreferencesViewModel(models);
+            var view = new GlobalHosterPreferencesView();
+            var viewModel = new GlobalHosterPreferencesViewModel(models);
             view.DataContext = viewModel;
 
             if (models.App.ShowDialog(view) != true) return;

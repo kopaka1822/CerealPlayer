@@ -5,9 +5,9 @@ namespace CerealPlayer.Views.Settings
     /// <summary>
     ///     Interaction logic for HosterPreferencesView.xaml
     /// </summary>
-    public partial class HosterPreferencesView : Window
+    public partial class GlobalHosterPreferencesView : Window
     {
-        public HosterPreferencesView()
+        public GlobalHosterPreferencesView()
         {
             InitializeComponent();
         }

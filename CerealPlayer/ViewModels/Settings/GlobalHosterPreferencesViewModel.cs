@@ -10,11 +10,11 @@ using GongSolutions.Wpf.DragDrop;
 
 namespace CerealPlayer.ViewModels.Settings
 {
-    public class HosterPreferencesViewModel : INotifyPropertyChanged, IDropTarget
+    public class GlobalHosterPreferencesViewModel : INotifyPropertyChanged, IDropTarget
     {
         private readonly Models.Models models;
 
-        public HosterPreferencesViewModel(Models.Models models)
+        public GlobalHosterPreferencesViewModel(Models.Models models)
         {
             this.models = models;
 

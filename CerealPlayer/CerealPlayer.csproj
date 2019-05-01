@@ -199,7 +199,7 @@
     <Compile Include="ViewModels\Playlist\PlaylistsPreviewViewModel.cs" />
     <Compile Include="ViewModels\Playlist\ActivePlaylistViewModel.cs" />
     <Compile Include="ViewModels\Playlist\LoadedPlaylistTaskViewModel.cs" />
-    <Compile Include="ViewModels\Settings\HosterPreferencesViewModel.cs" />
+    <Compile Include="ViewModels\Settings\GlobalHosterPreferencesViewModel.cs" />
     <Compile Include="ViewModels\ViewModels.cs" />
     <Compile Include="Views\Settings\GeneralSettingsView.xaml.cs">
       <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
@@ -207,8 +207,8 @@
     <Compile Include="Views\Settings\HosterItemView.xaml.cs">
       <DependentUpon>HosterItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Settings\HosterPreferencesView.xaml.cs">
-      <DependentUpon>HosterPreferencesView.xaml</DependentUpon>
+    <Compile Include="Views\Settings\GlobalHosterPreferencesView.xaml.cs">
+      <DependentUpon>GlobalHosterPreferencesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlayerBar.xaml.cs">
       <DependentUpon>PlayerBar.xaml</DependentUpon>
@@ -242,7 +242,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Settings\HosterPreferencesView.xaml">
+    <Page Include="Views\Settings\GlobalHosterPreferencesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
