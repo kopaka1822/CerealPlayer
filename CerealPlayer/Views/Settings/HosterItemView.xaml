@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CerealPlayer.Views.Settings"
              mc:Ignorable="d" 
              Height="25"
-             Width="160"
+             d:DesignWidth="160"
              Background="White">
     <UserControl.Resources>
         <Style x:Key="ThisStyle" TargetType="{x:Type TextBlock}">

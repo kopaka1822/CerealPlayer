@@ -30,7 +30,7 @@ namespace CerealPlayer.Commands.Settings
             if (models.App.ShowDialog(view) != true) return;
 
             // apply settings
-            models.Settings.PreferredHoster = viewModel.Items.ToArray();
+            models.Settings.PreferredHoster = viewModel.HosterList.Items.ToArray();
             models.Settings.Save();
         }
 

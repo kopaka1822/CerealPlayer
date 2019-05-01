@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace CerealPlayer.Views.Settings
 {
     /// <summary>
-    /// Interaction logic for PlaylistSettings.xaml
+    /// Interaction logic for HosterListView.xaml
     /// </summary>
-    public partial class PlaylistSettings : Window
+    public partial class HosterListView : UserControl
     {
-        public PlaylistSettings()
+        public HosterListView()
         {
             InitializeComponent();
         }

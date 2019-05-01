@@ -27,7 +27,7 @@ namespace CerealPlayer.Controllers
                     // save state after playlist changed
                     if (activePlaylist != null)
                     {
-                        SavePlaylist(activePlaylist);
+                        activePlaylist.Save();
                         activePlaylist.PropertyChanged -= ActivePlaylistOnPropertyChanged;
                     }
 
@@ -47,7 +47,7 @@ namespace CerealPlayer.Controllers
             {
                 case nameof(PlaylistModel.PlayingVideo):
                     // save state after video changed
-                    SavePlaylist(activePlaylist);
+                    activePlaylist.Save();
                     break;
             }
         }
@@ -64,7 +64,7 @@ namespace CerealPlayer.Controllers
                 foreach (var item in args.NewItems)
                 {
                     var playlist = (PlaylistModel) item;
-                    SavePlaylist(playlist);
+                    playlist.Save();
                     // save playlist after a video finished downloading
                     playlist.VideosCollectionChanged += PlaylistOnVideosCollectionChanged;
                     foreach (var playlistVideo in playlist.Videos)
@@ -103,15 +103,9 @@ namespace CerealPlayer.Controllers
 
                 if (video.DownloadTask.Status == TaskModel.TaskStatus.Finished)
                 {
-                    SavePlaylist(video.Parent);
+                    video.Parent.Save();
                 }
             };
-        }
-
-        public void SavePlaylist(PlaylistModel playlist)
-        {
-            var data = JsonConvert.SerializeObject(playlist.GetSaveData());
-            File.WriteAllText(playlist.SettingsLocation, data);
         }
 
         /// <summary>
@@ -121,7 +115,7 @@ namespace CerealPlayer.Controllers
         {
             foreach (var playlistModel in models.Playlists.List)
             {
-                SavePlaylist(playlistModel);
+                playlistModel.Save();
             }
         }
     }

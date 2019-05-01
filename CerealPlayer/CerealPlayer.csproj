@@ -134,6 +134,7 @@
     <Compile Include="Commands\SetDialogResultCommand.cs" />
     <Compile Include="Commands\Settings\ShowGeneralSettingsCommand.cs" />
     <Compile Include="Commands\Settings\ShowHosterPreferencesCommand.cs" />
+    <Compile Include="Commands\Settings\ShowPlaylistSettingsCommand.cs" />
     <Compile Include="Commands\ToggleFullscreenCommand.cs" />
     <Compile Include="Commands\TogglePlaylistCommand.cs" />
     <Compile Include="Controllers\DeleteAfterWatchedController.cs" />
@@ -203,6 +204,8 @@
     <Compile Include="ViewModels\Playlist\ActivePlaylistViewModel.cs" />
     <Compile Include="ViewModels\Playlist\LoadedPlaylistTaskViewModel.cs" />
     <Compile Include="ViewModels\Settings\GlobalHosterPreferencesViewModel.cs" />
+    <Compile Include="ViewModels\Settings\HosterListViewModel.cs" />
+    <Compile Include="ViewModels\Settings\PlaylistSettingsViewModel.cs" />
     <Compile Include="ViewModels\ViewModels.cs" />
     <Compile Include="Views\General\SaveCancelView.xaml.cs">
       <DependentUpon>SaveCancelView.xaml</DependentUpon>
@@ -228,8 +231,11 @@
     <Compile Include="Views\Playlist\PlaylistTaskView.xaml.cs">
       <DependentUpon>PlaylistTaskView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Settings\PlaylistSettings.xaml.cs">
-      <DependentUpon>PlaylistSettings.xaml</DependentUpon>
+    <Compile Include="Views\Settings\HosterListView.xaml.cs">
+      <DependentUpon>HosterListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\PlaylistSettingsView.xaml.cs">
+      <DependentUpon>PlaylistSettingsView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -275,7 +281,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Settings\PlaylistSettings.xaml">
+    <Page Include="Views\Settings\HosterListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\PlaylistSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

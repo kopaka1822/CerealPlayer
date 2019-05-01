@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="CerealPlayer.Views.Settings.HosterListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CerealPlayer.Views.Settings"
+             xmlns:dd="urn:gong-wpf-dragdrop"
+             mc:Ignorable="d" 
+             d:DesignHeight="260" 
+             d:DesignWidth="180">
+    <UserControl.Resources>
+        <DataTemplate x:Key="HostItemTemplate">
+            <local:HosterItemView DataContext="{Binding}"/>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ListBox
+        Margin="{StaticResource BigBottomBorder}"
+        ItemsSource="{Binding Items}"
+        ItemTemplate="{StaticResource HostItemTemplate}"
+        dd:DragDrop.IsDragSource="True"
+        dd:DragDrop.IsDropTarget="True"
+        dd:DragDrop.DropHandler="{Binding}"
+        ScrollViewer.PanningMode="None"
+        HorizontalContentAlignment="Stretch"/>
+</UserControl>

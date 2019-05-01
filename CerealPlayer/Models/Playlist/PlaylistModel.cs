@@ -175,7 +175,16 @@ namespace CerealPlayer.Models.Playlist
             return new PlaylistModel(models, data);
         }
 
-        public SaveData GetSaveData()
+        /// <summary>
+        /// Saves relevant information in the json file
+        /// </summary>
+        public void Save()
+        {
+            var data = JsonConvert.SerializeObject(GetSaveData());
+            File.WriteAllText(SettingsLocation, data);
+        }
+
+        private SaveData GetSaveData()
         {
             var vs = new List<VideoModel.SaveData>();
             foreach (var videoModel in Videos)

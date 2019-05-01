@@ -23,15 +23,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListBox
-            Margin="{StaticResource BigBottomBorder}"
-            ItemsSource="{Binding Items}"
-            SelectedItem="{Binding SelectedItem}"
-            ItemTemplate="{StaticResource HostItemTemplate}"
-            dd:DragDrop.IsDragSource="True"
-            dd:DragDrop.IsDropTarget="True"
-            dd:DragDrop.DropHandler="{Binding}"
-            ScrollViewer.PanningMode="None"/>
+        <settings:HosterListView
+            DataContext="{Binding HosterList}"/>
 
         <general:SaveCancelView
             DataContext="{Binding SaveCancel}"

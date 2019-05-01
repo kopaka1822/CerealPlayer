@@ -81,7 +81,8 @@
                                     SelectedItem="{Binding PlaylistPreview.SelectedPlaylist}"
                                     Margin="{StaticResource BottomBorder}"
                                     ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.RowSpan="2" />
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.RowSpan="2"
+                                    HorizontalContentAlignment="Stretch"/>
 
                                 <StackPanel
                                     Grid.Row="2"
@@ -119,7 +120,8 @@
                                 ItemsSource="{Binding ActivePlaylist.Videos}"
                                 SelectedItem="{Binding ActivePlaylist.SelectedVideo}"
                                 ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                HorizontalContentAlignment="Stretch"/>
                         </TabItem>
                     </TabControl>
 
