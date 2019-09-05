@@ -24,7 +24,8 @@ namespace CerealPlayer.Models.Hoster.Series
 
         public bool Supports(string website)
         {
-            return website.Contains(".gogoanimes.tv") || website.Contains(".gogoanimes.in");
+            return
+                website.Contains(".gogoanimes.") || website.Contains("/gogoanimes.");
         }
 
         public EpisodeInfo GetInfo(string website)
